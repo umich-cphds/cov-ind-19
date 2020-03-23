@@ -13,6 +13,11 @@ Johns Hopkins University, CSSE (https://github.com/CSSEGISandData/COVID-19/tree/
 COVI-IND-19 `R` Shiny app
 * _forthcoming_
 
+### Publications and news articles
+* [COV-IND-19 Report](https://bit.ly/COV-IND-19_Report) (direct download link, check your downloads folder) - 20 March 2020
+* [Medium article](https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6) - 21 March 2020
+* [_India faces spike in coronavirus cases, says study, in test for health system - Reuters_](https://in.reuters.com/article/health-coronavirus-india-estimates/india-faces-spike-in-coronavirus-cases-says-study-in-test-for-health-system-idINKBN21A32Q?fbclid=IwAR0sXPJcsbjSU6ZRVwJHFnb2z-oTGw58BbgJxbY9rQQYMtVGoL_RqsDhRBw) - 23 March 2020
+
 ### Acknowledgments
 The COV-IND-19 Study Group is comprised of:
 * Debashree Ray - _Departments of Epidemiology and Biostatistics, Johns Hopkins University_
