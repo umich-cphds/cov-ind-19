@@ -9,4 +9,4 @@
 
 module load R/3.6.1-gcc8.3.0
 
-Rscript --vanilla ~/cov-ind-19/r_scripts/covid19_prediction_india.R
+Rscript --vanilla ~/cov-ind-19/model/r_scripts/covid19_prediction_india.R

@@ -7,7 +7,7 @@
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 
 for i in $(seq 1 3); do
-  sbatch ~/cov-ind-19/slurm_scripts/job_run_indian_models_loop.slurm
+  sbatch ~/cov-ind-19/model/slurm_scripts/job_run_indian_models_loop.slurm
   sleep 24h
 done
-sbatch ~/cov-ind-19/slurm_scripts/master_india.slurm
+sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
