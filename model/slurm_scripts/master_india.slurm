@@ -7,7 +7,8 @@
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 
 for i in $(seq 1 3); do
-  sbatch ~/cov-ind-19/model/slurm_scripts/job_run_indian_models_loop.slurm
+  depend=$(sbatch~/cov-ind-19/model/slurm_scripts/job_run_indian_models_loop.slurm | awk '{print $NF}')
+  sbatch --dependency=afterok:$depend ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
   sleep 24h
 done
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
