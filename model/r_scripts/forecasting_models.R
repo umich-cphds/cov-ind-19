@@ -55,6 +55,7 @@ change_time <- c("03/12/2020",
 pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1], 0.3, 0.2)
 
 if(arrayid==1){
+print("Running model_1")
 model_1 <- tvt.eSIR(
   Y,
   R,
@@ -75,6 +76,7 @@ model_1 <- tvt.eSIR(
 }
 
 if(arrayid==2){
+print("Running model_2")
 # Model 2 ----------
 # Model 2 Scenario: Travel ban + social distancing
 #   - March 1 - March 12:  1
@@ -104,6 +106,7 @@ model_2 <- tvt.eSIR(
 }
 
 if(arrayid==3){
+print("Running model_3")
 # Model 3 ----------
 # Model 3 Scenario: No intervention
 model_3 <- tvt.eSIR(
@@ -124,6 +127,7 @@ model_3 <- tvt.eSIR(
 }
 
 if(arrayid==4){
+print("Running model_4")
 # Model 4 ----------
 # Model 4 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (moderate)
@@ -161,6 +165,7 @@ model_4 <- tvt.eSIR(
 }
 
 if(arrayid==5){
+print("Running model_5")
 # Model 5 ----------
 # Model 5 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (party)
@@ -198,6 +203,7 @@ model_5 <- tvt.eSIR(
 }
 
 if(arrayid==6){
+print("Running model_6")
 # Model 6 ----------
 # Model 6 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (scared)
