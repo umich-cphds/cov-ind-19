@@ -18,7 +18,6 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TR
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/qh.eSIR.R?raw=TRUE")  # irrelevant??
 
 # !! directory ----------
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 today <- Sys.Date()
 wd <- paste0("/mnt/biostat/ftp/ncov2019/India/", today)
 setwd(wd)
