@@ -11,6 +11,9 @@ library(shiny)
 library(plotly)
 library(tidyverse)
 library(reshape2)
+library(tmap)   
+library(sf)
+library(leaflet)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -68,7 +71,8 @@ shinyUI(fluidPage(
         h2("Cumulative case counts by state/union territory"),
         p("The map displays the case counts by state/union territory in India over the last few days.",
           "The darker areas of the map indicate a greater number of cases."),
-        imageOutput("map", height = "650px"),
+        #imageOutput("map", height = "650px"),
+        leafletOutput("map"),
         hr(),
         h3("Acknowledgments"),
         p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore,
