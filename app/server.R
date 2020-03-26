@@ -84,7 +84,7 @@ shinyServer(function(input, output)
         mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
         group_by(Country) %>% filter(Cases >= 100) %>%
         arrange(Date) %>%
-        mutate(Day = seq(n()) - 1)
+        mutate(Day = seq(n()))
 
         Day.max <- nrow(data %>% filter(Country == "India"))
         data <- filter(data, Day <= Day.max) %>%
