@@ -67,7 +67,7 @@ model_1 <- tvt.eSIR(
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
   casename       = "India_1",
-  save_files     = TRUE,
+  save_files     = FALSE,
   save_mcmc      = FALSE,
   save_plot_data = TRUE,
   M              = 5e5,           # should be 5e5 (5e3 for testing - but not stable)
@@ -97,7 +97,7 @@ model_2 <- tvt.eSIR(
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
   casename       = "India_2",
-  save_files     = TRUE,
+  save_files     = FALSE,
   save_mcmc      = FALSE,
   save_plot_data = TRUE,
   M              = 5e5,           # should be 5e5 (5e3 for testing - but not stable)
@@ -118,7 +118,7 @@ model_3 <- tvt.eSIR(
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
   casename       = "India_3",
-  save_files     = TRUE,
+  save_files     = FALSE,
   save_mcmc      = FALSE,
   save_plot_data = TRUE,
   M              = 5e5,           # should be 5e5 (5e3 for testing - but not stable)
@@ -156,7 +156,7 @@ model_4 <- tvt.eSIR(
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
   casename       = "India_4",
-  save_files     = TRUE,
+  save_files     = FALSE,
   save_mcmc      = FALSE,
   save_plot_data = TRUE,
   M              = 5e5,           # should be 5e5 (5e3 for testing - but not stable)
@@ -232,7 +232,7 @@ model_6 <- tvt.eSIR(
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
   casename       = "India_6",
-  save_files     = TRUE,
+  save_files     = FALSE,
   save_mcmc      = FALSE,
   save_plot_data = TRUE,
   M              = 5e5,           # should be 5e5 (5e3 for testing - but not stable)
