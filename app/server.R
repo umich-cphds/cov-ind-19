@@ -1,12 +1,20 @@
 library(shiny)
 library(tidyverse)
 library(vroom)
+library(httr)
 library(plotly)
 library(glue)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
 {
+    request <- GET("https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master")
+    dates <- as.Date(map_chr(
+                         keep(content(request)$tree, ~.x$type == "tree"),
+                         ~.x$path)
+    )
+    latest <- max(dates)
+
     plot1_input <- function() {
         start.date <- as.Date("2020-03-01")
 
@@ -27,10 +35,15 @@ shinyServer(function(input, output)
                 filter(Date >= start.date - 1)
             }
         ), ~ left_join(.x, .y)) %>%
-        mutate_at(vars(Case, Recovered, Death), list( ~ .x - lag(.x))) %>%
+
+        mutate_at(vars(Case, Recovered, Death), list(function(x) {
+            y <- x - lag(x)
+            ifelse(y < 0, 0, y)
+        })) %>%
         filter(Date >= start.date) %>%
         gather(Case, Recovered, Death, key = Type, value = Count) %>%
-        mutate(Date = as.factor(format(Date, format = "%b.%d")))
+        mutate(Date = as.factor(format(Date, format = "%b.%d"))) %>%
+        mutate(Type = factor(Type, levels = c("Recovered", "Death", "Case")))
 
         p <- ggplot(data, aes(Date, Count))
         p <- p + geom_bar(stat = "identity", aes(fill = Type), position = "stack") +
@@ -159,7 +172,7 @@ shinyServer(function(input, output)
             geom_path(size = 1, na.rm = TRUE, color = "dark green") +
             xlab("Days since infected cases reached 100")+
             ylab("Number of infected cases") +
-            theme_bw() + labs(caption = "\uA9 COV-IND-19 Study Group")+
+            theme_bw() + ggtitle(paste("\uA9 COV-IND-19 Study Group; Updated", latest))
             theme(axis.text.x = element_text(
                 vjust = 0.5, size = 15),
                 legend.position = "bottom",
@@ -206,7 +219,7 @@ shinyServer(function(input, output)
 
 
     output$plot3a_full <- renderImage({
-        fl <- "ftp://xfer1.bio.sph.umich.edu/ncov2019/India/2020-03-24/2020-03-24_India_totalN_prior%232_Figure3_adj.png"
+        fl <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/", latest, "_India_totalN_prior%232_Figure3_adj.png")
         outfile = tempfile(fileext='.png')
         download.file(url = fl, destfile = outfile, mode = 'wb')
         print(outfile)
@@ -217,7 +230,7 @@ shinyServer(function(input, output)
     }, deleteFile = TRUE)
 
     output$plot3b_full <- renderImage({
-        fl <- "ftp://xfer1.bio.sph.umich.edu/ncov2019/India/2020-03-24/2020-03-24_India_totalN_prior%233_Figure3_adj.png"
+        fl <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/", latest, "_India_totalN_prior%232_Figure3_adj.png")
         outfile = tempfile(fileext='.png')
         download.file(url = fl, destfile = outfile, mode = 'wb')
         print(outfile)
