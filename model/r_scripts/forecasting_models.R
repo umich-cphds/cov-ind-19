@@ -37,7 +37,7 @@ RI_complete <- IndiaRecovered[-(1:43)]  # recovered per day (starting March 1)
 N=1.38e9                                # Population of India
 
 R=unlist(RI_complete/N)   # proportion of recovered per day
-Y=head(unlist(NI_complete/N-R), -1) # proportion of cases per day
+Y=unlist(NI_complete/N-R) # proportion of cases per day
 
 # These three  below are the models that we run. You may need to separate them into jobs to make it more efficient
 
