@@ -8,7 +8,7 @@ library(glue)
 shinyServer(function(input, output)
 {
     plot1_input <- function() {
-        start.date <- as.Date("2020-03-01")
+        start.date <- as.Date("2020-01-30")
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
         jhu.files <- list(
@@ -29,10 +29,12 @@ shinyServer(function(input, output)
         ), ~ left_join(.x, .y)) %>%
         mutate_at(vars(Case, Recovered, Death), list( ~ .x - lag(.x))) %>%
         filter(Date >= start.date) %>%
-        gather(Case, Recovered, Death, key = Type, value = Count)
+        gather(Case, Recovered, Death, key = Type, value = Count) %>%
+        mutate(Date = as.factor(format(Date, format = "%b.%d")))
 
-        ymax <- max(data$Case + data$Recovered + data$Death, na.rm = T)
-        mytitle <- paste("COVID-19 Confirmed New Cases/Recovered/Deaths by Day in India")
+        # dataf$Date <- format(as.Date(dataf$Date, format="%m-%d-%y"), format="%b.%d")
+        # dataf$Date <- factor(dataf$Date, levels=dataf$Date)
+
         myylab <- "Number of new cases/recovered/deaths"
 
         p <- ggplot(data, aes(Date, Count))
