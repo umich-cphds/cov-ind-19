@@ -24,7 +24,7 @@ setwd(wd)
 
 # !!  data ----------
 JHUCases     <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")     # pull data daily
-JHURecovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv ") # pull data daily
+JHURecovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv") # pull data daily
 # These two datasets above need to be updated from https://data.humdata.org/dataset/novel-coronavirus-2019-ncov-cases.
 #   just pull from JHU CSSE GitHub? Preprocessed elsewhere
 
