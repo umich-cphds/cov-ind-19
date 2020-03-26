@@ -6,8 +6,8 @@
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 
-today=$(date +%Y-%m-%d)
-cd /mnt/biostat/ftp/ncov2019/India/$today
+cd /mnt/biostat/ftp/ncov2019/India
+Rscript PATH/model/r_scripts/app_data_preprocess.R
 git add *
 git commit -m "Automated push from slurm job"
 git push
