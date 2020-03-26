@@ -14,11 +14,11 @@ library(reshape2)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-    
+
     # Application title
     titlePanel("COVID-19 Outbreak in India"),
-    
-    # # Sidebar with a slider input for number of bins 
+
+    # # Sidebar with a slider input for number of bins
      sidebarLayout(
          sidebarPanel(
              h3("COV-IND-19 Study Group"),
@@ -34,8 +34,8 @@ shinyUI(fluidPage(
              p("Please direct any questions or inquiries to ", a("Bhramar Mukherjee", target="_blank", href="mailto:bhramar@umich.edu"))
         ),
 
-    
-    
+
+
     # Show a plot of the generated distribution
     mainPanel(
         h2("COVID-19 cases, deaths, and recovereds in India by day"),
@@ -45,8 +45,13 @@ shinyUI(fluidPage(
         hr(),
         h2("Cumulative COVID-19 cases by country since day infected cases reach 100"),
         p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
-        plotlyOutput("plot2", height = "600px"),
-        downloadButton("download_plot2", label = "Download Figure 2"),
+        plotlyOutput("plot2a", height = "600px"),
+        downloadButton("download_plot2a", label = "Download Figure 2a"),
+        hr(),
+        h2("Cumulative COVID-19 cases for India since day infected cases reach 100"),
+        p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
+        plotlyOutput("plot2b", height = "600px"),
+        downloadButton("download_plot2b", label = "Download Figure 2b"),
         hr(),
         h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2)"))),
         p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
@@ -66,8 +71,8 @@ shinyUI(fluidPage(
         imageOutput("map", height = "650px"),
         hr(),
         h3("Acknowledgments"),
-        p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore, 
-          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Daniel Barker, 
+        p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore,
+          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Daniel Barker,
           Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, Parikshit Ghosh, and Bhramar Mukherjee."),
         # hr(),
         # h2("Figure 3c"),
@@ -75,7 +80,7 @@ shinyUI(fluidPage(
         # hr(),
         # h2("Figure 3d"),
         # imageOutput("plot3d_metro"),
-        width = 8, 
+        width = 8,
     )
 )
 )

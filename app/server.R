@@ -64,7 +64,7 @@ shinyServer(function(input, output)
         }
     )
 
-    plot2_input <- function() {
+    plot2a_input <- function() {
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
 
@@ -86,14 +86,18 @@ shinyServer(function(input, output)
         arrange(Date) %>%
         mutate(Day = seq(n()))
 
-        Day.max <- nrow(data %>% filter(Country == "India"))
+        Day.max <- 22 # nrow(data %>% filter(Country == "India"))
         data <- filter(data, Day <= Day.max) %>%
-        mutate(Day = as.factor(Day)) %>%
+        mutate(Day = Day) %>%
         ungroup()
 
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
-            geom_point(size = 3.6, na.rm = TRUE) +
-            geom_path(size = 1.8, na.rm = TRUE) +
+            geom_point(size = 1.5, na.rm = TRUE, alpha = .3) +
+            geom_path(size = 1, na.rm = TRUE, alpha = .3) +
+            geom_point(data = data %>% filter(Country == "India"), size = 1.5,
+                       na.rm = TRUE, alpha = 1) +
+            geom_path(data = data %>% filter(Country == "India"), size = 1,
+                      na.rm = TRUE, alpha = 1) +
             xlab("Days since infected cases reached 100")+
             ylab("Number of infected cases") +
             theme_bw() + labs(caption = "\uA9 COV-IND-19 Study Group")+
@@ -110,15 +114,74 @@ shinyServer(function(input, output)
         print(p)
     }
 
-    output$plot2 <- renderPlotly({
-        plotly::ggplotly(plot2_input())
+    output$plot2a <- renderPlotly({
+        plotly::ggplotly(plot2a_input())
     })
 
-    output$download_plot2 <- downloadHandler(
-        filename = glue("cov-ind-19_figure2_{Sys.Date()}.pdf"),
+    output$download_plot2a <- downloadHandler(
+        filename = glue("cov-ind-19_figure2a_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot2_input()
+            plot2a_input()
+            dev.off()
+        }
+    )
+
+    plot2b_input <- function()
+    {
+
+        jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
+
+        countries <- c("India")
+
+        file <- paste0(jhu.path, "/time_series_covid19_confirmed_global.csv")
+        data <- vroom(file) %>%
+        select(Country = matches("Country"), matches("[0-9].*")) %>%
+        filter(Country %in% countries) %>%
+        group_by(Country) %>%
+
+        # Since we don't care about counts in each state we collapse into a
+        # single count per country of interest.
+        summarise_all(sum, na.rm = T) %>%
+        gather(matches("[0-9].+"), key = Date, value = Cases) %>%
+        mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
+        group_by(Country) %>% filter(Cases >= 100) %>%
+        arrange(Date) %>%
+        mutate(Day = seq(n()))
+
+        Day.max <- nrow(data %>% filter(Country == "India"))
+        data <- filter(data, Day <= Day.max) %>%
+        mutate(Day = Day) %>%
+        ungroup()
+
+        p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
+            geom_point(size = 1.5, na.rm = TRUE, color = "dark green") +
+            geom_path(size = 1, na.rm = TRUE, color = "dark green") +
+            xlab("Days since infected cases reached 100")+
+            ylab("Number of infected cases") +
+            theme_bw() + labs(caption = "\uA9 COV-IND-19 Study Group")+
+            theme(axis.text.x = element_text(
+                vjust = 0.5, size = 15),
+                legend.position = "bottom",
+                axis.text.y = element_text(size = 15),
+                plot.title = element_text(size = 18),
+                plot.caption = element_text(color = "blue", face = "bold"),
+                #legend.position = c(0.1,0.6),
+                legend.title = element_blank(),
+                legend.box = "horizontal",
+                legend.text = element_text(size = 17))
+        print(p)
+    }
+
+    output$plot2b <- renderPlotly({
+        plotly::ggplotly(plot2b_input())
+    })
+
+    output$download_plot2b <- downloadHandler(
+        filename = glue("cov-ind-19_figure2b_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 9, height = 6)
+            plot2b_input()
             dev.off()
         }
     )
