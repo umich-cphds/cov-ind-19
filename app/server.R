@@ -245,39 +245,12 @@ shinyServer(function(input, output)
              contentType = "image/gif",
              alt = "Map not available")
     }, deleteFile = FALSE)
-
-    # output$plot3c_metro <- renderImage({
-    #     fl <- "ftp://xfer1.bio.sph.umich.edu/ncov2019/India/2020-03-24/2020-03-24_India_metroN_prior%232_Figure3_adj.png"
-    #     outfile = tempfile(fileext='.png')
-    #     download.file(url = fl, destfile = outfile, mode = 'wb')
-    #     print(outfile)
-    #     print(fl)
-    #     list(src = outfile,
-    #          alt = "Plot not available",
-    #          width = 900)
-    # }, deleteFile = TRUE)
-    #
-    # output$plot3d_metro <- renderImage({
-    #     fl <- "ftp://xfer1.bio.sph.umich.edu/ncov2019/India/2020-03-24/2020-03-24_India_metroN_prior%233_Figure3_adj.png"
-    #     outfile = tempfile(fileext='.png')
-    #     download.file(url = fl, destfile = outfile, mode = 'wb')
-    #     print(outfile)
-    #     print(fl)
-    #     list(src = outfile,
-    #          alt = "Plot not available",
-    #          width = 900)
-    # }, deleteFile = TRUE)
-
-    # output$plot3b_full <- renderImage({
-    #     fl <- "2020-03-24_India_totalIN_prior#3_Figure3_adj.png"
-    # })
-    # output$plot3c_metro <- renderImage({
-    #     fl <- "2020-03-24_India_metroN_prior#2_Figure3_adj.png"
-    # })
-    #
-    # output$plot3d_metro <- renderImage({
-    #     fl <- "2020-03-24_India_metroN_prior#3_Figure3_adj.png"
-    # })
+    
+    output$map = renderLeaflet({
+        load('./map/map_obj.RData')
+        tmap_leaflet(anim_day)
+    })
+  
 
 
 })
