@@ -53,10 +53,10 @@ Y=unlist(NI_complete/N-R) # proportion of cases per day
 #   - March 26:            0.3
 #   - March 28:            0.2
 change_time <- c("03/12/2020",
-                 format(seq(as.Date("2020/03/13"), as.Date("2020/03/25"), "days"), "%m/%d/%Y"),
-                 "03/26/2020",
-                 "03/28/2020")
-pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1], 0.3, 0.2)
+                  format(seq(as.Date("2020/03/13"), as.Date("2020/04/08"), "days"), "%m/%d/%Y"),
+                  "04/09/2020")
+pi0         <- c(1, 0.8, rev(seq(0.4, 0.8, 0.4/27))[-1], 0.4)
+
 
 if(arrayid==1){
 print("Running model_1")
@@ -64,7 +64,7 @@ model_1 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
   change_time    = change_time,
@@ -88,13 +88,13 @@ print("Running model_2")
 #   - March 12 - March 25: 0.6 (but in equal drops per day)
 change_time <- c("03/12/2020",
                  format(seq(as.Date("2020/03/13"), as.Date("2020/03/25"), "days"), "%m/%d/%Y"))
-pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1])
+pi0         <- c(1, 0.8, rev(seq(0.75, 0.8, 0.05/13))[-1])
 
 model_2 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
   change_time    = change_time,
@@ -117,7 +117,7 @@ model_3 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   R0             = 2,             # basic reproduction number
   dic            = TRUE,
@@ -142,18 +142,16 @@ print("Running model_4")
 #   - March 28:            0.2
 #   - April 16:            0.6
 change_time <- c("03/12/2020",
-                 format(seq(as.Date("2020/03/13"), as.Date("2020/03/25"), "days"), "%m/%d/%Y"),
-                 "03/26/2020",
-                 "03/28/2020",
-                 "04/16/2020"
-)
-pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1], 0.3, 0.2, 0.6)
+                 format(seq(as.Date("2020/03/13"), as.Date("2020/04/08"), "days"), "%m/%d/%Y"),
+                 "04/09/2020",
+                 format(seq(as.Date("2020/04/16"), as.Date("2020/04/16") + 13, "days"), "%m/%d/%Y"))
+pi0         <- c(1, 0.8, rev(seq(0.4, 0.8, 0.4/27))[-1], 0.4, seq(0.4, 0.75, 0.35/14)[-1])
 
 model_4 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
   change_time    = change_time,
@@ -180,18 +178,16 @@ print("Running model_5")
 #   - March 28:            0.2
 #   - April 16:            0.7
 change_time <- c("03/12/2020",
-format(seq(as.Date("2020/03/13"), as.Date("2020/03/25"), "days"), "%m/%d/%Y"),
-"03/26/2020",
-"03/28/2020",
-"04/16/2020"
-)
-pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1], 0.3, 0.2, 0.7)
+                 format(seq(as.Date("2020/03/13"), as.Date("2020/04/08"), "days"), "%m/%d/%Y"),
+                 "04/09/2020",
+                 format(seq(as.Date("2020/04/16"), as.Date("2020/04/16") + 13, "days"), "%m/%d/%Y"))
+pi0         <- c(1, 0.8, rev(seq(0.4, 0.8, 0.4/27))[-1], 0.4, seq(0.4, 0.85, 0.45/13))
 
 model_5 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
   change_time    = change_time,
@@ -218,18 +214,16 @@ print("Running model_6")
 #   - March 28:            0.2
 #   - April 16:            0.5
 change_time <- c("03/12/2020",
-format(seq(as.Date("2020/03/13"), as.Date("2020/03/25"), "days"), "%m/%d/%Y"),
-"03/26/2020",
-"03/28/2020",
-"04/16/2020"
-)
-pi0         <- c(1, 0.8, rev(seq(0.6, 0.8, 0.2/13))[-1], 0.3, 0.2, 0.5)
+                 format(seq(as.Date("2020/03/13"), as.Date("2020/04/08"), "days"), "%m/%d/%Y"),
+                 "04/09/2020",
+                 format(seq(as.Date("2020/04/16"), as.Date("2020/04/16") + 13, "days"), "%m/%d/%Y"))
+pi0         <- c(1, 0.8, rev(seq(0.4, 0.8, 0.4/27))[-1], 0.4, seq(0.4, 0.65, 0.25/13))
 
 model_6 <- tvt.eSIR(
   Y,
   R,
   begin_str      = "03/01/2020",
-  death_in_R     = 0.02,
+  death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
   change_time    = change_time,
