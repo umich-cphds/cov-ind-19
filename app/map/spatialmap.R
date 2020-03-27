@@ -3,6 +3,9 @@ library(tidyverse)
 library(sf)
 library(tmap)
 
+wd <- "~/cov-ind-19/app/map"
+setwd(wd)
+
 ndays=5
 plot.height=11
 plot.width=8.5
@@ -41,7 +44,7 @@ gather(matches("[0-9].+"), key = Date, value = Cases) %>%
 mutate(Date = as.Date(Date)) %>%
 filter(Date >= max(Date) - days)
 
-india_shp <- st_read("map/Indian_States.shp")
+india_shp <- st_read("Indian_States.shp")
 i <- match(data$State, india_shp$st_nm)
 
 final_data <- india_shp[i, ]
@@ -53,5 +56,5 @@ anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
   tm_facets(along="Date", free.coords=F)  +
   tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
 
-tmap_animation(anim_day,filename="map/day_sp_animation.gif",
+tmap_animation(anim_day,filename="day_sp_animation.gif",
                width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
