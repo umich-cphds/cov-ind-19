@@ -24,6 +24,9 @@ The COV-IND-19 Study Group is comprised of:
 * Rupam Bhattacharyya - _Department of Biostatistics, University of Michigan_
 * Lili Wang - _Department of Biostatistics, University of Michigan_
 * Maxwell Salvatore - _Departments of Biostatistics and Epidemiology and Center for Precision Health Data Science, University of Michigan_
+* Dan Barker - _Department of Biostatistics, University of Michigan_
+* Alexander Rix - _Department of Biostatistics and Center for Precision Health Data Science, University of Michigan_
+* Michael Kleinsasser - _Departments of Biostatistics and Health Behavior and Health Education, University of Michigan_
 * Shariq Mohammed - _Departments of Biostatistics and Computational Medicine and Bioinformatics, University of Michigan_
 * Aritra  Halder - _Department of Statistics, University of Connecticut_
 * Yiwang Zhou - _Department of Biostatistics, University of Michigan_
