@@ -20,6 +20,10 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/qh.eSIR.R?raw=TRU
 # !! directory ----------
 today <- Sys.Date()
 wd <- paste0("~/cov-ind-19-data/", today)
+if (!dir.exists(wd)) {
+    dir.create(wd)
+    message("Creating ", wd)
+}
 setwd(wd)
 
 # !!  data ----------
