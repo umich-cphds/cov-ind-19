@@ -333,7 +333,7 @@ shinyServer(function(input, output)
         #                width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
 
 
-        list(src = './map/time_lapse_India.gif',
+        list(src = './map/day_sp_animation.gif',
              contentType = "image/gif",
              alt = "Map not available", width = 500)
     }, deleteFile = FALSE)
