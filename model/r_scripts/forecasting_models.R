@@ -19,7 +19,7 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/qh.eSIR.R?raw=TRU
 
 # !! directory ----------
 today <- Sys.Date()
-wd <- paste0("/mnt/biostat/ftp/ncov2019/India/", today)
+wd <- paste0("~/cov-ind-19-data/", today)
 setwd(wd)
 
 # !!  data ----------
