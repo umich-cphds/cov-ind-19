@@ -88,6 +88,7 @@ shinyServer(function(input, output)
         data <- vroom(file) %>%
         select(Country = matches("Country"), matches("[0-9].*")) %>%
         filter(Country %in% countries) %>%
+        mutate(Country = ifelse(Country == 'Korea, South', 'South Korea', Country) %>% as.factor()) %>%
         group_by(Country) %>%
 
         # Since we don't care about counts in each state we collapse into a
@@ -105,8 +106,8 @@ shinyServer(function(input, output)
         ungroup()
 
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
-            geom_point(size = 1.5, na.rm = TRUE, alpha = .3) +
-            geom_path(size = 1, na.rm = TRUE, alpha = .3) +
+            geom_point(size = 1.5, na.rm = TRUE, alpha = 1) +
+            geom_path(size = 1, na.rm = TRUE, alpha = 1) +
             geom_point(data = data %>% filter(Country == "India"), size = 1.5,
                        na.rm = TRUE, alpha = 1) +
             geom_path(data = data %>% filter(Country == "India"), size = 1,
@@ -128,7 +129,7 @@ shinyServer(function(input, output)
     }
 
     output$plot2 <- renderPlotly({
-        plotly::ggplotly(plot2_input())
+        plotly::ggplotly(plot2_input(), tooltip = c('Cases', 'Day', 'Date'))
     })
 
     output$download_plot2 <- downloadHandler(
@@ -168,8 +169,8 @@ shinyServer(function(input, output)
         ungroup()
 
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
-            geom_point(size = 1.5, na.rm = TRUE, color = "dark green") +
-            geom_path(size = 1, na.rm = TRUE, color = "dark green") +
+            geom_point(size = 1.5, na.rm = TRUE, color = "#00BE67") +
+            geom_path(size = 1, na.rm = TRUE, color = "#00BE67") +
             xlab("Days since infected cases reached 100")+
             ylab("Number of infected cases") +
             theme_bw() + ggtitle(paste("\uA9 COV-IND-19 Study Group; Updated", latest))
@@ -187,7 +188,7 @@ shinyServer(function(input, output)
     }
 
     output$plot3 <- renderPlotly({
-        plotly::ggplotly(plot3_input())
+        plotly::ggplotly(plot3_input(), tooltip = c('Cases', 'Day', 'Date'))
     })
 
     output$download_plot3 <- downloadHandler(
