@@ -149,4 +149,4 @@ plt <- ggplot(data = complete_plot, mapping = aes(x = Dates, y = value * 100000 
         plot.title   = element_text(size = 22),
         plot.caption = element_text(color = "blue",face = "bold"))
 
-write_rds(plt, path = "./Figure5.Rds")
+write_rds(plt, "./Figure5.Rds")

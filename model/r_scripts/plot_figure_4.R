@@ -165,4 +165,4 @@ ggplot(f3plotdata %>% filter(color == 'black'), aes(Dates, log(value))) +
 
   p1
 
-  write_rds(p1, file = "./Figure4.Rds")
+  write_rds(p1, "./Figure4.Rds")
