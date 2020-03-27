@@ -11,7 +11,7 @@ library(shiny)
 library(plotly)
 library(tidyverse)
 library(reshape2)
-library(tmap)   
+library(tmap)
 library(sf)
 library(leaflet)
 library(magick)
@@ -49,25 +49,25 @@ shinyUI(fluidPage(
         hr(),
         h2("Cumulative COVID-19 cases by country since day infected cases reach 100"),
         p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
-        plotlyOutput("plot2a", height = "600px"),
-        downloadButton("download_plot2a", label = "Download Figure 2a"),
+        plotlyOutput("plot2", height = "600px"),
+        downloadButton("download_plot2", label = "Download Figure 2"),
         hr(),
         h2("Cumulative COVID-19 cases for India since day infected cases reach 100"),
         p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
-        plotlyOutput("plot2b", height = "600px"),
-        downloadButton("download_plot2b", label = "Download Figure 2b"),
+        plotlyOutput("plot3", height = "600px"),
+        downloadButton("download_plot3", label = "Download Figure 3"),
         hr(),
         h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2)"))),
         p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
           "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
           "This graph is assuming a basic reproduction number (or R0) of 2."),
-        imageOutput("plot3a_full"),
+        plotlyOutput("plot4_full", height = "600px"),
         hr(),
         h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2.5)"))),
         p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
           "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
           "This graph is assuming a basic reproduction number (or R0) of 2.5."),
-        imageOutput("plot3b_full"),
+        plotlyOutput("plot5_full", height = "600px"),
         hr(),
         h2("Cumulative case counts by state/union territory"),
         p("The map displays the case counts by state/union territory in India over the last few days.",

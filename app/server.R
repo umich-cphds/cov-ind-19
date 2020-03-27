@@ -77,7 +77,7 @@ shinyServer(function(input, output)
         }
     )
 
-    plot2a_input <- function() {
+    plot2_input <- function() {
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
 
@@ -127,20 +127,20 @@ shinyServer(function(input, output)
         print(p)
     }
 
-    output$plot2a <- renderPlotly({
-        plotly::ggplotly(plot2a_input())
+    output$plot2 <- renderPlotly({
+        plotly::ggplotly(plot2_input())
     })
 
-    output$download_plot2a <- downloadHandler(
+    output$download_plot2 <- downloadHandler(
         filename = glue("cov-ind-19_figure2a_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot2a_input()
+            plot2_input()
             dev.off()
         }
     )
 
-    plot2b_input <- function()
+    plot3_input <- function()
     {
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
@@ -186,15 +186,15 @@ shinyServer(function(input, output)
         print(p)
     }
 
-    output$plot2b <- renderPlotly({
-        plotly::ggplotly(plot2b_input())
+    output$plot3 <- renderPlotly({
+        plotly::ggplotly(plot3_input())
     })
 
-    output$download_plot2b <- downloadHandler(
+    output$download_plot3 <- downloadHandler(
         filename = glue("cov-ind-19_figure2b_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot2b_input()
+            plot3_input()
             dev.off()
         }
     )
@@ -218,34 +218,20 @@ shinyServer(function(input, output)
 
 
 
-    output$plot3a_full <- renderImage({
-        fl <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/", latest, "_India_totalN_prior%232_Figure3_adj.png")
-        outfile = tempfile(fileext='.png')
-        download.file(url = fl, destfile = outfile, mode = 'wb')
-        print(outfile)
-        print(fl)
-        list(src = outfile,
-             alt = "Plot not available",
-             width = 900)
-    }, deleteFile = TRUE)
+    output$plot4_full <- renderPlotly({
+            plotly::ggplotly(readRDS(url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/Figure4.Rds"))))
+    })
 
-    output$plot3b_full <- renderImage({
-        fl <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/", latest, "_India_totalN_prior%232_Figure3_adj.png")
-        outfile = tempfile(fileext='.png')
-        download.file(url = fl, destfile = outfile, mode = 'wb')
-        print(outfile)
-        print(fl)
-        list(src = outfile,
-             alt = "Plot not available",
-             width = 900)
-    }, deleteFile = TRUE)
+    output$plot5_full <- renderPlotly({
+        plotly::ggplotly(readRDS(url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/Figure5.Rds"))))
+    })
 
     # output$map <- renderImage({
     #     list(src = "./www/day_sp_animation.gif",
     #          contentType = "image/gif",
     #          alt = "Map not available")
     # }, deleteFile = FALSE)
-    
+
     # output$map = renderLeaflet({
     #     # load('./map/map_obj.RData')
     #     ndays=1 # no of previous days to plot, we start from the last reported day by default
@@ -265,38 +251,38 @@ shinyServer(function(input, output)
     #     covid.ind <- as.data.frame(covid.ind)
     #     rownames(covid.ind)[which(rownames(covid.ind)=="Delhi")] <- "NCT of Delhi"
     #     rownames(covid.ind)[which(rownames(covid.ind)=="Jammu and Kashmir")] <- "Jammu & Kashmir"
-    #     
-    #     
+    #
+    #
     #     india_shp <- st_read("./map/Indian_States.shp") # put the shape file in the data path
     #     list_try <- list()
-    #     
+    #
     #     states_np <- as.character(india_shp$st_nm[is.na(match(india_shp$st_nm,rownames(covid.ind)))])
     #     states_np_data <- matrix(0,nrow=length(states_np),ncol = ncol(covid.ind))
     #     rownames(states_np_data) <- states_np; colnames(states_np_data) <- cnames <- colnames(covid.ind)
     #     covid.ind <- rbind(covid.ind,states_np_data)
-    #     covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",] 
+    #     covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",]
     #     covid.ind <- covid.ind[-which(rownames(covid.ind)=="Ladakh"),]
-    #     
+    #
     #     for(i in (ncol(covid.ind)-ndays+1):ncol(covid.ind)){
     #         temp_shp <- india_shp
     #         temp_shp$cases <- covid.ind[match(india_shp$st_nm,rownames(covid.ind)),i]
     #         temp_shp$day <- cnames[i]
-    #         
+    #
     #         list_try[[i]] <- temp_shp
     #     }
     #     final_data <- do.call(rbind, list_try)
-    #     
+    #
     #     anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
     #         tm_fill(col="cases", palette="Reds") + tm_text(text="cases")+
     #         tm_facets(along="day", free.coords=F)  +
     #         tm_compass(type = "8star", position = c("left", "top")) +
     #         tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
-    #     
+    #
     #     tmap_leaflet(anim_day)
     # })
-    
+
     output$map <- renderImage({
-        
+
         # ndays=5 # no of previous days to plot, we start from the last reported day by default
         # plot.height=11 # gif parameters
         # plot.width=8.5 # gif parameters
@@ -314,44 +300,44 @@ shinyServer(function(input, output)
         # covid.ind <- as.data.frame(covid.ind)
         # rownames(covid.ind)[which(rownames(covid.ind)=="Delhi")] <- "NCT of Delhi"
         # rownames(covid.ind)[which(rownames(covid.ind)=="Jammu and Kashmir")] <- "Jammu & Kashmir"
-        # 
-        # 
+        #
+        #
         # india_shp <- st_read("./map/Indian_States.shp") # put the shape file in the data path
         # list_try <- list()
-        # 
+        #
         # states_np <- as.character(india_shp$st_nm[is.na(match(india_shp$st_nm,rownames(covid.ind)))])
         # states_np_data <- matrix(0,nrow=length(states_np),ncol = ncol(covid.ind))
         # rownames(states_np_data) <- states_np; colnames(states_np_data) <- cnames <- colnames(covid.ind)
         # covid.ind <- rbind(covid.ind,states_np_data)
-        # covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",] 
+        # covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",]
         # covid.ind <- covid.ind[-which(rownames(covid.ind)=="Ladakh"),]
-        # 
+        #
         # for(i in (ncol(covid.ind)-ndays+1):ncol(covid.ind)){
         #     temp_shp <- india_shp
         #     temp_shp$cases <- covid.ind[match(india_shp$st_nm,rownames(covid.ind)),i]
         #     temp_shp$day <- cnames[i]
-        #     
+        #
         #     list_try[[i]] <- temp_shp
         # }
         # final_data <- do.call(rbind, list_try)
-        # 
+        #
         # anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
         #     tm_fill(col="cases", palette="Reds") + tm_text(text="cases")+
         #     tm_facets(along="day", free.coords=F)  +
         #     tm_compass(type = "8star", position = c("left", "top")) +
         #     tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
-        # 
+        #
         # # write animation to file
         # outfile = tempfile(fileext='.gif')
         # tmap_animation(anim_day,filename=outfile,
         #                width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
-        
-      
+
+
         list(src = './map/time_lapse_India.gif',
              contentType = "image/gif",
              alt = "Map not available")
     }, deleteFile = FALSE)
-  
+
 
 
 })
