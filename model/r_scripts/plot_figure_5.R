@@ -40,8 +40,10 @@ LineColor=function(x)
 
 # directories ----------
 #wd <- "/Users/maxsalvatore/Downloads/Codes/test/test_0705"
+
+arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
 today <- Sys.Date()
-wd <- paste0("~/cov-ind-19-data/", today, "/1wk")
+wd <- paste0("~/cov-ind-19-data/", today, "/", arrayid, "wk")
 setwd(wd)
 
 # data ----------
