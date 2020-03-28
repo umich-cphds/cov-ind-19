@@ -9,4 +9,4 @@
 
 module load R/3.6.1-gcc8.3.0
 
-Rscript --vanilla ~/cov-ind-19/model/r_scripts/forecasting_models.R
+Rscript --vanilla ~/cov-ind-19/model/r_scripts/forecasting_1wk_models.R
