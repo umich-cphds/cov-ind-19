@@ -188,8 +188,4 @@ p1 <- ggplot(f4plotdata %>% filter(color == 'black'), aes(Dates, log(value))) +
 
 p1
 
-pdf(paste0("./Figure4.pdf"), width = 11, height  = 7)
-p1
-dev.off()
-
 write_rds(p1, "./Figure4.Rds")
