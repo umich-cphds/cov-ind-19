@@ -12,8 +12,8 @@ library(devtools)
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 R_0      <- 2      # basic reproduction number
-Ms       <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
-nburnins <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
+Ms       <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
+nburnins <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 
 # eSIR ----------
 # library(eSIR)  # trouble installing
