@@ -2,7 +2,7 @@
 
 #SBATCH --mail-type=FAIL
 #SBATCH --time=0-12:00:00
-#SBATCH --job-name=forecasting_models
+#SBATCH --job-name=forecasting_models_1wk
 #SBATCH --mem-per-cpu=8G
 #SBATCH --array=1-6
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
