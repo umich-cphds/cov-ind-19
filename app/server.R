@@ -37,7 +37,7 @@ shinyServer(function(input, output)
     }
     latest <- get_latest()
 
-    plot1_input <- function() {
+    plot1_input <- function(use_title = FALSE) {
         start.date <- as.Date("2020-03-01")
 
         jhu.path <- paste0("https://github.com/CSSEGISandData/COVID-19/raw/",
@@ -67,42 +67,53 @@ shinyServer(function(input, output)
         })) %>%
         filter(Date >= start.date) %>%
         gather(Case, Recovered, Death, key = Type, value = Count) %>%
-        mutate(Date = as.factor(format(Date, format = "%b.%d"))) %>%
-        mutate(Type = factor(Type, levels = c("Recovered", "Death", "Case")))
-
+        mutate(Date = as.factor(format(Date, format = "%b %d"))) %>%
+        mutate(Type = factor(Type, levels = c("Recovered", "Death", "Case"))) %>%
+        mutate(Type = recode(Type, Recovered = 'Recovered', Death = 'Fatalities', Case = 'New Cases') %>% as_factor)
+        
+        if(use_title == TRUE) {
+            title_matter = paste('Daily number of COVID-19 cases, fatalities \n and recovered cased in India from March 1 till', 
+                                 as.character(data$Date[nrow(data)]), sep = ' ')
+        } else {
+            title_matter = ''
+        }
+        
         p <- ggplot(data, aes(Date, Count))
         p <- p + geom_bar(stat = "identity", aes(fill = Type), position = "stack") +
-        xlab("") + ylab("Number of new cases/recovered/deaths") +
+        xlab('Date') + ylab('Daily Counts') +
             labs(subtitle = "Data source: Johns Hopkins University CSSE",
                  caption = "© COV-IND-19 Study Group") +
             theme_bw() +
-            theme(axis.text.x = element_text(angle = 45, vjust = 0.5, size=15),
+            theme(axis.text.x = element_text(angle = 40, vjust = 0.2, size=10),
                   axis.text.y = element_text(size = 15),
+                  axis.title.x = element_text(vjust=-0.5),
                   legend.position = "bottom", legend.title = element_blank(),
                   legend.text = element_text(size = 17), plot.title =
-                  element_text(size = 18), axis.title.y = element_blank(),
+                  element_text(size = 18),
                   plot.caption = element_text(color = "blue", face = "bold",
                   size = 10)
             ) +
-            scale_fill_manual("", values = c("Case" = "orange", "Recovered" =
-                              "dark green", "Death" = "red"))
+            scale_fill_manual("", values = c("New Cases" = "orange", "Recovered" =
+                              "dark green", "Fatalities" = "red")) + 
+            ggtitle(title_matter)
         print(p)
     }
 
     output$plot1 <- renderPlotly({
-        plotly::ggplotly(plot1_input())
+        plotly::ggplotly(plot1_input()) %>% 
+            layout(yaxis = list(title = 'Daily Counts'))
     })
 
     output$download_plot1 <- downloadHandler(
         filename = glue("cov-ind-19_figure1_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot1_input()
+            plot1_input(use_title = TRUE)
             dev.off()
         }
     )
 
-    plot2_input <- function() {
+    plot2_input <- function(use_title = FALSE) {
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
 
@@ -129,7 +140,13 @@ shinyServer(function(input, output)
         data <- filter(data, Day <= Day.max) %>%
         mutate(Day = Day) %>%
         ungroup()
-
+        
+        if(use_title == TRUE) {
+            title_matter = 'Cumulative number of COVID-19 cases in India compared to\n other countries affected by the pandemic. The x-axis starts\n on a day for each country when they exceed 100 cases in order\n to allow comparison of case counts at similar stages of the outbreak.'
+        } else {
+            title_matter = ''
+        }
+        
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
             geom_point(size = 1.5, na.rm = TRUE, alpha = 1) +
             geom_path(size = 1, na.rm = TRUE, alpha = 1) +
@@ -149,7 +166,8 @@ shinyServer(function(input, output)
                 #legend.position = c(0.1,0.6),
                 legend.title = element_blank(),
                 legend.box = "horizontal",
-                legend.text = element_text(size = 17))
+                legend.text = element_text(size = 17)) + 
+            ggtitle(title_matter)
         print(p)
     }
 
@@ -161,7 +179,7 @@ shinyServer(function(input, output)
         filename = glue("cov-ind-19_figure2a_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot2_input()
+            plot2_input(use_title = TRUE)
             dev.off()
         }
     )

@@ -42,8 +42,9 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-        h2("COVID-19 cases, deaths, and recovereds in India by day"),
-        p("This figure provides the number of COVID-19 cases (yellow), deaths (red), and recovereds (green) by day in India. You can hover over the bars to get more information."),
+        h2("Daily number of COVID-19 cases, fatalities and recovered cased in India from March 1 till current date"),
+        p("This figure provides the number of COVID-19 cases (yellow), fatalities (red),and recovered cases (green) in India. 
+          You can hover your cursor over the bar to see the exact numerical counts."),
         plotlyOutput("plot1", height = "600px"),
         downloadButton("download_plot1", label = "Download Figure 1"),
         hr(),
