@@ -51,7 +51,7 @@ gather(matches("[0-9].+"), key = Date, value = Cases) %>%
 mutate(Date = as.Date(Date)) %>%
 filter(Date %in% c(kalends.ides, seq(max(Date) - days.back, max(Date), 1)) &
        Date >= start.date
-)
+) %>% mutate(Date = format(Date, "%e %B %Y"))
 
 india_shp <- st_read("Indian_States.shp")
 i <- match(data$State, india_shp$st_nm)
@@ -61,9 +61,8 @@ final_data$Cases <- data$Cases
 final_data$Date <- data$Date
 
 anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
-  tm_fill(col="Cases", palette="Reds") + tm_text(text="Cases")+
-  tm_facets(along="Date", free.coords=F)  +
-  tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
+  tm_fill(col = "Cases", palette = "Reds") + tm_text(text = "Cases") +
+  tm_facets(along = "Date", free.coords = F) + tm_legend(scale = 2)
 
 today <- Sys.Date()
 wd <- paste0("~/cov-ind-19-data/", today)
