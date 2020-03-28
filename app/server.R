@@ -258,22 +258,78 @@ shinyServer(function(input, output)
     )
 
     github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
-    output$plot4_full <- renderPlotly({
-            plotly::ggplotly(readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))))
+    
+    output$plot4a_full <- renderPlot({
+            readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))) + 
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
     })
-
-    output$plot5_full <- renderPlotly({
-        plotly::ggplotly(readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))))
+    
+    output$download_plot4a <- downloadHandler(
+        filename = glue("cov-ind-19_figure4_1week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))))
+            dev.off()
+        }
+    )
+    
+    output$plot4b_full <- renderPlot({
+        readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))) + 
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
     })
+    
+    output$download_plot4b <- downloadHandler(
+        filename = glue("cov-ind-19_figure4_2week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))))
+            dev.off()
+        }
+    )
 
-
+    output$plot5a_full <- renderPlot({
+        readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) + 
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
+    })
+    
+    output$download_plot5a <- downloadHandler(
+        filename = glue("cov-ind-19_figure5_1week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))))
+            dev.off()
+        }
+    )
+    
+    output$plot5b_full <- renderPlot({
+        readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) + 
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
+    })
+    
+    output$download_plot5b <- downloadHandler(
+        filename = glue("cov-ind-19_figure5_2week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))))
+            dev.off()
+        }
+    )
+    
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
          download.file(paste0(github.path, latest, "/day_sp_animation.gif"), file)
          list(src = file, contentType = "image/gif", alt = "Map not available",
               width = 500)
      }, deleteFile = FALSE)
-
-
+     
+     
 
 })
