@@ -7,13 +7,17 @@ library(jsonlite)
 wd <- "~/cov-ind-19/model/map"
 setwd(wd)
 
-ndays <- 5
 plot.height <- 11
 plot.width <- 8.5
 plot.delay <- 200
 plot.dpi <- 200
 
-days <- 7
+days.back  <- 7
+start.date <- as.Date("2020-02-15")
+
+kalends.ides <- as.Date(paste0(rep(paste0("2020-", 1:12), 2),
+                       c(rep(-1, 12), rep(-15,12))
+))
 
 kaggle.auth <- read_json(".kaggle.json")
 
@@ -45,7 +49,9 @@ ungroup() %>%
 spread(Date, Cases, fill = 0) %>%
 gather(matches("[0-9].+"), key = Date, value = Cases) %>%
 mutate(Date = as.Date(Date)) %>%
-filter(Date >= max(Date) - days)
+filter(Date %in% c(kalends.ides, seq(max(Date) - days.back, max(Date), 1)) &
+       Date >= start.date
+)
 
 india_shp <- st_read("Indian_States.shp")
 i <- match(data$State, india_shp$st_nm)
