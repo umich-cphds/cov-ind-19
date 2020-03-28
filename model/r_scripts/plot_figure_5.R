@@ -153,7 +153,7 @@ complete_plot_dash  <- complete_plot %>% filter(type == 'dashed')
 my_title    <- paste0("Predicted number of COVID-19 infections")
 my_subtitle <- paste0("as of ", format(latest_date, "%d %B, %Y"))
 
-p1 <- ggplot(data = complete_plot_solid, mapping = aes(x = Dates, y = value * 100000 / N, group = variable, color = color)) +
+p1 <- ggplot(data = complete_plot_solid, mapping = aes(x = Dates, y = value * 100000 / !!N, group = variable, color = color)) +
   geom_line(size = 1.35) +
   scale_color_manual(values = color_values) +
   scale_x_date(labels = date_format("%b %d")) +
