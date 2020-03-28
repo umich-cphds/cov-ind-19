@@ -22,7 +22,7 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TR
 
 # !! directory ----------
 today <- Sys.Date()
-wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
+wd <- paste0("~/cov-ind-19-data/", today, "/2wk/")
 if (!dir.exists(wd)) {
     dir.create(wd, recursive = TRUE)
     message("Creating ", wd)
