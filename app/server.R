@@ -154,8 +154,8 @@ shinyServer(function(input, output)
                        na.rm = TRUE, alpha = 1) +
             geom_path(data = data %>% filter(Country == "India"), size = 1,
                       na.rm = TRUE, alpha = 1) +
-            xlab("Days since infected cases reached 100")+
-            ylab("Number of infected cases") +
+            xlab("Days since infected cases reached 100") +
+            ylab("Cumulative number of reported cases") +
             theme_bw() + labs(caption = "\uA9 COV-IND-19 Study Group")+
             theme(axis.text.x = element_text(
                 vjust = 0.5, size = 15),
@@ -167,7 +167,7 @@ shinyServer(function(input, output)
                 legend.title = element_blank(),
                 legend.box = "horizontal",
                 legend.text = element_text(size = 17)) + 
-            ggtitle(title_matter)
+            ggtitle(title_matter) + xlim(0, 30)
         print(p)
     }
 

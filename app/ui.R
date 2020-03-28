@@ -48,7 +48,7 @@ shinyUI(fluidPage(
         plotlyOutput("plot1", height = "600px"),
         downloadButton("download_plot1", label = "Download Figure 1"),
         hr(),
-        h2("Cumulative COVID-19 cases by country since day infected cases reach 100"),
+        h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic. The x-axis starts on a day for each country when they exceed 100 cases in order to allow comparison of case counts at similar stages of the outbreak."),
         p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
         plotlyOutput("plot2", height = "600px"),
         downloadButton("download_plot2", label = "Download Figure 2"),
