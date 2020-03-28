@@ -225,12 +225,12 @@ shinyServer(function(input, output)
         p <- ggplot(data, aes(Date, Cases, col = Country, group = Country)) +
             geom_point(size = 1.5, na.rm = TRUE, color = "#00BE67") +
             geom_path(size = 1, na.rm = TRUE, color = "#00BE67") +
-            xlab("Days since infected cases reached 100")+
+            xlab("\nDays since infected cases reached 100")+
             ylab("Cumulative number of reported cases") +
             theme_bw() + 
             labs(subtitle = paste("This figure displays the cumulative number of COVID-19 cases in India\nsince the country reached 100 total cases. Last updated", format(latest, format = "%b %d")),
                  caption = "\uA9 COV-IND-19 Study Group") + 
-            theme(axis.text.x = element_text(angle = 40, vjust = 0.2, size=10),
+            theme(axis.text.x = element_text(angle = 40, vjust = 0.15, size=10),
                 legend.position = "bottom",
                 axis.text.y = element_text(size = 15),
                 plot.title = element_text(size = 18),
@@ -238,7 +238,8 @@ shinyServer(function(input, output)
                 #legend.position = c(0.1,0.6),
                 legend.title = element_blank(),
                 legend.box = "horizontal",
-                legend.text = element_text(size = 17)) + 
+                legend.text = element_text(size = 17),
+                axis.title.x = element_text()) + 
             ggtitle(title_matter)
         print(p)
     }
