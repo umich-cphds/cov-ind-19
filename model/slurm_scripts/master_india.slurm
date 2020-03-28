@@ -11,6 +11,7 @@ depend1=$(sbatch --dependency=afterok:$depend ~/cov-ind-19/model/slurm_scripts/f
 depend1=$(sbatch --dependency=afterok:$depend ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
 depend2=$(sbatch --dependency=afterok:$depend1 ~/cov-ind-19/model/slurm_scripts/plot_figure_4.slurm | awk '{print $NF}')
 depend3=$(sbatch --dependency=afterok:$depend2 ~/cov-ind-19/model/slurm_scripts/plot_figure_5.slurm | awk '{print $NF}')
-sbatch --dependency=afterok:$depend3 ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
+depend4=$(sbatch --dependency=afterok:$depend3 ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
+sbatch --dependency=afterok:$depend4 ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
 sleep 24h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
