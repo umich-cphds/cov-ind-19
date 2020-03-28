@@ -97,7 +97,7 @@ shinyUI(fluidPage(
         hr(),
         h3("Acknowledgments"),
         p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore,
-          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Daniel Barker,
+          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Alexander Rix, Daniel Barker,
           Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, Parikshit Ghosh, and Bhramar Mukherjee."),
         # hr(),
         # h2("Figure 3c"),
