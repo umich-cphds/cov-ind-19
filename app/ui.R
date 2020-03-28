@@ -42,19 +42,19 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-        h2("Daily number of COVID-19 cases, fatalities and recovered cased in India from March 1 till current date"),
-        p("This figure provides the number of COVID-19 cases (yellow), fatalities (red),and recovered cases (green) in India. 
+        h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India from March 1 to current date"),
+        p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India. 
           You can hover your cursor over the bar to see the exact numerical counts."),
         plotlyOutput("plot1", height = "600px"),
         downloadButton("download_plot1", label = "Download Figure 1"),
         hr(),
-        h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic. The x-axis starts on a day for each country when they exceed 100 cases in order to allow comparison of case counts at similar stages of the outbreak."),
-        p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
+        h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic"),
+        p("The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts at similar stages of the outbreak. Use your cursor to click on countries in the legend to remove them from the plot."),
         plotlyOutput("plot2", height = "600px"),
         downloadButton("download_plot2", label = "Download Figure 2"),
         hr(),
-        h2("Cumulative COVID-19 cases for India since day infected cases reach 100"),
-        p("This figure displays the cumulative number of COVID-19 cases by country since that country reached 100 total cases."),
+        h2("Cumulative number of COVID-19 cases in India alone"),
+        p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases."),
         plotlyOutput("plot3", height = "600px"),
         downloadButton("download_plot3", label = "Download Figure 3"),
         hr(),
