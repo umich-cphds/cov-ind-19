@@ -2,19 +2,22 @@ library(httr)
 library(tidyverse)
 library(sf)
 library(tmap)
+library(jsonlite)
 
 wd <- "~/cov-ind-19/model/map"
 setwd(wd)
 
-ndays=5
-plot.height=11
-plot.width=8.5
-plot.delay=200
-plot.dpi=200
+ndays <- 5
+plot.height <- 11
+plot.width <- 8.5
+plot.delay <- 200
+plot.dpi <- 200
 
 days <- 7
 
-auth <- authenticate("alexanderrix","73bc32161b1b3d4a98ddb89ed1110413")
+kaggle.auth <- read_json(".kaggle.json")
+
+auth <- authenticate(kaggle.auth$user, kaggle.auth$key)
 url <- "https://www.kaggle.com/api/v1/datasets/download/sudalairajkumar/covid19-in-india/covid_19_india.csv"
 request <- GET(url, auth)
 
