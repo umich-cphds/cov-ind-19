@@ -8,22 +8,47 @@ library(glue)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
 {
-    request <- GET("https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master")
-    dates <- as.Date(map_chr(
-                         keep(content(request)$tree, ~.x$type == "tree"),
-                         ~.x$path)
-    )
-    latest <- max(dates)
+    get_latest <- function()
+    {
+        auth <- authenticate("tzimiskes", "9660dd499101885031bce23958ea067882d51f15")
+        request <- GET("https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master", auth)
+
+        stop_for_status(request)
+
+        header <- headers(request)
+
+        if (http_type(request) != "application/json")
+            stop(header$date, ": GET did not result in the correct content type.")
+
+        limit     <- as.numeric(header["x-ratelimit-limit"])
+        remaining <- as.numeric(header["x-ratelimit-remaining"])
+
+        if (limit == 60)
+            warning(header$date, ": Github authorization failed",
+                    ". Limited to 60 queries an hour!")
+
+        if (remaining < limit / 10)
+            warning(header$date, ": ", remaining, " remaining api calls!")
+
+        json <- content(request)
+        dates <- as.Date(map_chr(keep(json$tree, ~.x$type == "tree"), ~.x$path))
+
+        max(dates)
+    }
+    latest <- get_latest()
 
     plot1_input <- function() {
         start.date <- as.Date("2020-03-01")
 
-        jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
+        jhu.path <- paste0("https://github.com/CSSEGISandData/COVID-19/raw/",
+                           "master/csse_covid_19_data/csse_covid_19_time_series")
+
         jhu.files <- list(
             Case      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
             Recovered = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
-            Death    = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
+            Death     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
         )
+
         data <- reduce(imap(jhu.files,
             function(file, var)
             {
@@ -200,144 +225,22 @@ shinyServer(function(input, output)
         }
     )
 
-
-    # output$plot3a_full = renderImage({
-    #     fls = files()
-    #     fls = fls[str_detect(string = fls, pattern = fixed('forecast2.'))]
-    #     fls = fls[str_detect(string = fls, pattern = fixed('2_Figure3_adj'))]
-    #     # calibrate = ifelse(input$calib == 'wout_calib', 'without_calibration', 'with_calibration')
-    #     middle_path = paste(paste(input$day, calibrate, sep = '/'), '', sep = '/')
-    #     fls = paste0('ftp://xfer1.bio.sph.umich.edu/ncov2019/', middle_path, fls)
-    #     outfile = tempfile(fileext='.png')
-    #     download.file(url = fls, destfile = outfile, mode = 'wb')
-    #     print(outfile)
-    #     print(fls)
-    #     list(src = outfile,
-    #          alt = "Plot not found",
-    #          width = 900)
-    # }, deleteFile = TRUE)
-
-
-
+    github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
     output$plot4_full <- renderPlotly({
-            plotly::ggplotly(readRDS(url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/Figure4.Rds"))))
+            plotly::ggplotly(readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))))
     })
 
     output$plot5_full <- renderPlotly({
-        plotly::ggplotly(readRDS(url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/", latest, "/Figure5.Rds"))))
+        plotly::ggplotly(readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))))
     })
 
-    # output$map <- renderImage({
-    #     list(src = "./www/day_sp_animation.gif",
-    #          contentType = "image/gif",
-    #          alt = "Map not available")
-    # }, deleteFile = FALSE)
 
-    # output$map = renderLeaflet({
-    #     # load('./map/map_obj.RData')
-    #     ndays=1 # no of previous days to plot, we start from the last reported day by default
-    #     plot.height=11 # gif parameters
-    #     plot.width=8.5 # gif parameters
-    #     plot.delay=200 # gif parameters
-    #     plot.dpi=60
-    #     covid.india = read.csv("./map/IndividualDetails.csv") # assuming filenames in Kaggle are same, use IndividualDetails.csv
-    #     covid.india$day.num = match(covid.india$Diagnosed.date,
-    #                                 as.character(unique(covid.india$Diagnosed.date)))
-    #     covid.ind = tapply(rep(1, nrow(covid.india)),
-    #                        list(covid.india$day.num, covid.india$Detected.state),
-    #                        sum)
-    #     rownames(covid.ind) = as.character(unique(covid.india$Diagnosed.date))
-    #     covid.ind[is.na(covid.ind)] = 0
-    #     covid.ind = t(apply(covid.ind, 2, cumsum))
-    #     covid.ind <- as.data.frame(covid.ind)
-    #     rownames(covid.ind)[which(rownames(covid.ind)=="Delhi")] <- "NCT of Delhi"
-    #     rownames(covid.ind)[which(rownames(covid.ind)=="Jammu and Kashmir")] <- "Jammu & Kashmir"
-    #
-    #
-    #     india_shp <- st_read("./map/Indian_States.shp") # put the shape file in the data path
-    #     list_try <- list()
-    #
-    #     states_np <- as.character(india_shp$st_nm[is.na(match(india_shp$st_nm,rownames(covid.ind)))])
-    #     states_np_data <- matrix(0,nrow=length(states_np),ncol = ncol(covid.ind))
-    #     rownames(states_np_data) <- states_np; colnames(states_np_data) <- cnames <- colnames(covid.ind)
-    #     covid.ind <- rbind(covid.ind,states_np_data)
-    #     covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",]
-    #     covid.ind <- covid.ind[-which(rownames(covid.ind)=="Ladakh"),]
-    #
-    #     for(i in (ncol(covid.ind)-ndays+1):ncol(covid.ind)){
-    #         temp_shp <- india_shp
-    #         temp_shp$cases <- covid.ind[match(india_shp$st_nm,rownames(covid.ind)),i]
-    #         temp_shp$day <- cnames[i]
-    #
-    #         list_try[[i]] <- temp_shp
-    #     }
-    #     final_data <- do.call(rbind, list_try)
-    #
-    #     anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
-    #         tm_fill(col="cases", palette="Reds") + tm_text(text="cases")+
-    #         tm_facets(along="day", free.coords=F)  +
-    #         tm_compass(type = "8star", position = c("left", "top")) +
-    #         tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
-    #
-    #     tmap_leaflet(anim_day)
-    # })
-
-    output$map <- renderImage({
-
-        # ndays=5 # no of previous days to plot, we start from the last reported day by default
-        # plot.height=11 # gif parameters
-        # plot.width=8.5 # gif parameters
-        # plot.delay=200 # gif parameters
-        # plot.dpi=60
-        # covid.india = read.csv("./map/IndividualDetails.csv") # assuming filenames in Kaggle are same, use IndividualDetails.csv
-        # covid.india$day.num = match(covid.india$Diagnosed.date,
-        #                             as.character(unique(covid.india$Diagnosed.date)))
-        # covid.ind = tapply(rep(1, nrow(covid.india)),
-        #                    list(covid.india$day.num, covid.india$Detected.state),
-        #                    sum)
-        # rownames(covid.ind) = as.character(unique(covid.india$Diagnosed.date))
-        # covid.ind[is.na(covid.ind)] = 0
-        # covid.ind = t(apply(covid.ind, 2, cumsum))
-        # covid.ind <- as.data.frame(covid.ind)
-        # rownames(covid.ind)[which(rownames(covid.ind)=="Delhi")] <- "NCT of Delhi"
-        # rownames(covid.ind)[which(rownames(covid.ind)=="Jammu and Kashmir")] <- "Jammu & Kashmir"
-        # 
-        # 
-        # india_shp <- st_read("./map/Indian_States.shp") # put the shape file in the data path
-        # list_try <- list()
-        # 
-        # states_np <- as.character(india_shp$st_nm[is.na(match(india_shp$st_nm,rownames(covid.ind)))])
-        # states_np_data <- matrix(0,nrow=length(states_np),ncol = ncol(covid.ind))
-        # rownames(states_np_data) <- states_np; colnames(states_np_data) <- cnames <- colnames(covid.ind)
-        # covid.ind <- rbind(covid.ind,states_np_data)
-        # covid.ind["Jammu & Kashmir",] <- covid.ind["Jammu & Kashmir",] + covid.ind["Ladakh",]
-        # covid.ind <- covid.ind[-which(rownames(covid.ind)=="Ladakh"),]
-        # 
-        # for(i in (ncol(covid.ind)-ndays+1):ncol(covid.ind)){
-        #     temp_shp <- india_shp
-        #     temp_shp$cases <- covid.ind[match(india_shp$st_nm,rownames(covid.ind)),i]
-        #     temp_shp$day <- cnames[i]
-        # 
-        #     list_try[[i]] <- temp_shp
-        # }
-        # final_data <- do.call(rbind, list_try)
-        # 
-        # anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
-        #     tm_fill(col="cases", palette="Reds") + tm_text(text="cases")+
-        #     tm_facets(along="day", free.coords=F)  +
-        #     tm_compass(type = "8star", position = c("left", "top")) +
-        #     tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
-        # 
-        # # write animation to file
-        # outfile = tempfile(fileext='.gif')
-        # tmap_animation(anim_day,filename=outfile,
-        #                width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
-
-
-        list(src = './map/day_sp_animation.gif',
-             contentType = "image/gif",
-             alt = "Map not available", width = 500)
-    }, deleteFile = FALSE)
+     output$map <- renderImage({
+         file <- tempfile(fileext = ".gif")
+         download.file(paste0(github.path, latest, "/day_sp_animation.gif"), file)
+         list(src = file, contentType = "image/gif", alt = "Map not available",
+              width = 500)
+     }, deleteFile = FALSE)
 
 
 
