@@ -56,5 +56,9 @@ anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
   tm_facets(along="Date", free.coords=F)  +
   tm_scale_bar(breaks = c(0, 100, 200), text.size = 1)
 
+today <- Sys.Date()
+wd <- paste0("~/cov-ind-19-data/", today)
+setwd(wd)
+
 tmap_animation(anim_day,filename="day_sp_animation.gif",
                width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
