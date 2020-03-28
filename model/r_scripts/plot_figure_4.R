@@ -118,8 +118,6 @@ my_title    <- paste0("COVID-19 Cumulative Cases by Day for India")
 my_subtitle <- paste0("as of ", format(latest_date, "%d %B %Y"))
 mybreaks    <- seq(0, ymax, length.out = 10)
 
-write_tsv(complete_plot, "./cumulative_counts.txt")
-
 complete_plot <- complete_plot %>%
   filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d"))
 
