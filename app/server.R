@@ -212,7 +212,8 @@ shinyServer(function(input, output)
 
         Day.max <- nrow(data %>% filter(Country == "India"))
         data <- filter(data, Day <= Day.max) %>%
-        mutate(Day = Day) %>%
+        mutate(Day = Day,
+               Date = format(Date, format = "%b %d")) %>%
         ungroup()
         
         if(use_title == TRUE) {
@@ -221,7 +222,7 @@ shinyServer(function(input, output)
             title_matter = ''
         }
 
-        p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
+        p <- ggplot(data, aes(Date, Cases, col = Country, group = Country)) +
             geom_point(size = 1.5, na.rm = TRUE, color = "#00BE67") +
             geom_path(size = 1, na.rm = TRUE, color = "#00BE67") +
             xlab("Days since infected cases reached 100")+
@@ -229,8 +230,7 @@ shinyServer(function(input, output)
             theme_bw() + 
             labs(subtitle = paste("This figure displays the cumulative number of COVID-19 cases in India\nsince the country reached 100 total cases. Last updated", format(latest, format = "%b %d")),
                  caption = "\uA9 COV-IND-19 Study Group") + 
-            theme(axis.text.x = element_text(
-                vjust = 0.5, size = 15),
+            theme(axis.text.x = element_text(angle = 40, vjust = 0.2, size=10),
                 legend.position = "bottom",
                 axis.text.y = element_text(size = 15),
                 plot.title = element_text(size = 18),
