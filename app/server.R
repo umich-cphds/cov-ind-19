@@ -72,7 +72,7 @@ shinyServer(function(input, output)
         mutate(Type = recode(Type, Recovered = 'Recovered', Death = 'Fatalities', Case = 'New Cases') %>% as_factor)
         
         if(use_title == TRUE) {
-            title_matter = paste('Daily number of COVID-19 cases, fatalities \n and recovered cased in India from March 1 till', 
+            title_matter = paste('Daily number of COVID-19 new cases, fatalities\nand recovered cases in India from March 1 to', 
                                  as.character(data$Date[nrow(data)]), sep = ' ')
         } else {
             title_matter = ''
@@ -81,7 +81,7 @@ shinyServer(function(input, output)
         p <- ggplot(data, aes(Date, Count))
         p <- p + geom_bar(stat = "identity", aes(fill = Type), position = "stack") +
         xlab('Date') + ylab('Daily Counts') +
-            labs(subtitle = "Data source: Johns Hopkins University CSSE",
+            labs(subtitle = paste("Data source: Johns Hopkins University CSSE. Last updated", format(latest, format = "%b %d"), sep = ' '),
                  caption = "© COV-IND-19 Study Group") +
             theme_bw() +
             theme(axis.text.x = element_text(angle = 40, vjust = 0.2, size=10),
@@ -136,16 +136,19 @@ shinyServer(function(input, output)
         arrange(Date) %>%
         mutate(Day = seq(n()))
 
-        Day.max <- 22 # nrow(data %>% filter(Country == "India"))
+        Day.max <- 30 # nrow(data %>% filter(Country == "India"))
         data <- filter(data, Day <= Day.max) %>%
         mutate(Day = Day) %>%
         ungroup()
         
         if(use_title == TRUE) {
-            title_matter = 'Cumulative number of COVID-19 cases in India compared to\n other countries affected by the pandemic. The x-axis starts\n on a day for each country when they exceed 100 cases in order\n to allow comparison of case counts at similar stages of the outbreak.'
+            title_matter = 'Cumulative number of COVID-19 cases in India compared to\nother countries affected by the pandemic'
         } else {
             title_matter = ''
         }
+        
+        subtext = paste('The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts\nat similar stages of the outbreak. Last updated',
+                        format(latest, format = "%b %d"), sep = ' ')
         
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
             geom_point(size = 1.5, na.rm = TRUE, alpha = 1) +
@@ -154,9 +157,10 @@ shinyServer(function(input, output)
                        na.rm = TRUE, alpha = 1) +
             geom_path(data = data %>% filter(Country == "India"), size = 1,
                       na.rm = TRUE, alpha = 1) +
-            xlab("Days since infected cases reached 100")+
-            ylab("Number of infected cases") +
-            theme_bw() + labs(caption = "\uA9 COV-IND-19 Study Group")+
+            xlab("Days since infected cases reached 100") +
+            ylab("Cumulative number of reported cases") +
+            theme_bw() + labs(subtitle = subtext,
+                              caption = "\uA9 COV-IND-19 Study Group")+
             theme(axis.text.x = element_text(
                 vjust = 0.5, size = 15),
                 legend.position = "bottom",
@@ -167,7 +171,7 @@ shinyServer(function(input, output)
                 legend.title = element_blank(),
                 legend.box = "horizontal",
                 legend.text = element_text(size = 17)) + 
-            ggtitle(title_matter)
+            ggtitle(title_matter) + xlim(0, 30)
         print(p)
     }
 
@@ -184,7 +188,7 @@ shinyServer(function(input, output)
         }
     )
 
-    plot3_input <- function()
+    plot3_input <- function(use_title = FALSE)
     {
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
@@ -210,13 +214,21 @@ shinyServer(function(input, output)
         data <- filter(data, Day <= Day.max) %>%
         mutate(Day = Day) %>%
         ungroup()
+        
+        if(use_title == TRUE) {
+            title_matter = 'Cumulative number of COVID-19 cases in India alone'
+        } else {
+            title_matter = ''
+        }
 
         p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
             geom_point(size = 1.5, na.rm = TRUE, color = "#00BE67") +
             geom_path(size = 1, na.rm = TRUE, color = "#00BE67") +
             xlab("Days since infected cases reached 100")+
-            ylab("Number of infected cases") +
-            theme_bw() + ggtitle(paste("\uA9 COV-IND-19 Study Group; Updated", latest))
+            ylab("Cumulative number of reported cases") +
+            theme_bw() + 
+            labs(subtitle = paste("This figure displays the cumulative number of COVID-19 cases in India\nsince the country reached 100 total cases. Last updated", format(latest, format = "%b %d")),
+                 caption = "\uA9 COV-IND-19 Study Group") + 
             theme(axis.text.x = element_text(
                 vjust = 0.5, size = 15),
                 legend.position = "bottom",
@@ -226,7 +238,8 @@ shinyServer(function(input, output)
                 #legend.position = c(0.1,0.6),
                 legend.title = element_blank(),
                 legend.box = "horizontal",
-                legend.text = element_text(size = 17))
+                legend.text = element_text(size = 17)) + 
+            ggtitle(title_matter)
         print(p)
     }
 
@@ -238,7 +251,7 @@ shinyServer(function(input, output)
         filename = glue("cov-ind-19_figure2b_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 9, height = 6)
-            plot3_input()
+            plot3_input(use_title = TRUE)
             dev.off()
         }
     )
