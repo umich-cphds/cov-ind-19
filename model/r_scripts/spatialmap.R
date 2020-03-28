@@ -3,7 +3,7 @@ library(tidyverse)
 library(sf)
 library(tmap)
 
-wd <- "~/cov-ind-19/app/map"
+wd <- "~/cov-ind-19/model/map"
 setwd(wd)
 
 ndays=5

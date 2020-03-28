@@ -8,4 +8,4 @@
 
 module load R/3.6.1-gcc8.3.0
 
-Rscript --vanilla ~/cov-ind-19/app/map/spatialmap.R
+Rscript --vanilla ~/cov-ind-19/model/r_scripts/spatialmap.R
