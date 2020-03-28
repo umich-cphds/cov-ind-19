@@ -41,7 +41,7 @@ LineColor=function(x)
 # directories ----------
 #wd <- "/Users/maxsalvatore/Downloads/Codes/test/test_0705"
 today <- Sys.Date()
-wd <- paste0("~/cov-ind-19-data/", today)
+wd <- paste0("~/cov-ind-19-data/", today, "/1wk")
 setwd(wd)
 
 # data ----------
