@@ -156,7 +156,7 @@ p1 <- ggplot(f4plotdata %>% filter(color == 'black'), aes(Dates, log(value))) +
        y        = "Cumulative number of cases") +
   theme_bw() +
   scale_y_continuous(breaks   = mybreaks,
-                     limits   = c(0, ymax_1),
+                     limits   = c(0, ymax),
                      labels   = format(round(exp(mybreaks), 0), big.mark = ","),
                      sec.axis = sec_axis(~., name = "", breaks = mybreaks, labels = format(round(exp(mybreaks), 0), big.mark = ","))) +
   theme(legend.position   = "none",
