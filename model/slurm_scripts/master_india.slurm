@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=FAIL
-#SBATCH --time=25:00:00
+#SBATCH --time=5:00:00
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
@@ -13,5 +13,5 @@ depend3=$(sbatch --dependency=afterok:$depend1:$depend2 ~/cov-ind-19/model/slurm
 depend4=$(sbatch --dependency=afterok:$depend1:$depend2 ~/cov-ind-19/model/slurm_scripts/plot_figure_5.slurm | awk '{print $NF}')
 depend5=$(sbatch ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 sbatch --dependency=afterok:$depend3:$depend4:$depend5 ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
-sleep 24h
+sleep 4h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
