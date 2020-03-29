@@ -267,11 +267,31 @@ shinyServer(function(input, output)
 
     github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
     
-    output$plot4a_full <- renderPlot({
-            readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))) + 
+    output$plot4a_full <- renderPlotly({
+            gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))) + 
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
+            gplot$labels$title = ""
+            gply = plotly::ggplotly(gplot, layerData = 10)
+            currentdate = as.numeric(get_latest())
+            startdate = currentdate - 30
+            enddate = currentdate + 30
+            
+            gply %>%
+                add_fun(function(p) {
+                    p %>% 
+                        add_segments(x = currentdate, xend = currentdate, y = 0, yend = 4000000)
+                }) %>%
+                layout(
+                    xaxis = 
+                    list(
+                        ticktext = as.list(as.Date(seq(startdate, enddate, by = 5), origin = '1970-01-01') %>% format(format = '%b %d')), 
+                        tickvals = as.list(seq(startdate, enddate, by = 5)),
+                        tickmode = "array"
+                    )
+                )
+            
     })
     
     output$download_plot4a <- downloadHandler(
@@ -284,10 +304,29 @@ shinyServer(function(input, output)
     )
     
     output$plot4b_full <- renderPlot({
-        readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))) + 
+        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))) + 
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
+        gplot$labels$title = ""
+        gply = plotly::ggplotly(gplot, layerData = 10)
+        currentdate = as.numeric(get_latest())
+        startdate = currentdate - 30
+        enddate = currentdate + 30
+        
+        gply %>%
+            add_fun(function(p) {
+                p %>% 
+                    add_segments(x = currentdate, xend = currentdate, y = 0, yend = 4000000)
+            }) %>%
+            layout(
+                xaxis = 
+                    list(
+                        ticktext = as.list(as.Date(seq(startdate, enddate, by = 5), origin = '1970-01-01') %>% format(format = '%b %d')), 
+                        tickvals = as.list(seq(startdate, enddate, by = 5)),
+                        tickmode = "array"
+                    )
+            )
     })
     
     output$download_plot4b <- downloadHandler(
