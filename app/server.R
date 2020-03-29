@@ -305,7 +305,8 @@ shinyServer(function(input, output)
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
         gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1)
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
+        
     })
     
     output$download_plot5a <- downloadHandler(
@@ -323,7 +324,7 @@ shinyServer(function(input, output)
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
         gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1)
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
     
     output$download_plot5b <- downloadHandler(
