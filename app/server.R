@@ -299,11 +299,14 @@ shinyServer(function(input, output)
         }
     )
 
-    output$plot5a_full <- renderPlot({
-        readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) + 
+    output$plot5a_full <- renderPlotly({
+        gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) + 
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
+        gplot$labels$title = ""
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
+        
     })
     
     output$download_plot5a <- downloadHandler(
@@ -315,11 +318,13 @@ shinyServer(function(input, output)
         }
     )
     
-    output$plot5b_full <- renderPlot({
-        readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) + 
+    output$plot5b_full <- renderPlotly({
+        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) + 
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
                   plot.subtitle = element_blank())
+        gplot$labels$title = ""
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
     
     output$download_plot5b <- downloadHandler(
