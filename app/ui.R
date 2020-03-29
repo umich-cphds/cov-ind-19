@@ -78,7 +78,7 @@ shinyUI(fluidPage(
         p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
           "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
           "This graph is assuming a basic reproduction number (or R0) of 2."),
-        plotOutput("plot4b_full", height = "600px"),
+        plotlyOutput("plot4b_full", height = "600px"),
         downloadButton("download_plot4b", label = "Download Figure 4b"),
         hr(),
         h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2.5)"))),
