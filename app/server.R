@@ -303,7 +303,7 @@ shinyServer(function(input, output)
         }
     )
     
-    output$plot4b_full <- renderPlot({
+    output$plot4b_full <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))) + 
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
