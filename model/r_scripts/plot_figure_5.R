@@ -159,11 +159,11 @@ p1 <- ggplot(data = complete_plot_solid, mapping = aes(x = Dates, y = value * 10
   scale_x_date(labels = date_format("%b %d")) +
   labs(title    = my_title,
        subtitle = my_subtitle,
-       y        = "Number of infected cases per 100,000 people in India",
+       y        = "Cumulative number of infected cases per 100,000 people in India",
        x        = "Date",
        color    = "Scenario",
        caption  = "\uA9 COV-IND-19 Study Group") +
-  ylim(0, 200) +
+  ylim(0, 250) +
   theme_bw() +
   theme(axis.text.x  = element_text(angle = 45, vjust = 0.5, size = 15),
         axis.text.y  = element_text(size = 15),
