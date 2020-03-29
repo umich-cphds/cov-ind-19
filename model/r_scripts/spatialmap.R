@@ -10,7 +10,7 @@ setwd(wd)
 plot.height <- 11
 plot.width <- 8.5
 plot.delay <- 200
-plot.dpi <- 200
+plot.dpi <- 100
 
 days.back  <- 7
 start.date <- as.Date("2020-02-15")
@@ -60,13 +60,15 @@ final_data <- india_shp[i, ]
 final_data$Cases <- data$Cases
 final_data$Date <- data$Date
 
-anim_day <- tm_shape(india_shp) + tm_borders() + tm_shape(final_data) +
-  tm_fill(col = "Cases", palette = "Reds") + tm_text(text = "Cases") +
-  tm_facets(along = "Date", free.coords = F) + tm_legend(scale = 2)
+anim_day <- tm_shape(final_data) + tm_fill(col = "Cases", palette = "Reds") +
+    tm_text(text = "Cases") + tm_facets(along = "Date", free.coords = F) +
+    tm_legend(scale = 1.5, height = 4, width = 4) + tm_shape(india_shp) +
+    tm_borders()
 
 today <- Sys.Date()
 wd <- paste0("~/cov-ind-19-data/", today)
 setwd(wd)
 
-tmap_animation(anim_day,filename="day_sp_animation.gif",
-               width=plot.width, height=plot.height, delay=plot.delay, dpi=plot.dpi)
+tmap_animation(anim_day, filename = "day_sp_animation.gif",
+               width = plot.width, height = plot.height, delay = plot.delay,
+               dpi = plot.dpi)
