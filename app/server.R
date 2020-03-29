@@ -90,9 +90,12 @@ shinyServer(function(input, output)
                   legend.position = "bottom", legend.title = element_blank(),
                   legend.text = element_text(size = 17), plot.title =
                   element_text(size = 18),
-                  plot.caption = element_text(color = "blue", face = "bold",
-                  size = 10)
-            ) +
+                  plot.caption = element_text(color = "blue", face = "bold")
+            ) + guides(shape = guide_legend(override.aes = list(size = 2)),
+                       color = guide_legend(override.aes = list(size = 2))) +
+            theme(legend.title = element_text(size = 12), 
+                  legend.text  = element_text(size = 12),
+                  legend.key.size = unit(0.4, "lines")) + 
             scale_fill_manual("", values = c("New Cases" = "orange", "Recovered" =
                               "dark green", "Fatalities" = "red")) + 
             ggtitle(title_matter)
@@ -171,6 +174,11 @@ shinyServer(function(input, output)
                 legend.title = element_blank(),
                 legend.box = "horizontal",
                 legend.text = element_text(size = 17)) + 
+            guides(shape = guide_legend(override.aes = list(size = 2)),
+                   color = guide_legend(override.aes = list(size = 2))) +
+            theme(legend.title = element_text(size = 12), 
+                  legend.text  = element_text(size = 12),
+                  legend.key.size = unit(0.4, "lines")) + 
             ggtitle(title_matter) + xlim(0, 30)
         print(p)
     }
