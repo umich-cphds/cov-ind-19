@@ -1,4 +1,3 @@
-
 #
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
@@ -32,15 +31,19 @@ shinyUI(fluidPage(
       br(),
       br(),
       br(),
-      p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource that updates daily to describe the COVID-19 outbreak in India to date as well as prediction models under various circumstances.",
-        "The data updates figures and forecasting models once per day. You may download figures for reference."),
+      p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource that updates daily to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios. 
+      The figure and forecasting models update once per day based on new data. You may download figures for reference. 
+        Please cite our medium article and this website in any publication that you use this resource for."),
       p("Read the original article: ", a("Medium article", target = "_blank", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
       p("Read the report: ", a("COV-IND-19 Report", target = "_blank", href = "https://bit.ly/COV-IND-19_Report"), "(this is a direct download link, check your downloads folder)"),
       p("Country-level data source: ", a("JHU CSSE COVID-19 GitHub", target = "_blank", href = "https://github.com/CSSEGISandData/COVID-19")),
       p("State-level data source: ", a("COVID-19 in India Kaggle", target = "_blank", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
       p("R modeling package: ", a("eSIR R package", target = "_blank", href = "https://github.com/lilywang1988/eSIR")),
       p("Source code: ", a("COV-IND-19 GitHub", target = "_blank", href = "https://github.com/umich-cphds/cov-ind-19")),
-      p("Please direct any questions or inquiries to ", a("Bhramar Mukherjee", target="_blank", href="mailto:bhramar@umich.edu"))
+      p("Please direct inquiries to ", 
+        a("Michael Kleinsasser", target="_blank", href="mailto:mkleinsa@umich.edu"),", ",
+        a("Maxwell Salvatore", target="_blank", href="mailto:mmsalva@umich.edu"), " and ",
+        a("Bhramar Mukherjee", target="_blank", href="mailto:bhramar@umich.edu"))
     ),
     
     
@@ -83,7 +86,8 @@ shinyUI(fluidPage(
         "The bar plots below the predicted cumulative short-term case counts represent three scenarios: 1) no intervention, 2) social distancing and travel ban (without March 25 lockdown), and 3) lockdown until April 15 with a gradual, moderate resumption of daily activities.",
         "Because we are using SIR models to generate the forecast, we explicitly delay changes in the basic reproduction number one week (Figure 4a) and two weeks (Figure 4b) to capture delayed onset of cases due to incubation period.",
         HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
-        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release')."))),
+        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
+        "You can hover of the bars for dates and natural log counts. To obtain the estimate, exponentiate the the log value seen. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention."),
       p("Our codes are available on GitHub and so users can change the nature of interventions."),
       h3("Figure 4a"),
       plotlyOutput("plot4a_full", height = "600px"),
@@ -92,8 +96,8 @@ shinyUI(fluidPage(
       plotlyOutput("plot4b_full", height = "600px"),
       downloadButton("download_plot4b", label = "Download Figure 4b"),
       hr(),
-      h2("Longer term forecasts post-lockdown"),
-      p("We present four models: 1) Perpetual social distancing  and travel ban (no lockdown; represented in yellow), 2) post-lockdown activities return to the same level as pre-lockdown ('pre-lockdown'; light blue), 3) post-lockdown activities gradually return to a moderate level ('moderate activity'; blue), 4) post-lockdown activities return to a subdued level ('hesitant'; dark blue).",
+      h2("Longer term forecasts post lockdown"),
+      p("We present four models: 1) Perpetual social distancing and travel ban (no lockdown; represented in yellow), 2) post-lockdown activities return to normal activities prior to any intervention ('pre-lockdown'; light blue), 3) post-lockdown activities gradually return to a moderate level ('moderate activity'; blue), 4) post-lockdown activities return to a subdued level ('hesitant'; dark blue). ",
         HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively.")),
         HTML(paste0("In Scenario 1, the R", tags$sub("0"), " remains 1.5 over the entire interval.")),
         HTML(paste0("In Scenario 2, the R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends.")),
@@ -107,10 +111,9 @@ shinyUI(fluidPage(
       plotlyOutput("plot5b_full", height = "600px"),
       downloadButton("download_plot5b", label = "Download Figure 5b"),
       hr(),
-      h3("Acknowledgments"),
-      p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore,
-          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Alexander Rix, Daniel Barker,
-          Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, Parikshit Ghosh, and Bhramar Mukherjee."),
+      h3("Contributors to the package"),
+      p("The COV-IND-19 study group is comprised of: Maxwell Salvatore, Michael Kleinsasser, Alexander Rix, Daniel Barker, Lili Wang, Rupam Bhattacharyya, Soumik Purkayastha, Debashree Ray, 
+          Shariq Mohammed, Aritra Halder, Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, and Parikshit Ghosh. Led by PI Bhramar Mukherjee."),
       width = 8,
     )
   )
