@@ -96,7 +96,7 @@ shinyUI(fluidPage(
       plotlyOutput("plot4b_full", height = "600px"),
       downloadButton("download_plot4b", label = "Download Figure 4b"),
       hr(),
-      h2("Longer term forecasts post lockdown"),
+      h2("Longer term forecasts post-lockdown"),
       p("We present four models: 1) Perpetual social distancing and travel ban (no lockdown; represented in yellow), 2) post-lockdown activities return to normal activities prior to any intervention ('pre-lockdown'; light blue), 3) post-lockdown activities gradually return to a moderate level ('moderate activity'; blue), 4) post-lockdown activities return to a subdued level ('hesitant'; dark blue). ",
         HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively.")),
         HTML(paste0("In Scenario 1, the R", tags$sub("0"), " remains 1.5 over the entire interval.")),
