@@ -5,7 +5,6 @@ library(reshape2)
 library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(scales) #alpha　function
-library(nCov2019)
 library(data.table)
 library(devtools)
 
