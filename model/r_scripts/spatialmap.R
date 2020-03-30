@@ -10,10 +10,10 @@ plot.delay  <- 200
 plot.dpi    <- 100
 
 days.back  <- 7
-start.date <- as.Date("2020-03-15")
+start.date <- as.Date("2020-02-15")
 
 # first and fifteenth of each month over the next two years
-kalends.ides <- as.Date(paste0(c(paste0("2020-", 1:12), paste0("2021-", 1:12)),
+kalends.ides <- as.Date(paste0(c(paste0("2020-", 1:12), paste0("2020-", 1:12)),
                         c(rep(-1, 12), rep(-15,12))
 ))
 
@@ -73,7 +73,6 @@ data <- content(request, col_types = col_types) %>%
     filter(Date %in% c(kalends.ides, seq(max(Date) - days.back, max(Date), 1)) &
            Date >= start.date)
 
-india_shp <- st_read("~/cov-ind-19/model/map/Indian_States.shp")
 i <- match(data$State, india_shp$st_nm)
 
 final_data       <- india_shp[i, ]
