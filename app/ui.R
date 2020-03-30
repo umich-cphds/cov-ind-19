@@ -113,7 +113,7 @@ shinyUI(fluidPage(
               tags$li(HTML(paste0("In Scenario 4, the R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
               ),
        ),
-      h3("Figure 5a: Cumulative"),
+      h3("Figure 5a"),
       plotlyOutput("plot5a", height = "600px"),
       downloadButton("download_plot5a", label = "Download Figure 5a: Cumulative"),
       plotlyOutput("plot5a_inc", height = "400px"),
