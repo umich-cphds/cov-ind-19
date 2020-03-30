@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=FAIL
-#SBATCH --time=0-12:00:00
+#SBATCH --time=10:00
 #SBATCH --job-name=plot_figure_5
 #SBATCH --mem-per-cpu=1g
 #SBATCH --array=1-2
