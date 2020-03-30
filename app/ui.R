@@ -31,7 +31,7 @@ shinyUI(fluidPage(
       br(),
       br(),
       br(),
-      p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource that updates daily to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios. 
+      p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios. 
       The figure and forecasting models update as new data becomes available (i.e., at least daily). You may download figures for reference. 
         Please cite our medium article and this website in any publication that you use this resource for."),
       p("Read the original article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
