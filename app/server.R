@@ -345,7 +345,7 @@ shinyServer(function(input, output)
         }
     )
 
-    output$plot5a_full <- renderPlotly({
+    output$plot5a <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) +
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
@@ -363,8 +363,27 @@ shinyServer(function(input, output)
             dev.off()
         }
     )
+    
+    output$plot5a_inc <- renderPlotly({
+        gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))) +
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
+        gplot$labels$title = ""
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
-    output$plot5b_full <- renderPlotly({
+    })
+    
+    output$download_plot5a <- downloadHandler(
+        filename = glue("cov-ind-19_figure5_inc_1week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))))
+            dev.off()
+        }
+    )
+
+    output$plot5b <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) +
             theme(plot.title = element_blank(),
                   plot.caption = element_blank(),
@@ -378,6 +397,24 @@ shinyServer(function(input, output)
         content = function(file) {
             pdf(file, width = 11, height = 7)
             print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))))
+            dev.off()
+        }
+    )
+    
+    output$plot5b_inc <- renderPlotly({
+        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))) +
+            theme(plot.title = element_blank(),
+                  plot.caption = element_blank(),
+                  plot.subtitle = element_blank())
+        gplot$labels$title = ""
+        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
+    })
+    
+    output$download_plot5b_inc <- downloadHandler(
+        filename = glue("cov-ind-19_figure5_inc_2week_{Sys.Date()}.pdf"),
+        content = function(file) {
+            pdf(file, width = 11, height = 7)
+            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))))
             dev.off()
         }
     )
