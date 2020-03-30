@@ -357,7 +357,7 @@ shinyServer(function(input, output)
     })
 
     output$download_plot5a <- downloadHandler(
-        filename = glue("cov-ind-19_figure5_1week_{Sys.Date()}.pdf"),
+        filename = glue("cov-ind-19_figure5a_1week_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 11, height = 7)
             print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))))
@@ -365,7 +365,7 @@ shinyServer(function(input, output)
         }
     )
     
-    output$plot5a_inc <- renderPlotly({
+    output$plot5b <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))) +
         labs(title = "Incidence") +
         theme(plot.title = element_text(hjust = 0.5, size = 10),
@@ -376,8 +376,8 @@ shinyServer(function(input, output)
 
     })
     
-    output$download_plot5a_inc <- downloadHandler(
-        filename = glue("cov-ind-19_figure5_inc_1week_{Sys.Date()}.pdf"),
+    output$download_plot5b <- downloadHandler(
+        filename = glue("cov-ind-19_figure5b_1week_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 11, height = 7)
             print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))))
@@ -385,7 +385,7 @@ shinyServer(function(input, output)
         }
     )
 
-    output$plot5b <- renderPlotly({
+    output$plot6a <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) +
         labs(title = "Cumulative") +
         theme(plot.title = element_text(hjust = 0.5, size = 10),
@@ -395,8 +395,8 @@ shinyServer(function(input, output)
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
 
-    output$download_plot5b <- downloadHandler(
-        filename = glue("cov-ind-19_figure5_2week_{Sys.Date()}.pdf"),
+    output$download_plot6a <- downloadHandler(
+        filename = glue("cov-ind-19_figure6a_2week_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 11, height = 7)
             print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))))
@@ -404,7 +404,7 @@ shinyServer(function(input, output)
         }
     )
     
-    output$plot5b_inc <- renderPlotly({
+    output$plot6b <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))) +
         labs(title = "Incidence") +
         theme(plot.title = element_text(hjust = 0.5, size = 10),
@@ -414,8 +414,8 @@ shinyServer(function(input, output)
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
     
-    output$download_plot5b_inc <- downloadHandler(
-        filename = glue("cov-ind-19_figure5_inc_2week_{Sys.Date()}.pdf"),
+    output$download_plot6b <- downloadHandler(
+        filename = glue("cov-ind-19_figure6b_2week_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 11, height = 7)
             print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))))
