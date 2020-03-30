@@ -347,9 +347,9 @@ shinyServer(function(input, output)
 
     output$plot5a <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
+        labs(title = "Cumulative") +
+        theme(plot.caption = element_blank(),
+              plot.subtitle = element_blank())
         gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
@@ -366,9 +366,9 @@ shinyServer(function(input, output)
     
     output$plot5a_inc <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
+        labs(title = "Incidence") +
+        theme(plot.caption = element_blank(),
+              plot.subtitle = element_blank())
         gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
@@ -385,9 +385,9 @@ shinyServer(function(input, output)
 
     output$plot5b <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
+        labs(title = "Cumulative") +
+        theme(plot.caption = element_blank(),
+              plot.subtitle = element_blank())
         gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
@@ -403,9 +403,9 @@ shinyServer(function(input, output)
     
     output$plot5b_inc <- renderPlotly({
         gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
+        labs(title = "Incidence") +
+        theme(plot.caption = element_blank(),
+              plot.subtitle = element_blank())
         gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
