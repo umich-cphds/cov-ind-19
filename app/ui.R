@@ -35,7 +35,7 @@ shinyUI(fluidPage(
       The figure and forecasting models update once per day based on new data. You may download figures for reference. 
         Please cite our medium article and this website in any publication that you use this resource for."),
       p("Read the original article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
-      p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"), "(this is a direct download link, check your downloads folder)"),
+      p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"), " (this is a direct download link, check your downloads folder)"),
       p("Country-level data source: ", a("JHU CSSE COVID-19 GitHub", .noWS = "outside", href = "https://github.com/CSSEGISandData/COVID-19")),
       p("State-level data source: ", a("COVID-19 in India Kaggle", .noWS = "outside", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
       p("R modeling package: ", a("eSIR R package", .noWS = "outside", href = "https://github.com/lilywang1988/eSIR")),
