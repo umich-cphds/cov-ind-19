@@ -121,6 +121,8 @@ mybreaks    <- seq(0, ymax, length.out = 10)
 complete_plot <- complete_plot %>%
   filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d"))
 
+write_csv(complete_plot, path = "./figure_4_data.csv")
+
 f4plotdata = complete_plot[complete_plot$variable != "mod_4_up", ]
 
 # original
