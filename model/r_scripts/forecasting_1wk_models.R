@@ -15,9 +15,7 @@ Ms       <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
 nburnins <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 
 # eSIR ----------
-# library(eSIR)  # trouble installing
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
-# source_url("https://github.com/lilywang1988/eSIR/blob/master/R/qh.eSIR.R?raw=TRUE")  # irrelevant??
 
 # !! directory ----------
 today <- Sys.Date()
