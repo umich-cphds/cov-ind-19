@@ -106,6 +106,8 @@ complete_plot <- complete_plot %>%
   filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d") & Dates >= as.Date("2020-04-15", format = "%Y-%m-%d")) %>%
   filter(color != "No Intervention")
 
+write_csv(complete_plot, "./figure_5_inc_data.csv")
+
 complete_plot_solid <- complete_plot %>% filter(type == 'solid')
 complete_plot_dash  <- complete_plot %>% filter(type == 'dashed')
 
