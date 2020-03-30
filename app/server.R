@@ -350,7 +350,7 @@ shinyServer(function(input, output)
         labs(title = "Cumulative") +
         theme(plot.caption = element_blank(),
               plot.subtitle = element_blank())
-        gplot$labels$title = ""
+        # gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
     })
@@ -369,7 +369,7 @@ shinyServer(function(input, output)
         labs(title = "Incidence") +
         theme(plot.caption = element_blank(),
               plot.subtitle = element_blank())
-        gplot$labels$title = ""
+        # gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
     })
@@ -388,7 +388,7 @@ shinyServer(function(input, output)
         labs(title = "Cumulative") +
         theme(plot.caption = element_blank(),
               plot.subtitle = element_blank())
-        gplot$labels$title = ""
+        # gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
 
@@ -406,7 +406,7 @@ shinyServer(function(input, output)
         labs(title = "Incidence") +
         theme(plot.caption = element_blank(),
               plot.subtitle = element_blank())
-        gplot$labels$title = ""
+        # gplot$labels$title = ""
         plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
     })
     
