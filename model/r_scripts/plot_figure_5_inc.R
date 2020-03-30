@@ -118,7 +118,7 @@ color_values <- c("Soc. Dist. + Travel Ban"   = "#f2c82e",
                   Limit                       = "#3c4c55",
                   Observed                    = "black")
 
-my_title    <- paste0("Predicted number of COVID-19 infections")
+my_title    <- paste0("Predicted number of new COVID-19 infections")
 my_subtitle <- paste0("as of ", format(latest_date, "%d %B, %Y"))
 
 p1 <- ggplot(data = complete_plot_solid, mapping = aes(x = Dates, y = value * 100000 / !!N, group = variable, color = color)) +
@@ -128,7 +128,7 @@ p1 <- ggplot(data = complete_plot_solid, mapping = aes(x = Dates, y = value * 10
   ylim(0, 5) +
   labs(title    = my_title,
        subtitle = my_subtitle,
-       y        = "Number of infected cases per 100,000 people in India",
+       y        = "Number of new cases per 100,000 people in India",
        x        = "Date",
        color    = "Scenario",
        caption  = "\uA9 COV-IND-19 Study Group") +
