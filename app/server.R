@@ -5,6 +5,8 @@ library(httr)
 library(plotly)
 library(glue)
 library(jsonlite)
+library(scales)
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
@@ -164,6 +166,7 @@ shinyServer(function(input, output)
                        na.rm = TRUE, alpha = 1) +
             geom_path(data = data %>% filter(Country == "India"), size = 1,
                       na.rm = TRUE, alpha = 1) +
+            scale_y_continuous(labels = comma) +
             xlab("Days since infected cases reached 100") +
             ylab("Cumulative number of reported cases") +
             theme_bw() + labs(subtitle = subtext,
