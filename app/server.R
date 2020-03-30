@@ -374,7 +374,7 @@ shinyServer(function(input, output)
 
     })
     
-    output$download_plot5a <- downloadHandler(
+    output$download_plot5a_inc <- downloadHandler(
         filename = glue("cov-ind-19_figure5_inc_1week_{Sys.Date()}.pdf"),
         content = function(file) {
             pdf(file, width = 11, height = 7)
