@@ -94,9 +94,9 @@ complete_plot <- bind_rows(observed_plot,
       variable == "True" ~ "Observed",
       variable == "mod_2" ~ "Soc. Dist. + Travel Ban",
       variable == "mod_3" ~ "No Intervention",
-      variable == "mod_4" ~ "Moderate activity",
+      variable == "mod_4" ~ "Moderate return",
       variable == "mod_5" ~ "Normal (pre-intervention)",
-      variable == "mod_6" ~ "Hesitant",
+      variable == "mod_6" ~ "Cautious return",
       variable == "Limit" ~ "Limit"
     )),
     type = as.factor(if_else(variable == "Limit", "dashed", "solid"))
@@ -112,9 +112,9 @@ complete_plot_dash  <- complete_plot %>% filter(type == 'dashed')
 # plot ----------
 color_values <- c("Soc. Dist. + Travel Ban"   = "#f2c82e",
                   "No Intervention"           = "#ED553B",
-                  "Moderate activity"         = "#0472cf",
+                  "Moderate return"           = "#0472cf",
                   "Normal (pre-intervention)" = "#3CAEA3",
-                  "Hesitant"                  = "#173F5F",
+                  "Cautious return"           = "#173F5F",
                   Limit                       = "#3c4c55",
                   Observed                    = "black")
 
