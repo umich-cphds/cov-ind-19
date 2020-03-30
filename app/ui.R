@@ -18,95 +18,104 @@ library(magick)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-
-    # Application title
-    titlePanel("COVID-19 Outbreak in India"),
-
-    # # Sidebar with a slider input for number of bins
-     sidebarLayout(
-         sidebarPanel(
-             h3("COV-IND-19 Study Group"),
-             # HTML('<center><img src="group_logo.png" width="200"></center>'),
-             shiny::img(src = "group_logo.png", height = 200, width = 200),
-             br(),
-             br(),
-             p("Read the article: ", a("Medium article", target = "_blank", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
-             p("Read the report: ", a("COV-IND-19 Report", target = "_blank", href = "https://bit.ly/COV-IND-19_Report"), "(this is a direct download link, check your downloads folder)"),
-             p("Data source: ", a("JHU CSSE COVID-19 GitHub", target = "_blank", href = "https://github.com/CSSEGISandData/COVID-19")),
-             p("Data source: ", a("COVID-19 in India Kaggle", target = "_blank", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
-             p("R modeling package: ", a("eSIR R package", target = "_blank", href = "https://github.com/lilywang1988/eSIR")),
-             p("Source code: ", a("COV-IND-19 GitHub", target = "_blank", href = "https://github.com/umich-cphds/cov-ind-19")),
-             p("Please direct any questions or inquiries to ", a("Bhramar Mukherjee", target="_blank", href="mailto:bhramar@umich.edu"))
-        ),
-
-
-
+  
+  # Application title
+  titlePanel("COVID-19 Outbreak in India"),
+  
+  # # Sidebar with a slider input for number of bins
+  sidebarLayout(
+    sidebarPanel(
+      h3("COV-IND-19 Study Group"),
+      # HTML('<center><img src="group_logo.png" width="200"></center>'),
+      shiny::img(src = "group_logo.png", height = 200, width = 200),
+      br(),
+      br(),
+      br(),
+      p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource that updates daily to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios. 
+      The figure and forecasting models update once per day based on new data. You may download figures for reference. 
+        Please cite our medium article and this website in any publication that you use this resource for."),
+      p("Read the original article: ", a("Medium article", target = "_blank", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
+      p("Read the report: ", a("COV-IND-19 Report", target = "_blank", href = "https://bit.ly/COV-IND-19_Report"), "(this is a direct download link, check your downloads folder)"),
+      p("Country-level data source: ", a("JHU CSSE COVID-19 GitHub", target = "_blank", href = "https://github.com/CSSEGISandData/COVID-19")),
+      p("State-level data source: ", a("COVID-19 in India Kaggle", target = "_blank", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
+      p("R modeling package: ", a("eSIR R package", target = "_blank", href = "https://github.com/lilywang1988/eSIR")),
+      p("Source code: ", a("COV-IND-19 GitHub", target = "_blank", href = "https://github.com/umich-cphds/cov-ind-19")),
+      p("Please direct inquiries to ", 
+        a("Michael Kleinsasser", target="_blank", href="mailto:mkleinsa@umich.edu"),", ",
+        a("Maxwell Salvatore", target="_blank", href="mailto:mmsalva@umich.edu"), " and ",
+        a("Bhramar Mukherjee", target="_blank", href="mailto:bhramar@umich.edu"))
+    ),
+    
+    
+    
     # Show a plot of the generated distribution
     mainPanel(
-        h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India from March 1 to current date"),
-        p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
+      h1("Current Status"),
+      h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India from March 1 to current date"),
+      p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
           You can hover your cursor over the bar to see the exact numerical counts."),
-        plotlyOutput("plot1", height = "600px"),
-        downloadButton("download_plot1", label = "Download Figure 1"),
-        hr(),
-        h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic"),
-        p("The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts at similar stages of the outbreak. Use your cursor to click on countries in the legend to remove them from the plot."),
-        plotlyOutput("plot2", height = "600px"),
-        downloadButton("download_plot2", label = "Download Figure 2"),
-        hr(),
-        h2("Cumulative number of COVID-19 cases in India alone"),
-        p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases."),
-        plotlyOutput("plot3", height = "600px"),
-        downloadButton("download_plot3", label = "Download Figure 3"),
-        hr(),
-        h2("Cumulative case counts by state/union/territory"),
-        p("The map displays the case counts by state/union territory in India over the last few days.",
-          "The darker areas of the map indicate a greater number of cases."),
-        fluidRow(
-            column(width = 3),
-            column(width = 9, imageOutput("map", height = "650px")),
-        ),
-        hr(),
-        h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2)"))),
-        p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
-          "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
-          "This graph is assuming a basic reproduction number (or R0) of 2."),
-        plotlyOutput("plot4a_full", height = "600px"),
-        downloadButton("download_plot4a", label = "Download Figure 4a"),
-        hr(),
-        h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2)"))),
-        p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
-          "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
-          "This graph is assuming a basic reproduction number (or R0) of 2."),
-        plotlyOutput("plot4b_full", height = "600px"),
-        downloadButton("download_plot4b", label = "Download Figure 4b"),
-        hr(),
-        h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2.5)"))),
-        p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
-          "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
-          "This graph is assuming a basic reproduction number (or R0) of 2.5."),
-        plotlyOutput("plot5a_full", height = "600px"),
-        downloadButton("download_plot5a", label = "Download Figure 5a"),
-        hr(),
-        h2(HTML(paste0("Predicted cases in India until June 15 (assuming R", tags$sub("0"), " = 2.5)"))),
-        p("This figure plots the observed number of cases up until today and then forecasts the number of cases until June 15.",
-          "The bars represent our best guess and the dashed line represents the upper credible limit of predicted cases for India.",
-          "This graph is assuming a basic reproduction number (or R0) of 2.5."),
-        plotlyOutput("plot5b_full", height = "600px"),
-        downloadButton("download_plot5b", label = "Download Figure 5b"),
-        hr(),
-        h3("Acknowledgments"),
-        p("The COV-IND-19 study group is comprised of: Debashree Ray, Rupam Bhattacharyya, Lili Wang, Maxwell Salvatore,
-          Shariq Mohammed, Aritra Halder, Yiwang Zhou, Peter Song, Soumik Purkayastha, Mike Kleinsasser, Alexander Rix, Daniel Barker,
-          Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, Parikshit Ghosh, and Bhramar Mukherjee."),
-        # hr(),
-        # h2("Figure 3c"),
-        # imageOutput("plot3c_metro"),
-        # hr(),
-        # h2("Figure 3d"),
-        # imageOutput("plot3d_metro"),
-        width = 8,
+      plotlyOutput("plot1", height = "600px"),
+      downloadButton("download_plot1", label = "Download Figure 1"),
+      hr(),
+      h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic"),
+      p("The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts at similar stages of the outbreak. 
+        Use your cursor to click on countries in the legend to remove them from the plot."),
+      plotlyOutput("plot2", height = "600px"),
+      downloadButton("download_plot2", label = "Download Figure 2"),
+      hr(),
+      h2("Cumulative number of COVID-19 cases in India alone"),
+      p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases (March 14)."),
+      plotlyOutput("plot3", height = "600px"),
+      downloadButton("download_plot3", label = "Download Figure 3"),
+      hr(),
+      h2("Cumulative case counts by state/union/territory"),
+      p("The map displays the case counts by state/union territory in India over the last few days.",
+        "The darker areas of the map indicate a greater number of cases."),
+      fluidRow(
+        column(width = 3),
+        column(width = 9, imageOutput("map", height = "650px")),
+      ),
+      hr(),
+      h1("Predictive modeling of case counts in India under hypothetical intervention scenarios"),
+      h2("Short-term impact of social distancing, travel ban, and lockdown"),
+      p("In the following Figures we consider various scenarios of intervention effects to assess the effect of the lockdown. 
+      These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent. 
+      We use the eSIR model (",a("Wang et al. 2020", target = "_blank", href = "https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf"), ") for all our projections and create hypothetical reductions in transmission probabilities capturing interventions like social distancing and lockdown. 
+        This in turn reduces the basic reproduction number over the period.",
+        "It was announced that India would undergo a central lockdown from March 25 until April 15.",
+        "The bar plots below the predicted cumulative short-term case counts represent three scenarios: 1) no intervention, 2) social distancing and travel ban (without March 25 lockdown), and 3) lockdown until April 15 with a gradual, moderate resumption of daily activities.",
+        "Because we are using SIR models to generate the forecast, we explicitly delay changes in the basic reproduction number one week (Figure 4a) and two weeks (Figure 4b) to capture delayed onset of cases due to incubation period.",
+        HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
+        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
+        "You can hover of the bars for dates and natural log counts. To obtain the estimate, exponentiate the the log value seen. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention."),
+      p("Our codes are available on GitHub and so users can change the nature of interventions."),
+      h3("Figure 4a"),
+      plotlyOutput("plot4a_full", height = "600px"),
+      downloadButton("download_plot4a", label = "Download Figure 4a"),
+      h3("Figure 4b"),
+      plotlyOutput("plot4b_full", height = "600px"),
+      downloadButton("download_plot4b", label = "Download Figure 4b"),
+      hr(),
+      h2("Longer term forecasts post-lockdown"),
+      p("We present four models: 1) Perpetual social distancing and travel ban (no lockdown; represented in yellow), 2) post-lockdown activities return to normal activities prior to any intervention ('pre-lockdown'; light blue), 3) post-lockdown activities gradually return to a moderate level ('moderate activity'; blue), 4) post-lockdown activities return to a subdued level ('hesitant'; dark blue). ",
+        HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively.")),
+        HTML(paste0("In Scenario 1, the R", tags$sub("0"), " remains 1.5 over the entire interval.")),
+        HTML(paste0("In Scenario 2, the R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends.")),
+        HTML(paste0("In Scenario 3, the R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends.")),
+        HTML(paste0("In Scenario 4, the R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends."))),
+      h3("Figure 5a"),
+      plotlyOutput("plot5a_full", height = "600px"),
+      downloadButton("download_plot5a", label = "Download Figure 5a"),
+      hr(),
+      h3("Figure 5b"),
+      plotlyOutput("plot5b_full", height = "600px"),
+      downloadButton("download_plot5b", label = "Download Figure 5b"),
+      hr(),
+      h3("Contributors to the package"),
+      p("The COV-IND-19 study group is comprised of: Maxwell Salvatore, Michael Kleinsasser, Alexander Rix, Daniel Barker, Lili Wang, Rupam Bhattacharyya, Soumik Purkayastha, Debashree Ray, 
+          Shariq Mohammed, Aritra Halder, Debraj Bose, Mousumi Banerjee, Veera Baladandayuthapani, and Parikshit Ghosh. Led by PI Bhramar Mukherjee."),
+      width = 8,
     )
-)
+  )
 )
 )
