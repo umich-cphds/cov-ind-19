@@ -51,7 +51,7 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       h1("Current Observed Data (Updated Daily)"),
-      h2("(Please wait a few seconds for the figures to load)"),
+      h3("(Please wait a few seconds for the figures to load)"),
       h2(""),
       h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India from March 1 to current date"),
       p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
@@ -70,7 +70,7 @@ shinyUI(fluidPage(
       plotlyOutput("plot3", height = "600px"),
       downloadButton("download_plot3", label = "Download Figure 3"),
       hr(),
-      h2("Cumulative case counts by state/union/territory"),
+      h2("Cumulative case counts by state/union territory"),
       p("The map displays the case counts by state/union territory in India over the last few days.",
         "The darker areas of the map indicate a greater number of cases."),
       fluidRow(
@@ -84,17 +84,18 @@ shinyUI(fluidPage(
             "These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent.", 
             "We use the eSIR model (",a("Wang et al. 2020", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf"), ") for all our projections and create hypothetical reductions in transmission probabilities capturing interventions like social distancing and lockdown. 
         This in turn reduces the basic reproduction number over the period.",
-              "It was announced that India would undergo a central lockdown from March 25 until April 15.",
-              "The bar plots below the predicted cumulative short-term case counts represent three scenarios: ",
-              tags$ol(
-                  tags$li("No intervention"),
-                  tags$li("Social distancing and travel ban (without March 25 lockdown)"),
-                  tags$li("Lockdown until April 15 with a gradual, moderate resumption of daily activities")
-              ),
-              "Because we are using SIR models to generate the forecast, we explicitly delay changes in the basic reproduction number one week (Figure 4a) and two weeks (Figure 4b) to capture delayed onset of cases due to incubation period.",
-              HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
-              HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
-              "You can hover of the bars for dates and natural log counts. To obtain the estimate, exponentiate the the log value seen. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.", 
+        "It was announced that India would undergo a central lockdown from March 25 until April 15.",
+        "The bar plots below the predicted cumulative short-term case counts represent three scenarios: ",
+        tags$ol(
+          tags$li("No intervention"),
+          tags$li("Social distancing and travel ban (without March 25 lockdown)"),
+          tags$li("Lockdown until April 15 with a gradual, moderate resumption of daily activities")
+        ),
+        "Because we are using SIR models to generate the forecast, we explicitly delay changes in the basic reproduction number one week (Figure 4a) and two weeks (Figure 4b) to capture delayed onset of cases due to incubation period and timeliness of adherence.",
+        "In general terms, the one-week delay models (Figures 4a and 5a) can be thought of as 'quick adherence' to the lockdown measures, while the 'two-week' delay models (Figures 4b and 5b) can be though of as 'slow adherence' to the lockdown measures.",
+        HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
+        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
+        "You can hover of the bars for dates and natural log counts. To obtain the estimate, exponentiate the the log value seen. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.", 
         "Our codes are available on GitHub and so users can change the nature of interventions."),
       h3("Figure 4a"),
       plotlyOutput("plot4a_full", height = "600px"),
@@ -113,12 +114,14 @@ shinyUI(fluidPage(
               tags$li(HTML(paste0("In Scenario 4, the R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
               ),
        ),
+      h2("Quick adherence (one-week delay)"),
       h3("Figure 5a"),
       plotlyOutput("plot5a", height = "600px"),
       downloadButton("download_plot5a", label = "Download Figure 5a: Cumulative"),
       plotlyOutput("plot5a_inc", height = "600px"),
       downloadButton("download_plot5a_inc", label = "Download Figure 5a: Incidence"),
       hr(),
+      h2("Slow adherence (two-week delay)"),
       h3("Figure 5b"),
       plotlyOutput("plot5b", height = "600px"),
       downloadButton("download_plot5b", label = "Download Figure 5b: Cumulative"),
