@@ -17,11 +17,15 @@ mutate(variable = recode(variable,
     "mod_4_up" = "Lockdown upper credible interval")
 ) %>%
 
-mutate(text = paste0(format(Dates, format("%b %d")), ": ",
-                     format(value, big.mark = ",", scientific = FALSE, trim = T),
-                     ifelse(variable == "Observed", " observed cases",
-                                                    " projected cases")),
-       i = variable != "Lockdown upper credible interval"
+mutate(
+    text = paste0(format(Dates, format("%b %d")), ": ",
+                  format(value, big.mark = ",", scientific = F, trim = T),
+                  case_when(
+                      variable == "Observed" ~ " observed cases",
+                      variable == "Lockdown upper credible interval" ~ " upper CI projected cases under lockdown",
+                      TRUE ~ " projected cases")
+                  ),
+    i = variable != "Lockdown upper credible interval"
 )
 
 title <- paste("Cumulative number of COVID-19 cases in India compared",

@@ -55,7 +55,7 @@ p <- plot_ly(data %>% filter(Country == "India"), x = ~ Day, y = ~Case,
 layout(xaxis = xaxis, yaxis = yaxis,
        title = list(text = cap, xanchor = "left", x = 0),
        legend = list(orientation = "h", font = list(size = 16), y = -0.2),
-       margin = list(b = 200)
+       margin = list(b = 100)
 )
 
 
