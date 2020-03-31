@@ -8,6 +8,7 @@ library(jsonlite)
 library(scales)
 
 
+github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
 {
@@ -44,72 +45,9 @@ shinyServer(function(input, output)
     latest <- get_latest()
 
     output$latest <- renderText(paste0("Data last updated ", format(latest, format = "%B %d")))
-    plot1_input <- function(use_title = FALSE) {
-        start.date <- as.Date("2020-03-01")
-
-        jhu.path <- paste0("https://github.com/CSSEGISandData/COVID-19/raw/",
-                           "master/csse_covid_19_data/csse_covid_19_time_series")
-
-        jhu.files <- list(
-            Case      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
-            Recovered = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
-            Death     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
-        )
-
-        data <- reduce(imap(jhu.files,
-            function(file, var)
-            {
-                vroom(file) %>%
-                select(Country = matches("Country"), matches("[0-9]+")) %>%
-                filter(Country == "India") %>% select(-Country) %>%
-                gather(matches("[0-9]+"), key = "Date", value = !!var) %>%
-                mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
-                filter(Date >= start.date - 1)
-            }
-        ), ~ left_join(.x, .y)) %>%
-
-        mutate_at(vars(Case, Recovered, Death), list(function(x) {
-            y <- x - lag(x)
-            ifelse(y < 0, 0, y)
-        })) %>%
-        filter(Date >= start.date) %>%
-        gather(Case, Recovered, Death, key = Type, value = Count) %>%
-        mutate(Date = as.factor(format(Date, format = "%b %d"))) %>%
-        mutate(Type = factor(
-        recode(Type,
-            Case = "New Cases",
-            Recovered = "Recovered",
-            Death = "Fatalities"
-        ), levels = c("New Cases", "Fatalities", "Recovered")))
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        title <- paste("Daily number of COVID-19 new cases, fatalities and",
-                       "recovered cases in India since March 1")
-
-
-        data$text <- paste0(data$Date, ": ", data$Count, " ", data$Type)
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date", titlefont = axis.title.font,
-                      showticklabels = TRUE, tickangle = -30, zeroline = F)
-
-        yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
-                      tickfont = tickfont, zeroline = T)
-
-        p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
-                type = "bar", colors = c("orange", "red", "dark green"),
-                hoverinfo = "text") %>%
-        layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)) %>%
-        plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
-    }
 
     output$plot1 <- renderPlotly({
-        plot1_input()
+        readRDS(url(paste0(github.path, latest, "/plot1.RDS")))
     })
 
     # output$download_plot1 <- downloadHandler(
@@ -119,67 +57,8 @@ shinyServer(function(input, output)
     #     }
     # )
 
-    plot2_input <- function(use_title = FALSE) {
-
-        jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
-
-        countries <- c("France", "Germany", "India", "Iran", "Italy",
-                       "Korea, South", "US", "China")
-
-        file <- paste0(jhu.path, "/time_series_covid19_confirmed_global.csv")
-        data <- vroom(file) %>%
-        select(Country = matches("Country"), matches("[0-9].*")) %>%
-        filter(Country %in% countries) %>%
-        mutate(Country = ifelse(Country == 'Korea, South', 'South Korea', Country) %>% as.factor()) %>%
-        group_by(Country) %>%
-
-        # Since we don't care about counts in each state we collapse into a
-        # single count per country of interest.
-        summarise_all(sum, na.rm = T) %>%
-        gather(matches("[0-9].+"), key = Date, value = Cases) %>%
-        mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
-        group_by(Country) %>% filter(Cases >= 100) %>%
-        arrange(Date) %>%
-        mutate(Day = seq(n()))
-
-        Day.max <- 30 # nrow(data %>% filter(Country == "India"))
-        data <- filter(data, Day <= Day.max) %>%
-        mutate(Date = format(Date, format = "%b %d")) %>%
-        ungroup()
-
-        title <- paste("Cumulative number of COVID-19 cases in India compared",
-                       "to other countries affected by the pandemic")
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Days since total cases passed 100",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, showline = T, zeroline = F)
-
-        yaxis <- list(title = "Total number of reported cases", titlefont =
-                      axis.title.font, tickfont = tickfont, zeroline = F,
-                      showline = F)
-
-        data$text <- paste0(data$Date, ": ", data$Cases, " cases")
-        plot_ly(data %>% filter(Country != "India"), x = ~ Day, y = ~Cases,
-                text = ~text, color = ~Country, type = "scatter",
-                mode = "lines+markers", hoverinfo = "text",
-                line = list(width = 4)) %>%
-        add_trace(data = data %>% filter(Country == "India"), x = ~ Day,
-                  y = ~Cases, text = ~text, color = ~Country,
-                  type = "scatter", mode = "lines+markers",
-                  hoverinfo = "text", line = list(width = 4)) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot2 <- renderPlotly({
-        plot2_input()
+        readRDS(url(paste0(github.path, latest, "/plot2.RDS")))
     })
 
     output$download_plot2 <- downloadHandler(
@@ -191,68 +70,8 @@ shinyServer(function(input, output)
         }
     )
 
-    plot3_input <- function(use_title = FALSE)
-    {
-
-        jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
-
-        countries <- c("France", "Germany", "India", "Iran", "Italy",
-                       "Korea, South", "US", "China")
-
-        file <- paste0(jhu.path, "/time_series_covid19_confirmed_global.csv")
-        data <- vroom(file) %>%
-        select(Country = matches("Country"), matches("[0-9].*")) %>%
-        filter(Country %in% countries) %>%
-        mutate(Country = ifelse(Country == 'Korea, South', 'South Korea', Country) %>% as.factor()) %>%
-        group_by(Country) %>%
-
-        # Since we don't care about counts in each state we collapse into a
-        # single count per country of interest.
-        summarise_all(sum, na.rm = T) %>%
-        gather(matches("[0-9].+"), key = Date, value = Cases) %>%
-        mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
-        group_by(Country) %>% filter(Cases >= 100) %>%
-        arrange(Date) %>%
-        mutate(Day = seq(n()))
-
-        Day.max <- 30
-        data <- filter(data, Day <= Day.max) %>%
-        mutate(Day = Day,
-               Date = format(Date, format = "%b %d")) %>%
-        ungroup()
-
-        title <- "Cumulative number of COVID-19 cases in India"
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Days since total cases passed 100",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, showline = T, zeroline = F)
-
-        yaxis <- list(title = "Total number of reported cases", titlefont =
-                      axis.title.font, tickfont = tickfont, zeroline = F,
-                      showline = F)
-
-        data$text <- paste0(data$Date, ": ", data$Cases, " cases")
-        plot_ly(data %>% filter(Country != "India"), x = ~ Day, y = ~Cases,
-                text = ~text, color = ~Country, type = "scatter",
-                mode = "lines+markers", hoverinfo = "text",
-                line = list(width = 4), visible  = "legendonly") %>%
-        add_trace(data = data %>% filter(Country == "India"), x = ~ Day,
-                  y = ~Cases, text = ~text, color = ~Country, type = "scatter",
-                  mode = "lines+markers", hoverinfo = "text",
-                  line = list(width = 4), visible  = T) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot3 <- renderPlotly({
-        plot3_input()
+        readRDS(url(paste0(github.path, latest, "/plot3.RDS")))
     })
 
     output$download_plot3 <- downloadHandler(
@@ -264,58 +83,9 @@ shinyServer(function(input, output)
         }
     )
 
-    github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
-
-    plot4a_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/1wk/figure_4_data.csv")) %>%
-        mutate(variable = factor(variable, levels = c("True", "mod_3",
-               "mod_2", "mod_4", "mod_4_up")
-        )) %>%
-        mutate(variable = recode(variable,
-            "True" = "Observed",
-            "mod_3" = "No intervention",
-            "mod_2" = "Social distancing",
-            "mod_4" = "Lockdown with moderate release",
-            "mod_4_up" = "Lockdown upper credible interval")
-        ) %>%
-        mutate(text = paste0(format(Dates, format("%b %d")), ": ", value,
-                            ifelse(variable == "Observed", " observed cases",
-                                                           " projected cases")),
-               i = variable != "Lockdown upper credible interval"
-        )
-
-        title <- paste("Cumulative number of COVID-19 cases in India compared",
-                       "to other countries affected by the pandemic")
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, showline = T)
-
-        yaxis <- list(title = "Cumulative number of cases", type = "log",
-                      dtick = 1, titlefont = axis.title.font, zeroline = T)
-
-        plot_ly(data %>% filter(i),
-                x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
-                colors = c("gray", "red", "orange", "navy", "navy"),
-                type = "bar", hoverinfo = "text"
-        ) %>%
-        add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
-                  type = "scatter", mode = "line"
-        ) %>%
-        layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
 
     output$plot4a_full <- renderPlotly({
-        plot4a_input()
+        readRDS(url(paste0(github.path, latest, "/plot4a.RDS")))
     })
 
     output$download_plot4a <- downloadHandler(
@@ -327,57 +97,8 @@ shinyServer(function(input, output)
         }
     )
 
-
-
-    plot4b_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/2wk/figure_4_data.csv")) %>%
-        mutate(variable = factor(variable, levels = c("True", "mod_3",
-               "mod_2", "mod_4", "mod_4_up")
-        )) %>%
-        mutate(variable = recode(variable,
-            "True" = "Observed",
-            "mod_3" = "No intervention",
-            "mod_2" = "Social distancing",
-            "mod_4" = "Lockdown with moderate release",
-            "mod_4_up" = "Lockdown upper credible interval")
-        ) %>%
-        mutate(text = paste0(format(Dates, format("%b %d")), ": ", value,
-                            ifelse(variable == "Observed", " observed cases",
-                                                           " projected cases")),
-               i = variable != "Lockdown upper credible interval"
-        )
-
-        title <- ""
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, showline = T)
-
-        yaxis <- list(title = "Cumulative number of cases", type = "log",
-                      dtick = 1, titlefont = axis.title.font, zeroline = T)
-
-        plot_ly(data %>% filter(i),
-                x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
-                colors = c("gray", "red", "orange", "navy", "navy"),
-                type = "bar", hoverinfo = "text"
-        ) %>%
-        add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
-                  type = "scatter", mode = "line"
-        ) %>%
-        layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot4b_full <- renderPlotly({
-        plot4b_input()
+        readRDS(url(paste0(github.path, latest, "/plot4b.RDS")))
     })
 
     output$download_plot4b <- downloadHandler(
@@ -458,9 +179,10 @@ shinyServer(function(input, output)
                       titlefont = axis.title.font, zeroline = T)
 
 
+        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text", line = list(width = 4)
+                color = ~ color, colors = colors, type = "scatter",
+                mode = "line", hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = cap, xanchor = "left", x = 0)
@@ -502,8 +224,9 @@ shinyServer(function(input, output)
                       titlefont = axis.title.font, zeroline = T)
 
 
+        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, type = "scatter", mode = "line",
+                color = ~ color, colors = colors, type = "scatter", mode = "line",
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
@@ -545,9 +268,9 @@ shinyServer(function(input, output)
         yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
                       titlefont = axis.title.font, zeroline = T)
 
-
+        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, type = "scatter", mode = "line",
+                color = ~ color, colors = colors, type = "scatter", mode = "line",
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
