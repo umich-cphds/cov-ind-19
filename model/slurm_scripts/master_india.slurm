@@ -5,6 +5,8 @@
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
+#SBATCH --account=covid19_project1
+#SBATCH --partition=standard
 
 dataframe=$(sbatch ~/cov-ind-19/model/slurm_scripts/data.slurm | awk '{print $NF}')
 fig1=$(sbatch --dependency=afterok:$dataframe ~/cov-ind-19/model/slurm_scripts/plot_fig_1.slurm | awk '{print $NF}')
