@@ -31,7 +31,8 @@ p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
         hoverinfo = "text", line = list(width = 4)
 ) %>%
 layout(xaxis = xaxis, yaxis = yaxis,
-       title = list(text = cap, xanchor = "left", x = 0)
+       title = list(text = cap, xanchor = "left", x = 0),
+       legend = list(orientation = "h", font = list(size = 16))
 )
 
 saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot5a.RDS"))

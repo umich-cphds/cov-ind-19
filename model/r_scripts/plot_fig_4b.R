@@ -52,7 +52,8 @@ add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
 layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
        title = list(text = cap, xanchor = "left", x = 0), shapes =
        list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
-            x1 = latest, layer = "below")
+            x1 = latest, layer = "below"),
+       legend = list(orientation = "h", font = list(size = 16))
 )
 
 saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot4b.RDS"))

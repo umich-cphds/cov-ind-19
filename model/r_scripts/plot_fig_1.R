@@ -49,7 +49,9 @@ p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
         type = "bar", colors = colors,
         hoverinfo = "text") %>%
 layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis,
-       title = list(text = cap, xanchor = "left", x = 0)) %>%
+       title = list(text = cap, xanchor = "left", x = 0),
+       legend = list(orientation = "h", font = list(size = 16), margin = list(h = 100))
+) %>%
 plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
 
