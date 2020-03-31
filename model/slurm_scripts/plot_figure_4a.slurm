@@ -4,7 +4,6 @@
 #SBATCH --time=10:00
 #SBATCH --job-name=plot_figure_4a
 #SBATCH --mem-per-cpu=1g
-#SBATCH --array=1-2
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
