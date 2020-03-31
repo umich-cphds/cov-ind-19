@@ -5,7 +5,8 @@
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
-
+#SBATCH --account=covid19_project1
+#SBATCH --partition=standard
 
 dataframe=$(sbatch ~/cov-ind-19/model/slurm_scripts/data.slurm | awk '{print $NF}')
 fig1=$(sbatch --dependency=afterok:$dataframe ~/cov-ind-19/model/slurm_scripts/plot_fig_1.slurm | awk '{print $NF}')
@@ -29,5 +30,6 @@ fig6b=$(sbatch --dependency=afterok:$fig5_inc ~/cov-ind-19/model/slurm_scripts/p
 spatialmap=$(sbatch ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 
 sbatch --dependency=afterok:$fig1:$fig23:$fig4a:$fig4b:$fig5a:$fig5b:$fig6:$fig6b:$spatialmap ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
+
 sleep 4h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
