@@ -30,7 +30,7 @@ setwd(wd)
 getwd()
 
 # data ----------
-jhu_cases <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"))
+jhu_cases <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
 
 india_cases     <- jhu_cases[jhu_cases$Country.Region == "India", ]
 latest_date     <- as.Date(sub("X", "", rev(names(india_cases))[1]), format("%m.%d.%y"))

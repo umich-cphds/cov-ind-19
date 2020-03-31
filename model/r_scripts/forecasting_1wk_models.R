@@ -27,8 +27,8 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-jhu_cases     <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"))
-jhu_recovered <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv")) # pull data daily
+jhu_cases     <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
+jhu_recovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv") # pull data daily
 
 ### check that datasets end on same date ----------
   last_jhuc_case_date     <- as.Date(sub("X", "", rev(names(jhu_cases))[1]), format("%m.%d.%y"))
