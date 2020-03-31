@@ -131,7 +131,8 @@ my_subtitle <- paste0("as of ", format(latest_date, "%d %B %Y"))
 mybreaks    <- seq(0, ymax, length.out = 10)
 
 complete_plot <- complete_plot %>%
-  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d"))
+  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d")) %>%
+  filter(!color %in% c("mod_2_up", "mod_3_up"))
 
 f4plotdata = complete_plot[complete_plot$variable != "mod_4_up", ]
 
