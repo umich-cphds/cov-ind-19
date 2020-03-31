@@ -65,7 +65,6 @@ add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
 
 saveRDS(p2, paste0("~/cov-ind-19-data/", latest, "/plot2.RDS"))
 
-
 p3 <- p %>%
 add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
           y = ~Case, text = ~text, color = ~Country,
