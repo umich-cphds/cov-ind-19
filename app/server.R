@@ -74,43 +74,40 @@ shinyServer(function(input, output)
         filter(Date >= start.date) %>%
         gather(Case, Recovered, Death, key = Type, value = Count) %>%
         mutate(Date = as.factor(format(Date, format = "%b %d"))) %>%
-        mutate(Type = factor(Type, levels = c("Recovered", "Death", "Case"))) %>%
-        mutate(Type = recode(Type, Recovered = 'Recovered', Death = 'Fatalities', Case = 'New Cases') %>% as_factor)
+        mutate(Type = factor(
+        recode(Type,
+            Case = "New Cases",
+            Recovered = "Recovered",
+            Death = "Fatalities"
+        ), levels = c("New Cases", "Fatalities", "Recovered")))
 
-        if(use_title == TRUE) {
-            title_matter = paste('Daily number of COVID-19 new cases, fatalities\nand recovered cases in India from March 1 to',
-                                 as.character(data$Date[nrow(data)]), sep = ' ')
-        } else {
-            title_matter = ''
-        }
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
 
-        p <- ggplot(data, aes(Date, Count))
-        p <- p + geom_bar(stat = "identity", aes(fill = Type), position = "stack") +
-        xlab('Date') + ylab('Daily Counts') +
-            labs(subtitle = paste("Data source: Johns Hopkins University CSSE. Last updated", format(latest, format = "%b %d"), sep = ' '),
-                 caption = "© COV-IND-19 Study Group") +
-            theme_bw() +
-            theme(axis.text.x = element_text(angle = 40, vjust = 0.2, size=10),
-                  axis.text.y = element_text(size = 15),
-                  axis.title.x = element_text(vjust=-0.5),
-                  legend.position = "bottom", legend.title = element_blank(),
-                  legend.text = element_text(size = 17), plot.title =
-                  element_text(size = 18),
-                  plot.caption = element_text(color = "blue", face = "bold")
-            ) + guides(shape = guide_legend(override.aes = list(size = 2)),
-                       color = guide_legend(override.aes = list(size = 2))) +
-            theme(legend.title = element_text(size = 12),
-                  legend.text  = element_text(size = 12),
-                  legend.key.size = unit(0.4, "lines")) +
-            scale_fill_manual("", values = c("New Cases" = "orange", "Recovered" =
-                              "dark green", "Fatalities" = "red")) +
-            ggtitle(title_matter)
-        print(p)
+        title <- paste("Daily number of COVID-19 new cases, fatalities and",
+                       "recovered cases in India since March 1")
+
+
+        data$text <- paste0(data$Date, ": ", data$Count, " ", data$Type)
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date", titlefont = axis.title.font,
+                      showticklabels = TRUE, tickangle = -30)
+
+        yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
+                      tickfont = tickfont)
+
+        plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
+                type = "bar", colors = c("orange", "red", "dark green"),
+                hoverinfo = "text") %>%
+        layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>")))
     }
 
     output$plot1 <- renderPlotly({
-        plotly::ggplotly(plot1_input()) %>%
-            layout(yaxis = list(title = 'Daily Counts'))
+        plot1_input()
     })
 
     output$download_plot1 <- downloadHandler(
@@ -147,51 +144,36 @@ shinyServer(function(input, output)
 
         Day.max <- 30 # nrow(data %>% filter(Country == "India"))
         data <- filter(data, Day <= Day.max) %>%
-        mutate(Day = Day) %>%
+        mutate(Date = format(Date, format = "%b %d")) %>%
         ungroup()
 
-        if(use_title == TRUE) {
-            title_matter = 'Cumulative number of COVID-19 cases in India compared to\nother countries affected by the pandemic'
-        } else {
-            title_matter = ''
-        }
+        title <- paste("Cumulative number of COVID-19 cases in India compared",
+                       "to other countries affected by the pandemic")
 
-        subtext = paste('The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts\nat similar stages of the outbreak. Last updated',
-                        format(latest, format = "%b %d"), sep = ' ')
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
 
-        p <- ggplot(data, aes(Day, Cases, col = Country, group = Country)) +
-            geom_point(size = 1.5, na.rm = TRUE, alpha = 1) +
-            geom_path(size = 1, na.rm = TRUE, alpha = 1) +
-            geom_point(data = data %>% filter(Country == "India"), size = 1.5,
-                       na.rm = TRUE, alpha = 1) +
-            geom_path(data = data %>% filter(Country == "India"), size = 1,
-                      na.rm = TRUE, alpha = 1) +
-            scale_y_continuous(labels = comma) +
-            xlab("Days since infected cases reached 100") +
-            ylab("Cumulative number of reported cases") +
-            theme_bw() + labs(subtitle = subtext,
-                              caption = "\uA9 COV-IND-19 Study Group")+
-            theme(axis.text.x = element_text(
-                vjust = 0.5, size = 15),
-                legend.position = "bottom",
-                axis.text.y = element_text(size = 15),
-                plot.title = element_text(size = 18),
-                plot.caption = element_text(color = "blue", face = "bold"),
-                #legend.position = c(0.1,0.6),
-                legend.title = element_blank(),
-                legend.box = "horizontal",
-                legend.text = element_text(size = 17)) +
-            guides(shape = guide_legend(override.aes = list(size = 2)),
-                   color = guide_legend(override.aes = list(size = 2))) +
-            theme(legend.title = element_text(size = 12),
-                  legend.text  = element_text(size = 12),
-                  legend.key.size = unit(0.4, "lines")) +
-            ggtitle(title_matter) + xlim(0, 30)
-        print(p)
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Days since total cases passed 100",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of reported cases", titlefont =
+                      axis.title.font, tickfont = tickfont)
+
+        data$text <- paste0(data$Date, ": ", data$Cases, " cases")
+        plot_ly(data, x = ~ Day, y = ~Cases, text = ~text, color = ~Country,
+                type = "scatter", mode = "lines+markers", hoverinfo = "text",
+                line = list(width = 3)) %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
     }
 
     output$plot2 <- renderPlotly({
-        plotly::ggplotly(plot2_input(), tooltip = c('Cases', 'Day', 'Date'))
+        plot2_input()
     })
 
     output$download_plot2 <- downloadHandler(
@@ -231,36 +213,32 @@ shinyServer(function(input, output)
                Date = format(Date, format = "%b %d")) %>%
         ungroup()
 
-        if(use_title == TRUE) {
-            title_matter = 'Cumulative number of COVID-19 cases in India alone'
-        } else {
-            title_matter = ''
-        }
+        title <- "Cumulative number of COVID-19 cases in India"
 
-        p <- ggplot(data, aes(Date, Cases, col = Country, group = Country)) +
-            geom_point(size = 1.5, na.rm = TRUE, color = "#00BE67") +
-            geom_path(size = 1, na.rm = TRUE, color = "#00BE67") +
-            xlab("\nDays since infected cases reached 100")+
-            ylab("Cumulative number of reported cases") +
-            theme_bw() +
-            labs(subtitle = paste("This figure displays the cumulative number of COVID-19 cases in India\nsince the country reached 100 total cases. Last updated", format(latest, format = "%b %d")),
-                 caption = "\uA9 COV-IND-19 Study Group") +
-            theme(axis.text.x = element_text(angle = 40, vjust = 0.15, size=10),
-                legend.position = "bottom",
-                axis.text.y = element_text(size = 15),
-                plot.title = element_text(size = 18),
-                plot.caption = element_text(color = "blue", face = "bold"),
-                #legend.position = c(0.1,0.6),
-                legend.title = element_blank(),
-                legend.box = "horizontal",
-                legend.text = element_text(size = 17),
-                axis.title.x = element_text()) +
-            ggtitle(title_matter)
-        print(p)
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Days since total cases passed 100",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of reported cases", titlefont =
+                      axis.title.font, tickfont = tickfont)
+
+        data$text <- paste0(data$Date, ": ", data$Cases, " cases")
+        plot_ly(data, x = ~ Day, y = ~Cases, text = ~text,
+                type = "scatter", mode = "lines+markers", hoverinfo = "text",
+                line = list(width = 3, color = "dark green")) %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
     }
 
     output$plot3 <- renderPlotly({
-        plotly::ggplotly(plot3_input(), tooltip = c('Cases', 'Day', 'Date'))
+        plot3_input()
     })
 
     output$download_plot3 <- downloadHandler(
@@ -274,31 +252,56 @@ shinyServer(function(input, output)
 
     github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
 
+    plot4a_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/1wk/figure_4_data.csv")) %>%
+        mutate(variable = factor(variable, levels = c("True", "mod_3",
+               "mod_2", "mod_4", "mod_4_up")
+        )) %>%
+        mutate(variable = recode(variable,
+            "True" = "Observed",
+            "mod_3" = "No intervention",
+            "mod_2" = "Social distancing",
+            "mod_4" = "Lockdown with moderate release",
+            "mod_4_up" = "Lockdown upper credible interval")
+        ) %>%
+        mutate(text = paste0(format(Dates, format("%b %d")), ": ", value,
+                            ifelse(variable == "Observed", " observed cases",
+                                                           " projected cases")),
+               i = variable != "Lockdown upper credible interval"
+        )
+
+        title <- paste("Cumulative number of COVID-19 cases in India compared",
+                       "to other countries affected by the pandemic")
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Cumulative number of cases", type = "log",
+                      dtick = 1, titlefont = axis.title.font)
+
+        plot_ly(data %>% filter(i),
+                x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
+                colors = c("gray", "red", "orange", "navy", "navy"),
+                type = "bar", hoverinfo = "text"
+        ) %>%
+        add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
+                  type = "scatter", mode = "line"
+        ) %>%
+        layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>")
+        ))
+    }
+
     output$plot4a_full <- renderPlotly({
-            gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
-            gplot$labels$title = ""
-            gply = plotly::ggplotly(gplot, layerData = 10)
-            currentdate = as.numeric(get_latest())
-            startdate = currentdate - 30
-            enddate = currentdate + 30
-
-            gply %>%
-                add_fun(function(p) {
-                    p %>%
-                        add_segments(x = currentdate, xend = currentdate, y = 0, yend = 4000000)
-                }) %>%
-                layout(
-                    xaxis =
-                    list(
-                        ticktext = as.list(as.Date(seq(startdate, enddate, by = 5), origin = '1970-01-01') %>% format(format = '%b %d')),
-                        tickvals = as.list(seq(startdate, enddate, by = 5)),
-                        tickmode = "array"
-                    )
-                )
-
+        plot4a_input()
     })
 
     output$download_plot4a <- downloadHandler(
@@ -310,30 +313,57 @@ shinyServer(function(input, output)
         }
     )
 
-    output$plot4b_full <- renderPlotly({
-        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))) +
-            theme(plot.title = element_blank(),
-                  plot.caption = element_blank(),
-                  plot.subtitle = element_blank())
-        gplot$labels$title = ""
-        gply = plotly::ggplotly(gplot, layerData = 10)
-        currentdate = as.numeric(get_latest())
-        startdate = currentdate - 30
-        enddate = currentdate + 30
 
-        gply %>%
-            add_fun(function(p) {
-                p %>%
-                    add_segments(x = currentdate, xend = currentdate, y = 0, yend = 4000000)
-            }) %>%
-            layout(
-                xaxis =
-                    list(
-                        ticktext = as.list(as.Date(seq(startdate, enddate, by = 5), origin = '1970-01-01') %>% format(format = '%b %d')),
-                        tickvals = as.list(seq(startdate, enddate, by = 5)),
-                        tickmode = "array"
-                    )
-            )
+
+    plot4b_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/2wk/figure_4_data.csv")) %>%
+        mutate(variable = factor(variable, levels = c("True", "mod_3",
+               "mod_2", "mod_4", "mod_4_up")
+        )) %>%
+        mutate(variable = recode(variable,
+            "True" = "Observed",
+            "mod_3" = "No intervention",
+            "mod_2" = "Social distancing",
+            "mod_4" = "Lockdown with moderate release",
+            "mod_4_up" = "Lockdown upper credible interval")
+        ) %>%
+        mutate(text = paste0(format(Dates, format("%b %d")), ": ", value,
+                            ifelse(variable == "Observed", " observed cases",
+                                                           " projected cases")),
+               i = variable != "Lockdown upper credible interval"
+        )
+
+        title <- ""
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Cumulative number of cases", type = "log",
+                      dtick = 1, titlefont = axis.title.font)
+
+        plot_ly(data %>% filter(i),
+                x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
+                colors = c("gray", "red", "orange", "navy", "navy"),
+                type = "bar", hoverinfo = "text"
+        ) %>%
+        add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
+                  type = "scatter", mode = "line"
+        ) %>%
+        layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>")
+        ))
+    }
+
+    output$plot4b_full <- renderPlotly({
+        plot4b_input()
     })
 
     output$download_plot4b <- downloadHandler(
@@ -345,15 +375,41 @@ shinyServer(function(input, output)
         }
     )
 
-    output$plot5a <- renderPlotly({
-        gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))) +
-        labs(title = "Cumulative") +
-        theme(plot.title = element_text(hjust = 0.5, size = 10),
-              plot.caption = element_blank(),
-              plot.subtitle = element_blank())
-        # gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
+    plot5a_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_data.csv")) %>%
+        mutate(text = paste0(format(Dates, "%b %d"),": ",
+                             round(value),
+                             " projected total cases")
+        )
+
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of infected cases per 100,000",
+                      titlefont = axis.title.font)
+
+
+        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
+                color = ~ color, type = "scatter", mode = "line",
+                hoverinfo = "text"
+        ) %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
+    }
+
+    output$plot5a <- renderPlotly({
+        plot5a_input()
     })
 
     output$download_plot5a <- downloadHandler(
@@ -364,18 +420,43 @@ shinyServer(function(input, output)
             dev.off()
         }
     )
-    
-    output$plot5b <- renderPlotly({
-        gplot = readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))) +
-        labs(title = "Incidence") +
-        theme(plot.title = element_text(hjust = 0.5, size = 10),
-              plot.caption = element_blank(),
-              plot.subtitle = element_blank())
-        # gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
 
+    plot5b_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_inc_data.csv")) %>%
+        mutate(text = paste0(format(Dates, "%b %d"),": ",
+                             round(value),
+                             " projected cases per day")
+        )
+
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
+                      titlefont = axis.title.font)
+
+
+        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
+                color = ~ color, type = "scatter", mode = "line",
+                hoverinfo = "text"
+        ) %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
+    }
+
+    output$plot5b <- renderPlotly({
+        plot5b_input()
     })
-    
+
     output$download_plot5b <- downloadHandler(
         filename = glue("cov-ind-19_figure5b_1week_{Sys.Date()}.pdf"),
         content = function(file) {
@@ -385,14 +466,39 @@ shinyServer(function(input, output)
         }
     )
 
+    plot6a_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/2wk/figure_5_data.csv")) %>%
+        mutate(text = paste0(format(Dates, "%b %d"),": ",
+                             round(value),
+                             " projected total cases")
+        )
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of infected cases per 100,000",
+                      titlefont = axis.title.font)
+
+
+        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
+                color = ~ color, type = "scatter", mode = "line",
+                hoverinfo = "text"
+        ) %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
+    }
+
     output$plot6a <- renderPlotly({
-        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))) +
-        labs(title = "Cumulative") +
-        theme(plot.title = element_text(hjust = 0.5, size = 10),
-              plot.caption = element_blank(),
-              plot.subtitle = element_blank())
-        # gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
+        plot6a_input()
     })
 
     output$download_plot6a <- downloadHandler(
@@ -403,17 +509,41 @@ shinyServer(function(input, output)
             dev.off()
         }
     )
-    
+
+    plot6b_input <- function()
+    {
+        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_inc_data.csv"))%>%
+        mutate(text = paste0(format(Dates, "%b %d"),": ",
+                             round(value),
+                             " projected cases per day")
+        )
+
+        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                      format(latest, format = "%b %d"), sep = ' ')
+
+        axis.title.font <- list(size = 16)
+        tickfont        <- list(size = 16)
+
+        xaxis <- list(title = "Date",
+                      titlefont = axis.title.font, showticklabels = TRUE,
+                      tickangle = -30)
+
+        yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
+                      titlefont = axis.title.font)
+
+
+        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
+                color = ~ color, type = "scatter", mode = "line",
+                hoverinfo = "text") %>%
+        layout(xaxis = xaxis, yaxis = yaxis,
+               title = list(text = paste0("", "<br> ", cap, "<br>"))
+        )
+    }
+
     output$plot6b <- renderPlotly({
-        gplot = readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))) +
-        labs(title = "Incidence") +
-        theme(plot.title = element_text(hjust = 0.5, size = 10),
-              plot.caption = element_blank(),
-              plot.subtitle = element_blank())
-        # gplot$labels$title = ""
-        plotly::ggplotly(gplot, layerData = 1, tooltip = c("Dates", "value * 1e+05/1.34e+09"))
+        plot6b_input()
     })
-    
+
     output$download_plot6b <- downloadHandler(
         filename = glue("cov-ind-19_figure6b_2week_{Sys.Date()}.pdf"),
         content = function(file) {
