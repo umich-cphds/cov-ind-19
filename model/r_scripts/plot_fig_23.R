@@ -25,11 +25,11 @@ cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)
 
-xaxis <- list(title = "Days since total cases passed 100",
+xaxis <- list(title = "Days since cumulative cases passed 100",
               titlefont = axis.title.font, showticklabels = TRUE,
               tickangle = 0, showline = T, zeroline = F)
 
-yaxis <- list(title = "Total number of reported cases", titlefont =
+yaxis <- list(title = "Cumulative number of reported cases", titlefont =
               axis.title.font, tickfont = tickfont, zeroline = F,
               showline = F)
 

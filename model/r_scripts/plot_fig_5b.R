@@ -22,7 +22,7 @@ tickfont        <- list(size = 16)
 xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
               tickangle = -30, zeroline = F)
 
-yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
+yaxis <- list(title = "Number of new infected cases per 100,000 per day",
               titlefont = axis.title.font, zeroline = T)
 
 
