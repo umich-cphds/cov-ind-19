@@ -215,7 +215,7 @@ shinyServer(function(input, output)
         arrange(Date) %>%
         mutate(Day = seq(n()))
 
-        Day.max <- nrow(data %>% filter(Country == "India"))
+        Day.max <- 30
         data <- filter(data, Day <= Day.max) %>%
         mutate(Day = Day,
                Date = format(Date, format = "%b %d")) %>%
