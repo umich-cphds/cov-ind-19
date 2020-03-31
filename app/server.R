@@ -94,30 +94,29 @@ shinyServer(function(input, output)
         tickfont        <- list(size = 16)
 
         xaxis <- list(title = "Date", titlefont = axis.title.font,
-                      showticklabels = TRUE, tickangle = -30)
+                      showticklabels = TRUE, tickangle = -30, zeroline = F)
 
         yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
-                      tickfont = tickfont)
+                      tickfont = tickfont, zeroline = T)
 
-        plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
+        p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
                 type = "bar", colors = c("orange", "red", "dark green"),
                 hoverinfo = "text") %>%
         layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>")))
+               title = list(text = cap, xanchor = "left", x = 0)) %>%
+        plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
     }
 
     output$plot1 <- renderPlotly({
         plot1_input()
     })
 
-    output$download_plot1 <- downloadHandler(
-        filename = glue("cov-ind-19_figure1_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 9, height = 6)
-            plot1_input(use_title = TRUE)
-            dev.off()
-        }
-    )
+    # output$download_plot1 <- downloadHandler(
+    #     filename = glue("cov-ind-19_figure1_{Sys.Date()}.pdf"),
+    #     content = function(file) {
+    #         orca(plot1_input(), file)
+    #     }
+    # )
 
     plot2_input <- function(use_title = FALSE) {
 
@@ -158,17 +157,23 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Days since total cases passed 100",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, showline = T, zeroline = F)
 
         yaxis <- list(title = "Total number of reported cases", titlefont =
-                      axis.title.font, tickfont = tickfont)
+                      axis.title.font, tickfont = tickfont, zeroline = F,
+                      showline = F)
 
         data$text <- paste0(data$Date, ": ", data$Cases, " cases")
-        plot_ly(data, x = ~ Day, y = ~Cases, text = ~text, color = ~Country,
-                type = "scatter", mode = "lines+markers", hoverinfo = "text",
+        plot_ly(data %>% filter(Country != "India"), x = ~ Day, y = ~Cases,
+                text = ~text, color = ~Country, type = "scatter",
+                mode = "lines+markers", hoverinfo = "text",
                 line = list(width = 4)) %>%
+        add_trace(data = data %>% filter(Country == "India"), x = ~ Day,
+                  y = ~Cases, text = ~text, color = ~Country,
+                  type = "scatter", mode = "lines+markers",
+                  hoverinfo = "text", line = list(width = 4)) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
@@ -190,12 +195,14 @@ shinyServer(function(input, output)
 
         jhu.path <- "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series"
 
-        countries <- c("India")
+        countries <- c("France", "Germany", "India", "Iran", "Italy",
+                       "Korea, South", "US", "China")
 
         file <- paste0(jhu.path, "/time_series_covid19_confirmed_global.csv")
         data <- vroom(file) %>%
         select(Country = matches("Country"), matches("[0-9].*")) %>%
         filter(Country %in% countries) %>%
+        mutate(Country = ifelse(Country == 'Korea, South', 'South Korea', Country) %>% as.factor()) %>%
         group_by(Country) %>%
 
         # Since we don't care about counts in each state we collapse into a
@@ -223,17 +230,23 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Days since total cases passed 100",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, showline = T, zeroline = F)
 
         yaxis <- list(title = "Total number of reported cases", titlefont =
-                      axis.title.font, tickfont = tickfont)
+                      axis.title.font, tickfont = tickfont, zeroline = F,
+                      showline = F)
 
         data$text <- paste0(data$Date, ": ", data$Cases, " cases")
-        plot_ly(data, x = ~ Date, y = ~Cases, text = ~text,
-                type = "scatter", mode = "lines+markers", hoverinfo = "text",
-                line = list(width = 4, color = "dark green")) %>%
+        plot_ly(data %>% filter(Country != "India"), x = ~ Day, y = ~Cases,
+                text = ~text, color = ~Country, type = "scatter",
+                mode = "lines+markers", hoverinfo = "text",
+                line = list(width = 4), visible  = "legendonly") %>%
+        add_trace(data = data %>% filter(Country == "India"), x = ~ Day,
+                  y = ~Cases, text = ~text, color = ~Country, type = "scatter",
+                  mode = "lines+markers", hoverinfo = "text",
+                  line = list(width = 4), visible  = T) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
@@ -282,10 +295,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, showline = T)
 
         yaxis <- list(title = "Cumulative number of cases", type = "log",
-                      dtick = 1, titlefont = axis.title.font)
+                      dtick = 1, titlefont = axis.title.font, zeroline = T)
 
         plot_ly(data %>% filter(i),
                 x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
@@ -296,8 +309,8 @@ shinyServer(function(input, output)
                   type = "scatter", mode = "line"
         ) %>%
         layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>")
-        ))
+               title = list(text = cap, xanchor = "left", x = 0)
+        )
     }
 
     output$plot4a_full <- renderPlotly({
@@ -344,10 +357,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, showline = T)
 
         yaxis <- list(title = "Cumulative number of cases", type = "log",
-                      dtick = 1, titlefont = axis.title.font)
+                      dtick = 1, titlefont = axis.title.font, zeroline = T)
 
         plot_ly(data %>% filter(i),
                 x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
@@ -358,8 +371,8 @@ shinyServer(function(input, output)
                   type = "scatter", mode = "line"
         ) %>%
         layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>")
-        ))
+               title = list(text = cap, xanchor = "left", x = 0)
+        )
     }
 
     output$plot4b_full <- renderPlotly({
@@ -393,10 +406,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, zeroline = F)
 
         yaxis <- list(title = "Total number of infected cases per 100,000",
-                      titlefont = axis.title.font)
+                      titlefont = axis.title.font, zeroline = T)
 
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
@@ -404,7 +417,7 @@ shinyServer(function(input, output)
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
@@ -438,10 +451,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, zeroline = F)
 
         yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
-                      titlefont = axis.title.font)
+                      titlefont = axis.title.font, zeroline = T)
 
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
@@ -449,7 +462,7 @@ shinyServer(function(input, output)
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
@@ -482,10 +495,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, zeroline = F)
 
         yaxis <- list(title = "Total number of infected cases per 100,000",
-                      titlefont = axis.title.font)
+                      titlefont = axis.title.font, zeroline = T)
 
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
@@ -493,7 +506,7 @@ shinyServer(function(input, output)
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
@@ -526,10 +539,10 @@ shinyServer(function(input, output)
 
         xaxis <- list(title = "Date",
                       titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30)
+                      tickangle = -30, zeroline = F)
 
         yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
-                      titlefont = axis.title.font)
+                      titlefont = axis.title.font, zeroline = T)
 
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
@@ -537,7 +550,7 @@ shinyServer(function(input, output)
                 hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = paste0("", "<br> ", cap, "<br>"))
+               title = list(text = cap, xanchor = "left", x = 0)
         )
     }
 
