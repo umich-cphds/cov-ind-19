@@ -124,7 +124,6 @@ shinyUI(fluidPage(
       h3("Figure 6b"),
       plotlyOutput("plot6b", height = "600px"),
       hr(),
-      h3("Contributors to the package"),
       width = 8,
     )
   )
