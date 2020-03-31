@@ -43,6 +43,7 @@ shinyServer(function(input, output)
     }
     latest <- get_latest()
 
+    output$latest <- renderText(paste0("Data last updated ", format(latest, format = "%B %d")))
     plot1_input <- function(use_title = FALSE) {
         start.date <- as.Date("2020-03-01")
 

@@ -50,10 +50,10 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      h1("Current Observed Data (Updated Daily)"),
-      h3("(Please wait a few seconds for the figures to load)"),
+      h4("(Please wait a few seconds for the figures to load)"),
+      h1(textOutput("latest")),
       h2(""),
-      h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India from March 1 to current date"),
+      h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India since March 1"),
       p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
           You can hover your cursor over the bar to see the exact numerical counts."),
       plotlyOutput("plot1", height = "600px"),
