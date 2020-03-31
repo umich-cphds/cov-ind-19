@@ -49,11 +49,30 @@ fig_5_data <- function(x) {
 }
 
 # processinng ----------
-mod_2 <- fig_5_data("India_2_plot_data.RData")[[1]]
-mod_3 <- fig_5_data("India_3_plot_data.RData")[[1]]
-mod_4 <- fig_5_data("India_4_plot_data.RData")[[1]]
-mod_5 <- fig_5_data("India_5_plot_data.RData")[[1]]
-mod_6 <- fig_5_data("India_6_plot_data.RData")[[1]]
+mod_2 <- fig_5_data("India_2_plot_data.RData")
+
+mod_2_up <- mod_2[[2]]
+mod_2    <- mod_2[[1]]
+
+mod_3 <- fig_5_data("India_3_plot_data.RData")
+
+mod_3_up <- mod_3[[2]]
+mod_3    <- mod_3[[1]]
+
+mod_4 <- fig_5_data("India_4_plot_data.RData")
+
+mod_4_up <- mod_4[[2]]
+mod_4    <- mod_4[[1]]
+
+mod_5 <- fig_5_data("India_5_plot_data.RData")
+
+mod_5_up <- mod_5[[2]]
+mod_5    <- mod_5[[1]]
+
+mod_6 <- fig_5_data("India_6_plot_data.RData")
+
+mod_6_up <- mod_6[[2]]
+mod_6    <- mod_6[[1]]
 
 observed_plot <- tibble(
   Dates    = dates_1, 
@@ -62,19 +81,29 @@ observed_plot <- tibble(
   )
 
 mod_2               <- mod_2 - dplyr::lag(mod_2)
+mod_2_up            <- mod_2_up - dplyr::lag(mod_2_up)
 mod_3               <- mod_3 - dplyr::lag(mod_3)
+mod_3_up            <- mod_3_up - dplyr::lag(mod_3_up)
 mod_4               <- mod_4 - dplyr::lag(mod_4)
+mod_4_up            <- mod_4_up - dplyr::lag(mod_4_up)
 mod_5               <- mod_5 - dplyr::lag(mod_5)
+mod_5_up            <- mod_5_up - dplyr::lag(mod_5_up)
 mod_6               <- mod_6 - dplyr::lag(mod_6)
+mod_6_up            <- mod_6_up - dplyr::lag(mod_6_up)
 observed_plot$value <- observed_plot$value - lag(observed_plot$value)
 
 forecasts_plot <- tibble(
-  Dates = forecast_dt,
-  mod_2 = mod_2,
-  mod_3 = mod_3,
-  mod_4 = mod_4,
-  mod_5 = mod_5,
-  mod_6 = mod_6,
+  Dates    = forecast_dt,
+  mod_2    = mod_2,
+  mod_2_up = mod_2_up,
+  mod_3    = mod_3,
+  mod_3_up = mod_3_up,
+  mod_4    = mod_4,
+  mod_4_up = mod_4_up,
+  mod_5    = mod_5,
+  mod_5_up = mod_5_up,
+  mod_6    = mod_6,
+  mod_6_up = mod_6_up,
   ) %>%
   gather(variable, value, -Dates) 
 
@@ -91,16 +120,23 @@ complete_plot <- bind_rows(observed_plot,
   arrange(Dates) %>%
   mutate(
     color = as.factor(case_when(
-      variable == "True" ~ "Observed",
-      variable == "mod_2" ~ "Soc. Dist. + Travel Ban",
-      variable == "mod_3" ~ "No Intervention",
-      variable == "mod_4" ~ "Moderate return",
-      variable == "mod_5" ~ "Normal (pre-intervention)",
-      variable == "mod_6" ~ "Cautious return",
-      variable == "Limit" ~ "Limit"
+      variable == "True"     ~ "Observed",
+      variable == "mod_2"    ~ "Soc. Dist. + Travel Ban",
+      variable == "mod_2_up" ~ "Soc. Dist. + Travel Ban CI",
+      variable == "mod_3"    ~ "No Intervention",
+      variable == "mod_3_up" ~ "No Intervention CI",
+      variable == "mod_4"    ~ "Moderate return",
+      variable == "mod_4_up" ~ "Moderate return CI",
+      variable == "mod_5"    ~ "Normal (pre-intervention)",
+      variable == "mod_5_up" ~ "Normal (pre-intervention) CI",
+      variable == "mod_6"    ~ "Cautious return",
+      variable == "mod_6_up" ~ "Cautious return CI",
+      variable == "Limit"    ~ "Limit"
     )),
     type = as.factor(if_else(variable == "Limit", "dashed", "solid"))
   )
+
+write_csv(complete_plot, path = "./figure_5_data.csv")
 
 complete_plot <- complete_plot %>%
   filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d") & Dates >= as.Date("2020-04-15", format = "%Y-%m-%d")) %>%
