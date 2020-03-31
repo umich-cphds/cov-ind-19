@@ -27,29 +27,35 @@ tickfont        <- list(size = 16)
 
 xaxis <- list(title = "Days since total cases passed 100",
               titlefont = axis.title.font, showticklabels = TRUE,
-              tickangle = -30, showline = T, zeroline = F)
+              tickangle = 0, showline = T, zeroline = F)
 
 yaxis <- list(title = "Total number of reported cases", titlefont =
               axis.title.font, tickfont = tickfont, zeroline = F,
               showline = F)
 
-data$text <- paste0(data$Date, ": ", data$Case, " cases")
+data$text <- paste0(data$Date, ": ",
+                    format(data$Case, big.mark = ",", scientific = FALSE, trim = T),
+                    " cases")
+
+colors <- c(
+    "China"       = "#ED553B",
+    "South Korea" = "#56738A",
+    "Italy"       = "#0472CF",
+    "Iran"        = "#173F5F",
+    "France"      = "#3CAEA3",
+    "Germany"     = "#f2c82e",
+    "US"          = "#822F21",
+    "India"       = "#138808"
+)
+
 p <- plot_ly(data %>% filter(Country == "India"), x = ~ Day, y = ~Case,
-        text = ~text, color = ~Country, type = "scatter",
+        text = ~text, color = ~Country, colors = colors, type = "scatter",
         mode = "lines+markers", hoverinfo = "text",
         line = list(width = 4)) %>%
 layout(xaxis = xaxis, yaxis = yaxis,
        title = list(text = cap, xanchor = "left", x = 0)
 )
 
-
-p2 <- p %>%
-add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
-          y = ~Case, text = ~text, color = ~Country,
-          type = "scatter", mode = "lines+markers",
-          hoverinfo = "text", line = list(width = 4))
-
-saveRDS(p2, paste0("~/cov-ind-19-data/", latest, "/plot2.RDS"))
 
 p2 <- p %>%
 add_trace(data = data %>% filter(Country != "India"), x = ~ Day,

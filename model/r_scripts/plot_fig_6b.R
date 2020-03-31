@@ -7,10 +7,10 @@ latest <- Sys.Date()
 
 data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/figure_5_inc_data.csv")) %>%
 mutate(text = paste0(format(Dates, "%b %d"),": ",
-                     round(value),
+                     format(round(value), big.mark = ",", scientific = FALSE,
+                            trim = T),
                      " projected cases per day")
 )
-
 
 cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
               format(latest, format = "%b %d"), sep = ' ')
@@ -18,8 +18,7 @@ cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)
 
-xaxis <- list(title = "Date",
-              titlefont = axis.title.font, showticklabels = TRUE,
+xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
               tickangle = -30, zeroline = F)
 
 yaxis <- list(title = "Total number of new infected cases per 100,000 per day",

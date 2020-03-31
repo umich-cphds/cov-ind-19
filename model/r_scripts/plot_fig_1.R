@@ -27,19 +27,26 @@ cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
 title <- paste("Daily number of COVID-19 new cases, fatalities and",
                "recovered cases in India since March 1")
 
-data$text <- paste0(data$Date, ": ", data$Count, " ", data$Type)
+data$text <- paste0(data$Date, ": ",
+                    format(data$Count, big.mark = ",",
+                    scientific = T, trim = T), " ", data$Type)
 
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)
 
-xaxis <- list(title = "Date", titlefont = axis.title.font,
+xaxis <- list(title = "", titlefont = axis.title.font,
               showticklabels = TRUE, tickangle = -30, zeroline = F)
 
 yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
               tickfont = tickfont, zeroline = T)
+colors <- c(
+  "Fatalities" = "#ED553B",
+  "New Cases"  = "#f2c82e",
+  "Recovered"  = "#138808"
+)
 
 p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
-        type = "bar", colors = c("orange", "red", "dark green"),
+        type = "bar", colors = colors,
         hoverinfo = "text") %>%
 layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis,
        title = list(text = cap, xanchor = "left", x = 0)) %>%

@@ -17,9 +17,10 @@ mutate(variable = recode(variable,
     "mod_4_up" = "Lockdown upper credible interval")
 ) %>%
 
-mutate(text = paste0(format(Dates, format("%b %d")), ": ", value,
-                    ifelse(variable == "Observed", " observed cases",
-                                                   " projected cases")),
+mutate(text = paste0(format(Dates, format("%b %d")), ": ",
+                     format(value, big.mark = ",", scientific = FALSE),
+                     ifelse(variable == "Observed", " observed cases",
+                                                    " projected cases")),
        i = variable != "Lockdown upper credible interval"
 )
 
@@ -32,8 +33,7 @@ cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)
 
-xaxis <- list(title = "Date",
-              titlefont = axis.title.font, showticklabels = TRUE,
+xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
               tickangle = -30, showline = T)
 
 yaxis <- list(title = "Cumulative number of cases", type = "log",
@@ -41,15 +41,17 @@ yaxis <- list(title = "Cumulative number of cases", type = "log",
 
 
 colors <- c("#979799", "#ED553B", "#f2c82e", "#173F5F", "#173F5F")
-p <- plot_ly(data %>% filter(i),
-        x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
-        colors = colors, type = "bar", hoverinfo = "text"
-) %>%
-add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
-          type = "scatter", mode = "line"
+p <- plot_ly(data %>% filter(i), x = ~ Dates, y = ~ value, text = ~text,
+             color = ~variable, colors = colors, type = "bar",
+             hoverinfo = "text"
 ) %>%
 layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-       title = list(text = cap, xanchor = "left", x = 0)
+       title = list(text = cap, xanchor = "left", x = 0), shapes =
+       list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
+            x1 = latest, layer = "below")
+) %>% add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
+          type = "scatter", mode = "line", line =
+          list(width = 3, dash = "dash")
 )
 
 saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot4a.RDS"))

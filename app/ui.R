@@ -41,9 +41,12 @@ shinyUI(fluidPage(
       p("R modeling package: ", a("eSIR R package", .noWS = "outside", href = "https://github.com/lilywang1988/eSIR")),
       p("Source code: ", a("COV-IND-19 GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19")),
       p("Please direct inquiries to ",
-        a("Michael Kleinsasser", .noWS = "outside", href="mailto:mkleinsa@umich.edu"),", ",
-        a("Maxwell Salvatore", .noWS = "outside", href="mailto:mmsalva@umich.edu"), " and ",
-        a("Bhramar Mukherjee", .noWS = "outside", href="mailto:bhramar@umich.edu"))
+        a("Maxwell Salvatore", .noWS = "outside", href="mailto:mmsalva@umich.edu"),", ",
+        a("Alexander Rix", .noWS = "outside", href="mailto:alexrix@umich.edu"),", ",
+        a("Michael Kleinsasser", .noWS = "outside", href="mailto:mkleinsa@umich.edu"),", and ",
+        a("Bhramar Mukherjee", .noWS = "outside", href="mailto:bhramar@umich.edu")),
+      p("The COV-IND-19 study group is comprised of: Maxwell Salvatore, Alexander Rix, Michael Kleinsasser, Daniel Barker, Lili Wang, Rupam Bhattacharyya, Soumik Purkayastha, Debashree Ray,
+            Shariq Mohammed, Aritra Halder, Debraj Bose, Peter Song, Mousumi Banerjee, Veera Baladandayuthapani, and Parikshit Ghosh. Led by PI ", a("Bhramar Mukherjee", .noWS = "outside", href = "http://www-personal.umich.edu/~bhramar/"), ".")
     ),
 
 
@@ -122,8 +125,6 @@ shinyUI(fluidPage(
       plotlyOutput("plot6b", height = "600px"),
       hr(),
       h3("Contributors to the package"),
-      p("The COV-IND-19 study group is comprised of: Maxwell Salvatore, Michael Kleinsasser, Alexander Rix, Daniel Barker, Lili Wang, Rupam Bhattacharyya, Soumik Purkayastha, Debashree Ray,
-          Shariq Mohammed, Aritra Halder, Debraj Bose, Peter Song, Mousumi Banerjee, Veera Baladandayuthapani, and Parikshit Ghosh. Led by PI ", a("Bhramar Mukherjee", .noWS = "outside", href = "http://www-personal.umich.edu/~bhramar/"), "."),
       width = 8,
     )
   )
