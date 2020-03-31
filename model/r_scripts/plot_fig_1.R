@@ -29,7 +29,7 @@ title <- paste("Daily number of COVID-19 new cases, fatalities and",
 
 data$text <- paste0(data$Date, ": ",
                     format(data$Count, big.mark = ",",
-                    scientific = T, trim = T), " ", data$Type)
+                    scientific = F, trim = T), " ", data$Type)
 
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)
