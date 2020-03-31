@@ -166,7 +166,7 @@ shinyServer(function(input, output)
         data$text <- paste0(data$Date, ": ", data$Cases, " cases")
         plot_ly(data, x = ~ Day, y = ~Cases, text = ~text, color = ~Country,
                 type = "scatter", mode = "lines+markers", hoverinfo = "text",
-                line = list(width = 3)) %>%
+                line = list(width = 4)) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
         )
@@ -229,9 +229,9 @@ shinyServer(function(input, output)
                       axis.title.font, tickfont = tickfont)
 
         data$text <- paste0(data$Date, ": ", data$Cases, " cases")
-        plot_ly(data, x = ~ Day, y = ~Cases, text = ~text,
+        plot_ly(data, x = ~ Date, y = ~Cases, text = ~text,
                 type = "scatter", mode = "lines+markers", hoverinfo = "text",
-                line = list(width = 3, color = "dark green")) %>%
+                line = list(width = 4, color = "dark green")) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
         )
@@ -401,7 +401,7 @@ shinyServer(function(input, output)
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
                 color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text"
+                hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
@@ -446,7 +446,7 @@ shinyServer(function(input, output)
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
                 color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text"
+                hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
@@ -490,7 +490,7 @@ shinyServer(function(input, output)
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
                 color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text"
+                hoverinfo = "text", line = list(width = 4)
         ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
@@ -534,7 +534,8 @@ shinyServer(function(input, output)
 
         plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
                 color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text") %>%
+                hoverinfo = "text", line = list(width = 4)
+        ) %>%
         layout(xaxis = xaxis, yaxis = yaxis,
                title = list(text = paste0("", "<br> ", cap, "<br>"))
         )
