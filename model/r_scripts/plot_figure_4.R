@@ -95,15 +95,19 @@ fig_4_data <- function(x) {
   return(list(india_confirm, india_confirm_up))
 }
 
-mod_3 <- fig_4_data("./India_3_plot_data.RData")[[1]]
-mod_2 <- fig_4_data("./India_2_plot_data.RData")[[1]]
+mod_3 <- fig_4_data("./India_3_plot_data.RData")
+mod_2 <- fig_4_data("./India_2_plot_data.RData")
 mod_4 <- fig_4_data("./India_4_plot_data.RData")
 
+mod_2_up <- mod_2[[2]]
+mod_2    <- mod_2[[1]]
+mod_3_up <- mod_3[[2]]
+mod_3    <- mod_3[[1]]
 mod_4_up <- mod_4[[2]]
 mod_4    <- mod_4[[1]]
 
 observed_plot  <- data.frame(Dates = dates_1,variable = rep("True", length(dates_1)), value = dataf)
-forecasts      <- data.frame(Dates = forecast_dt, mod_3, mod_2, mod_4, mod_4_up)
+forecasts      <- data.frame(Dates = forecast_dt, mod_3, mod_3_up, mod_2, mod_2_up, mod_4, mod_4_up)
 forecasts_plot <- melt(forecasts, id = "Dates")
 
 complete_plot           <- rbind(observed_plot, forecasts_plot)
