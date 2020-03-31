@@ -11,7 +11,13 @@ LineColor = function(x) {
   if (x == "mod_3") {
     return("red")
   }
+  if (x == "mod_3_up") {
+    return("red")
+  }
   if (x == "mod_2") {
+    return("green")
+  }
+  if (x == "mod_2_up") {
     return("green")
   }
   if (x == "mod_4") {
