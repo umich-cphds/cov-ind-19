@@ -43,16 +43,16 @@ yaxis <- list(title = "Cumulative number of cases", type = "log",
 colors <- c("#979799", "#ED553B", "#f2c82e", "#173F5F", "#173F5F")
 p <- plot_ly(data %>% filter(i),
         x = ~ Dates, y = ~ value, text = ~text, color = ~variable,
-        colors = colors, type = "bar", hoverinfo = "text", shapes =
-        list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
-             x1 = latest, layer = "below")
+        colors = colors, type = "bar", hoverinfo = "text"
 ) %>%
 add_trace(data = data %>% filter(!i), x = ~Dates, y = ~value,
           type = "scatter", mode = "line", line =
           list(width = 3, dash = "dash")
 ) %>%
 layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
-       title = list(text = cap, xanchor = "left", x = 0)
+       title = list(text = cap, xanchor = "left", x = 0), shapes =
+       list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
+            x1 = latest, layer = "below")
 )
 
 saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot4b.RDS"))
