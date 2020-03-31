@@ -512,7 +512,7 @@ shinyServer(function(input, output)
 
     plot6b_input <- function()
     {
-        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_inc_data.csv"))%>%
+        data <- vroom(paste0(github.path, latest, "/2wk/figure_5_inc_data.csv"))%>%
         mutate(text = paste0(format(Dates, "%b %d"),": ",
                              round(value),
                              " projected cases per day")
