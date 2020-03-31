@@ -95,7 +95,7 @@ shinyUI(fluidPage(
         "In general terms, the one-week delay models (Figures 4a, 5a, and 5b) can be thought of as 'quick adherence' to the lockdown measures, while the 'two-week' delay models (Figures 4b, 6a, and 6b) can be though of as 'slow adherence' to the lockdown measures.",
         HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
         HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
-        "You can hover of the bars for dates and natural log counts. To obtain the estimate, exponentiate the the log value seen. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.",
+        "You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.",
         "Our codes are available on GitHub and so users can change the nature of interventions."),
       h3("Figure 4a"),
       plotlyOutput("plot4a_full", height = "600px"),
