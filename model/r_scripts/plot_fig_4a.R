@@ -18,7 +18,7 @@ mutate(variable = recode(variable,
 ) %>%
 
 mutate(text = paste0(format(Dates, format("%b %d")), ": ",
-                     format(value, big.mark = ",", scientific = FALSE),
+                     format(value, big.mark = ",", scientific = F, trim = T),
                      ifelse(variable == "Observed", " observed cases",
                                                     " projected cases")),
        i = variable != "Lockdown upper credible interval"
