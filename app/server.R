@@ -110,41 +110,8 @@ shinyServer(function(input, output)
         }
     )
 
-
-    plot5a_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_data.csv")) %>%
-        mutate(text = paste0(format(Dates, "%b %d"),": ",
-                             round(value),
-                             " projected total cases")
-        )
-
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, zeroline = F)
-
-        yaxis <- list(title = "Total number of infected cases per 100,000",
-                      titlefont = axis.title.font, zeroline = T)
-
-
-        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, type = "scatter", mode = "line",
-                hoverinfo = "text", line = list(width = 4)
-        ) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot5a <- renderPlotly({
-        plot5a_input()
+            readRDS(url(paste0(github.path, latest, "/plot5a.RDS")))
     })
 
     output$download_plot5a <- downloadHandler(
@@ -156,41 +123,8 @@ shinyServer(function(input, output)
         }
     )
 
-    plot5b_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/1wk/figure_5_inc_data.csv")) %>%
-        mutate(text = paste0(format(Dates, "%b %d"),": ",
-                             round(value),
-                             " projected cases per day")
-        )
-
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, zeroline = F)
-
-        yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
-                      titlefont = axis.title.font, zeroline = T)
-
-
-        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, colors = colors, type = "scatter",
-                mode = "line", hoverinfo = "text", line = list(width = 4)
-        ) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot5b <- renderPlotly({
-        plot5b_input()
+        readRDS(url(paste0(github.path, latest, "/plot5b.RDS")))
     })
 
     output$download_plot5b <- downloadHandler(
@@ -202,40 +136,8 @@ shinyServer(function(input, output)
         }
     )
 
-    plot6a_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/2wk/figure_5_data.csv")) %>%
-        mutate(text = paste0(format(Dates, "%b %d"),": ",
-                             round(value),
-                             " projected total cases")
-        )
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, zeroline = F)
-
-        yaxis <- list(title = "Total number of infected cases per 100,000",
-                      titlefont = axis.title.font, zeroline = T)
-
-
-        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, colors = colors, type = "scatter", mode = "line",
-                hoverinfo = "text", line = list(width = 4)
-        ) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
-
     output$plot6a <- renderPlotly({
-        plot6a_input()
+        readRDS(url(paste0(github.path, latest, "/plot6a.RDS")))
     })
 
     output$download_plot6a <- downloadHandler(
@@ -247,39 +149,9 @@ shinyServer(function(input, output)
         }
     )
 
-    plot6b_input <- function()
-    {
-        data <- vroom(paste0(github.path, latest, "/2wk/figure_5_inc_data.csv"))%>%
-        mutate(text = paste0(format(Dates, "%b %d"),": ",
-                             round(value),
-                             " projected cases per day")
-        )
-
-        cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                      format(latest, format = "%b %d"), sep = ' ')
-
-        axis.title.font <- list(size = 16)
-        tickfont        <- list(size = 16)
-
-        xaxis <- list(title = "Date",
-                      titlefont = axis.title.font, showticklabels = TRUE,
-                      tickangle = -30, zeroline = F)
-
-        yaxis <- list(title = "Total number of new infected cases per 100,000 per day",
-                      titlefont = axis.title.font, zeroline = T)
-
-        colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-        plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-                color = ~ color, colors = colors, type = "scatter", mode = "line",
-                hoverinfo = "text", line = list(width = 4)
-        ) %>%
-        layout(xaxis = xaxis, yaxis = yaxis,
-               title = list(text = cap, xanchor = "left", x = 0)
-        )
-    }
 
     output$plot6b <- renderPlotly({
-        plot6b_input()
+        readRDS(url(paste0(github.path, latest, "/plot6b.RDS")))
     })
 
     output$download_plot6b <- downloadHandler(
@@ -297,7 +169,4 @@ shinyServer(function(input, output)
          list(src = file, contentType = "image/gif", alt = "Map not available",
               width = 500)
      }, deleteFile = FALSE)
-
-
-
 })
