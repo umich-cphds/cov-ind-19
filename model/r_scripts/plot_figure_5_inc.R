@@ -7,8 +7,8 @@ options(stringsAsFactors=FALSE)
 # directories ----------
 
 arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
-today <- Sys.Date()  -1
-wd <- paste0("~/cov-ind-19-data/", today, "/", "2", "wk")
+today <- Sys.Date()
+wd <- paste0("~/cov-ind-19-data/", today, "/", arrayid, "wk")
 setwd(wd)
 getwd()
 
