@@ -43,7 +43,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
     p <- plot_ly(data %>% filter(Country == "India"), x = ~ Day, y = ~Case,
                  text = ~text, color = ~Country, colors = colors,
                  type = "scatter", mode = "lines+markers", hoverinfo = "text",
-                 line = list(width = 4)
+                 line = list(width = 4), hoverlabel = list(align = "left")
     ) %>%
     layout(xaxis = xaxis, yaxis = yaxis, title =
            list(text = cap, xanchor = "left", x = 0), legend =
