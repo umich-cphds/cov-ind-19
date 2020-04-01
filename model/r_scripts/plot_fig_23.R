@@ -13,14 +13,14 @@ mutate(Day = seq(n()))
 
 Day.max <- 30 # nrow(data %>% filter(Country == "India"))
 data <- filter(data, Day <= Day.max) %>%
-mutate(Date = format(Date, format = "%b %d")) %>%
+mutate(Date = format(Date, format = "%b %e")) %>%
 ungroup()
 
 title <- paste("Cumulative number of COVID-19 cases in India compared",
                "to other countries affected by the pandemic")
 
 cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-              format(latest, format = "%b %d"), sep = ' ')
+              format(latest, format = "%b %e"), sep = ' ')
 
 axis.title.font <- list(size = 16)
 tickfont        <- list(size = 16)

@@ -13,7 +13,7 @@ mutate_at(vars(Case, Recovered, Death), list(function(x) {
 })) %>%
 filter(Date >= start.date) %>%
 gather(Case, Recovered, Death, key = Type, value = Count) %>%
-mutate(Date = as.factor(format(Date, format = "%b %d"))) %>%
+mutate(Date = as.factor(format(Date, format = "%b %e"))) %>%
 mutate(Type = factor(
 recode(Type,
     Case = "New Cases",
@@ -22,7 +22,7 @@ recode(Type,
 ), levels = c("New Cases", "Fatalities", "Recovered")))
 
 cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-              format(latest, format = "%b %d"), sep = ' ')
+              format(latest, format = "%b %e"), sep = ' ')
 
 title <- paste("Daily number of COVID-19 new cases, fatalities and",
                "recovered cases in India since March 1")
