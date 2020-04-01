@@ -11,7 +11,13 @@ LineColor = function(x) {
   if (x == "mod_3") {
     return("red")
   }
+  if (x == "mod_3_up") {
+    return("red")
+  }
   if (x == "mod_2") {
+    return("green")
+  }
+  if (x == "mod_2_up") {
     return("green")
   }
   if (x == "mod_4") {
@@ -95,15 +101,19 @@ fig_4_data <- function(x) {
   return(list(india_confirm, india_confirm_up))
 }
 
-mod_3 <- fig_4_data("./India_3_plot_data.RData")[[1]]
-mod_2 <- fig_4_data("./India_2_plot_data.RData")[[1]]
+mod_3 <- fig_4_data("./India_3_plot_data.RData")
+mod_2 <- fig_4_data("./India_2_plot_data.RData")
 mod_4 <- fig_4_data("./India_4_plot_data.RData")
 
+mod_2_up <- mod_2[[2]]
+mod_2    <- mod_2[[1]]
+mod_3_up <- mod_3[[2]]
+mod_3    <- mod_3[[1]]
 mod_4_up <- mod_4[[2]]
 mod_4    <- mod_4[[1]]
 
 observed_plot  <- data.frame(Dates = dates_1,variable = rep("True", length(dates_1)), value = dataf)
-forecasts      <- data.frame(Dates = forecast_dt, mod_3, mod_2, mod_4, mod_4_up)
+forecasts      <- data.frame(Dates = forecast_dt, mod_3, mod_3_up, mod_2, mod_2_up, mod_4, mod_4_up)
 forecasts_plot <- melt(forecasts, id = "Dates")
 
 complete_plot           <- rbind(observed_plot, forecasts_plot)
@@ -112,6 +122,8 @@ rownames(complete_plot) <- NULL
 
 complete_plot$color <- unlist(lapply(complete_plot$variable, LineColor))
 
+write_csv(complete_plot, path = "./figure_4_data.csv")
+
 # ymax        <- max(log(complete_plot$value))
 ymax        <- log(4e6)
 my_title    <- paste0("COVID-19 Cumulative Cases by Day for India")
@@ -119,9 +131,8 @@ my_subtitle <- paste0("as of ", format(latest_date, "%d %B %Y"))
 mybreaks    <- seq(0, ymax, length.out = 10)
 
 complete_plot <- complete_plot %>%
-  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d"))
-
-write_csv(complete_plot, path = "./figure_4_data.csv")
+  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d")) %>%
+  filter(!color %in% c("mod_2_up", "mod_3_up"))
 
 f4plotdata = complete_plot[complete_plot$variable != "mod_4_up", ]
 

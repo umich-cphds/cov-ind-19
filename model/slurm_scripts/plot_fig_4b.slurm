@@ -2,7 +2,7 @@
 
 #SBATCH --mail-type=FAIL
 #SBATCH --time=10:00
-#SBATCH --job-name=plot_fig_4b
+#SBATCH --job-name=fig_4b
 #SBATCH --mem-per-cpu=1g
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 #SBATCH --account=covid19_project1
