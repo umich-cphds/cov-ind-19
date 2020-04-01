@@ -108,9 +108,9 @@ forecasts_plot <- tibble(
   gather(variable, value, -Dates) 
 
 connect_plot <- tibble(
-  Dates    = rep(as.Date("03-23-2020", format = "%m-%d-%y"), 5),
-  variable = c("mod_2", "mod_3", "mod_4", "mod_5", "mod_6"),
-  value    = rep(499, 5)
+  Dates    = rep(as.Date("03-23-2020", format = "%m-%d-%y"), 10),
+  variable = c("mod_2", "mod_2_up", "mod_3","mod_3_up", "mod_4","mod_4_up", "mod_5","mod_5_up", "mod_6", "mod_6_up"),
+  value    = rep(499, 10)
   )
 
 complete_plot <- bind_rows(observed_plot,
@@ -133,16 +133,15 @@ complete_plot <- bind_rows(observed_plot,
       variable == "mod_6_up" ~ "Cautious return CI",
       variable == "Limit"    ~ "Limit"
     )),
-    type = as.factor(if_else(variable == "Limit", "dashed", "solid"))
+    type = as.factor(if_else(variable %in%c("Limit", "Soc. Dist. + Travel Ban CI", "No Intervention CI", "Moderate return CI", "Normal (pre-intervention) CI", "Cautious return CI"), "dashed", "solid"))
   )
 
-write_csv(complete_plot, path = "./figure_5_data.csv")
+write_csv(complete_plot, path = "./figure_5_inc_data.csv")
 
 complete_plot <- complete_plot %>%
   filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d") & Dates >= as.Date("2020-04-15", format = "%Y-%m-%d")) %>%
-  filter(color != "No Intervention")
-
-write_csv(complete_plot, "./figure_5_inc_data.csv")
+  filter(!(color %in% c("No Intervention", "No Intervention CI", "Cautious return CI", "Normal (pre-intervention) CI", "Moderate return CI",
+                        "Soc. Dist. + Travel Ban CI")))
 
 complete_plot_solid <- complete_plot %>% filter(type == 'solid')
 complete_plot_dash  <- complete_plot %>% filter(type == 'dashed')
@@ -153,8 +152,8 @@ color_values <- c("Soc. Dist. + Travel Ban"   = "#f2c82e",
                   "Moderate return"           = "#0472cf",
                   "Normal (pre-intervention)" = "#3CAEA3",
                   "Cautious return"           = "#173F5F",
-                  Limit                       = "#3c4c55",
-                  Observed                    = "black")
+                  "Limit"                     = "#3c4c55",
+                  "Observed"                  = "black")
 
 my_title    <- paste0("Predicted number of new COVID-19 infections")
 my_subtitle <- paste0("as of ", format(latest_date, "%d %B, %Y"))
