@@ -25,7 +25,7 @@ forecast_dt     <- seq(from = as.Date(dates_1[length(dates_1)] + 1, format = "%m
 adj_len         <- 2
 adj             <- T
 plot_start_date <- "2020-04-30"
-plot_end_date   <- "2020-08-30"
+plot_end_date   <- "2020-08-31"
 
 # function ----------
 fig_5_data <- function(x) {
