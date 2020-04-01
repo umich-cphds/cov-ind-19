@@ -114,9 +114,9 @@ complete_plot <- bind_rows(observed_plot,
       variable == "True" ~ "Observed",
       variable == "mod_2" ~ "Soc. Dist. + Travel Ban",
       variable == "mod_3" ~ "No Intervention",
-      variable == "mod_4" ~ "Moderate activity",
+      variable == "mod_4" ~ "Moderate return",
       variable == "mod_5" ~ "Normal (pre-intervention)",
-      variable == "mod_6" ~ "Hesitant",
+      variable == "mod_6" ~ "Cautious return",
       variable == "Limit" ~ "Limit"
     )),
     type = as.factor(if_else(variable == "Limit", "dashed", "solid"))
