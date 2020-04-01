@@ -7,8 +7,8 @@ options(stringsAsFactors=FALSE)
 # directories ----------
 
 arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
-today <- Sys.Date()
-wd <- paste0("~/cov-ind-19-data/", today, "/", arrayid, "wk")
+today <- Sys.Date()  -1
+wd <- paste0("~/cov-ind-19-data/", today, "/", "2", "wk")
 setwd(wd)
 getwd()
 
@@ -30,12 +30,12 @@ plot_end_date   <- "2020-08-31"
 # function ----------
 fig_5_data <- function(x) {
   load(x)
-  
+
   T_prime     <- plot_data_ls[[2]][[1]]
   y_text_ht   <- plot_data_ls[[4]][[1]]
   data_comp   <- plot_data_ls[[4]][[3]]
   data_comp_R <- plot_data_ls[[5]][[3]]
-  
+
   india_confirm    <- round(N * (data_comp[(T_prime + 1):(T_prime + forecast_length), "mean"] +
                             data_comp_R[(T_prime + 1):(T_prime + forecast_length),"mean"]))
   india_confirm_up <- round(N*(data_comp[(T_prime + 1):(T_prime + forecast_length),"upper"] +
@@ -71,8 +71,8 @@ mod_6_up <- mod_6[[2]]
 mod_6    <- mod_6[[1]]
 
 observed_plot <- tibble(
-  Dates    = dates_1, 
-  variable = rep("True", length(dates_1)), 
+  Dates    = dates_1,
+  variable = rep("True", length(dates_1)),
   value    = dataf
   )
 

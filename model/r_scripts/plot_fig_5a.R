@@ -2,37 +2,51 @@ library(tidyverse)
 library(vroom)
 library(plotly)
 
-start.date <- as.Date("2020-03-01")
-latest <- Sys.Date()
-
-data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/figure_5_data.csv")) %>%
-mutate(text = paste0(format(Dates, "%b %d"),": ",
-                     format(round(value), big.mark = ",", scientific = FALSE,
+start.date <- as.Date("2020-04-30")
+end.date <- as.Date("2020-08-31")
+latest <- Sys.Date() - 1
+plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
+                        end.date = end.date <- as.Date("2020-08-31"),
+                        latest = Sys.Date())
+{
+    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/figure_5_data.csv")) %>%
+    mutate(Dates = as.Date(Dates)) %>%
+    filter(Dates >= start.date & Dates <= end.date & variable != "mod_3") %>%
+    mutate(date.fmt = paste0(format(Dates, "%b %d")),
+           val.fmt = format(round(value), big.mark = ",", scientific = FALSE,
                             trim = T),
-                     " projected cumulative cases")
-)
+            ci.fmt = format(round(upper_ci), big.mark = ",", scientific = FALSE,
+                            trim = T),
+    ) %>%
+    mutate(
+        text = paste0(paste0(date.fmt, ": ", val.fmt, " projected total cases"),
+                      paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
+        )
+    )
 
+    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    format(latest, format = "%b %d"), sep = ' ')
 
-cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-              format(latest, format = "%b %d"), sep = ' ')
+    axis.title.font <- list(size = 16)
+    tickfont        <- list(size = 16)
 
-axis.title.font <- list(size = 16)
-tickfont        <- list(size = 16)
+    xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
+    tickangle = -30, zeroline = F)
 
-xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
-              tickangle = -30, zeroline = F)
+    yaxis <- list(title = "Cumulative number of infected cases per 100,000",
+    titlefont = axis.title.font, zeroline = T)
 
-yaxis <- list(title = "Cumulative number of infected cases per 100,000",
-              titlefont = axis.title.font, zeroline = T)
-
-colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
+    colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
+    p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
         color = ~ color, colors = colors, type = "scatter", mode = "line",
         hoverinfo = "text", line = list(width = 4)
-) %>%
-layout(xaxis = xaxis, yaxis = yaxis,
-       title = list(text = cap, xanchor = "left", x = 0),
-       legend = list(orientation = "h", font = list(size = 16))
-)
+    ) %>%
+    layout(xaxis = xaxis, yaxis = yaxis,
+        title = list(text = cap, xanchor = "left", x = 0),
+        legend = list(orientation = "h", font = list(size = 16))
+    )
 
-saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot5a.RDS"))
+    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot5a.csv"))
+    saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot5a.RDS"))
+
+}
