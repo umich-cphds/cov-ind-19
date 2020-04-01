@@ -1,32 +1,6 @@
 # libraries ----------
 library(tidyverse)
-require(reshape2)
 options(stringsAsFactors = FALSE)
-
-# function ----------
-LineColor = function(x) {
-  if (x == "True") {
-    return("black")
-  }
-  if (x == "mod_3") {
-    return("red")
-  }
-  if (x == "mod_3_up") {
-    return("red")
-  }
-  if (x == "mod_2") {
-    return("green")
-  }
-  if (x == "mod_2_up") {
-    return("green")
-  }
-  if (x == "mod_4") {
-    return("blue")
-  }
-  if (x == "mod_4_up") {
-    return("blue")
-  }
-}
 
 # directories ----------
 arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
@@ -43,49 +17,20 @@ latest_date     <- as.Date(sub("X", "", rev(names(india_cases))[1]), format("%m.
 dates_1         <- seq(as.Date("03-01-2020", format = "%m-%d-%y"), latest_date, "days")
 dataf           <- unlist(india_cases[-(1:43)])
 N               <- 1.34e9
-forecast_length <- 120
-forecast_dt     <- seq(from = as.Date(dates_1[length(dates_1)] + 1, format = "%m-%d-%y"),
-                       to = as.Date(dates_1[length(dates_1)] + forecast_length, format = "%m-%d-%y"),
-                       "days")
+forecast_length <- 200
+forecast_dt     <- seq(from = as.Date(dates_1[length(dates_1)] + 1, format = "%m-%d-%y"), to = as.Date(dates_1[length(dates_1)] + forecast_length, format = "%m-%d-%y"), "days")
 adj_len         <- 2
 adj             <- T
 plot_start_date <- "2020-03-01"
 plot_end_date   <- "2020-04-30"
 
 fig_4_data <- function(x) {
-
   load(x)
 
-  other_plot       <- plot_data_ls[[2]]
-  T_fin            <- other_plot[[2]]
-  T_prime          <- other_plot[[1]]
-  chron_ls         <- other_plot[[3]]
-  R0_p_mean        <- other_plot[[10]]
-  beta_p_mean      <- other_plot[[8]]
-  dthetaI_tp1      <- other_plot[[4]]
-  dthetaI_tp2      <- other_plot[[5]]
-  gamma_p_mean     <- other_plot[[9]]
-  dthetaI_tp1_date <- other_plot[[6]]
-  dthetaI_tp2_date <- other_plot[[7]]
-
-  spaghetti_plot_ls       <- plot_data_ls[[3]]
-  spaghetti_ht            <-spaghetti_plot_ls[[1]]
-  dthetaI_mean_data       <-spaghetti_plot_ls[[2]]
-  sample_dthetaI_mat_long <-spaghetti_plot_ls[[3]]
-  second_tp_date_ci       <-spaghetti_plot_ls[[5]]
-  first_tp_date_ci        <-spaghetti_plot_ls[[4]]
-
-  infection_plot_ls <- plot_data_ls[[4]]
-  y_text_ht         <- infection_plot_ls[[1]]
-  data_poly         <- infection_plot_ls[[2]]
-  data_comp         <- infection_plot_ls[[3]]
-  data_pre          <- infection_plot_ls[[4]]
-
-  removed_plot_ls <- plot_data_ls[[5]]
-  r_text_ht       <- removed_plot_ls[[1]]
-  data_poly_R     <- removed_plot_ls[[2]]
-  data_comp_R     <- removed_plot_ls[[3]]
-  data_pre_R      <- removed_plot_ls[[4]]
+  T_prime     <- plot_data_ls[[2]][[1]]
+  y_text_ht   <- plot_data_ls[[4]][[1]]
+  data_comp   <- plot_data_ls[[4]][[3]]
+  data_comp_R <- plot_data_ls[[5]][[3]]
 
   india_confirm <- round(N * (data_comp[(T_prime + 1):(T_prime + forecast_length), "mean"] +
                                  data_comp_R[(T_prime + 1):(T_prime + forecast_length), "mean"]))
@@ -101,85 +46,97 @@ fig_4_data <- function(x) {
   return(list(india_confirm, india_confirm_up))
 }
 
-mod_3 <- fig_4_data("./India_3_plot_data.RData")
-mod_2 <- fig_4_data("./India_2_plot_data.RData")
-mod_4 <- fig_4_data("./India_4_plot_data.RData")
-
+# processing ----------
+mod_2    <- fig_4_data("India_2_plot_data.RData")
 mod_2_up <- mod_2[[2]]
 mod_2    <- mod_2[[1]]
+
+mod_3    <- fig_4_data("India_3_plot_data.RData")
 mod_3_up <- mod_3[[2]]
 mod_3    <- mod_3[[1]]
+
+mod_4    <- fig_4_data("India_4_plot_data.RData")
 mod_4_up <- mod_4[[2]]
 mod_4    <- mod_4[[1]]
 
-observed_plot  <- data.frame(Dates = dates_1,variable = rep("True", length(dates_1)), value = dataf)
-forecasts      <- data.frame(Dates = forecast_dt, mod_3, mod_3_up, mod_2, mod_2_up, mod_4, mod_4_up)
-forecasts_plot <- melt(forecasts, id = "Dates")
+observed_plot  <- tibble(
+  Dates    = dates_1,
+  variable = rep("True", length(dates_1)),
+  value    = dataf
+  )
 
-complete_plot           <- rbind(observed_plot, forecasts_plot)
-complete_plot           <- complete_plot[order(complete_plot$Dates), ]
-rownames(complete_plot) <- NULL
+forecasts_plot <- tibble(
+  Dates    = forecast_dt,
+  mod_2    = mod_2,
+  mod_3    = mod_3,
+  mod_4    = mod_4,
+  ) %>%
+  gather(variable, value, -Dates)
 
-complete_plot$color <- unlist(lapply(complete_plot$variable, LineColor))
+forecasts_plot_ci <- tibble(
+  Dates    = forecast_dt,
+  mod_2 = mod_2_up,
+  mod_3 = mod_3_up,
+  mod_4 = mod_4_up,
+  ) %>%
+  gather(variable, upper_ci, -Dates)
+
+forecasts_plot <- left_join(forecasts_plot, forecasts_plot_ci, by = c("Dates", "variable"))
+
+complete_plot <- bind_rows(observed_plot,
+                           forecasts_plot) %>%
+  mutate(variable = as.factor(variable)) %>%
+  arrange(Dates) %>%
+  mutate(
+    color = as.factor(case_when(
+      variable == "True" ~ "Observed",
+      variable == "mod_2" ~ "Social distancing",
+      variable == "mod_3" ~ "No intervention",
+      variable == "mod_4" ~ "Lockdown with moderate release",
+      variable == "Limit" ~ "Limit"
+    )),
+    type = as.factor(if_else(variable == "Limit", "dashed", "solid"))
+  )
 
 write_csv(complete_plot, path = "./figure_4_data.csv")
 
-# ymax        <- max(log(complete_plot$value))
 ymax        <- log(4e6)
 my_title    <- paste0("COVID-19 Cumulative Cases by Day for India")
 my_subtitle <- paste0("as of ", format(latest_date, "%d %B %Y"))
 mybreaks    <- seq(0, ymax, length.out = 10)
 
 complete_plot <- complete_plot %>%
-  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d")) %>%
-  filter(!color %in% c("mod_2_up", "mod_3_up"))
+  filter(Dates <= as.Date(plot_end_date, format = "%Y-%m-%d"), Dates >= as.Date(plot_start_date, format = "%Y-%m-%d"))
 
-f4plotdata = complete_plot[complete_plot$variable != "mod_4_up", ]
-
-# original
-# dark - #264652 - no intervention
-# orange - #e76f51 - social distancing
-# yellow - #e9c46a - lockdown
-
-# alternative
-# dark - #264652 - lockdown
-# orange - #e76f51 - no intervention
-# yellow - #e9c46a - social distancing
-
-# figure 5
-# color_values <- c("Soc. Dist. + Travel Ban" = "#F6D55C", "No Intervention" = "#ED553B", "Average Release" = "#20639B",
-#                   Party = "#3CAEA3",  Scared = "#173F5F", Limit = "#3c4c55", Observed = "black")
+f4plotdata <-  complete_plot
 
 options(scipen=10000)
 
-p1 <- ggplot(f4plotdata %>% filter(color == 'black'), aes(Dates, log(value))) +
+p1 <- ggplot(complete_plot %>% filter(color == "Observed"), aes(Dates, log(value))) +
   geom_bar(stat = 'identity', fill = '#979799') +
-  geom_bar(data = f4plotdata %>% filter(color == 'red'), aes(Dates, log(value)), # no intervention
+  geom_bar(data = f4plotdata %>% filter(color == "No intervention"), aes(Dates, log(value)), # no intervention
            stat = 'identity', fill = '#ED553B') +
-  geom_bar(data = f4plotdata %>% filter(color == 'green'), aes(Dates, log(value)), # social distancing
+  geom_bar(data = f4plotdata %>% filter(color == "Social distancing"), aes(Dates, log(value)), # social distancing
            stat = 'identity', fill = '#f2c82e') +
-  geom_bar(data = f4plotdata %>% filter(color == 'blue'), aes(Dates, log(value)), # lockdown
+  geom_bar(data = f4plotdata %>% filter(color == "Lockdown with moderate release"), aes(Dates, log(value)), # lockdown
            stat = 'identity', fill = '#173F5F') +
   labs(title    = my_title,
        subtitle = my_subtitle,
        caption  = "© COV-IND-19 Study Group",
        x        = "Date",
        y        = "Cumulative number of cases") +
-  theme_bw() +
+  theme_minimal() +
   scale_y_continuous(breaks   = mybreaks,
                      limits   = c(0, ymax),
                      labels   = format(round(exp(mybreaks), 0), big.mark = ","),
                      sec.axis = sec_axis(~., name = "", breaks = mybreaks, labels = format(round(exp(mybreaks), 0), big.mark = ","))) +
-  theme(legend.position   = "none",
+  theme(legend.position   = "bottom",
         axis.text.x       = element_text(angle=45,vjust=0.5,size=15),
         axis.text.y       = element_text(size=15, hjust = 0),
-        # axis.text.y.right = element_text(hjust = -0.5),
-        # axis.title.x    = element_blank(),
-        # axis.title.y    = element_blank(),
         plot.title        = element_text(size=22),
         plot.caption      = element_text(size=12,face="bold",color="blue")) +
-  geom_line(data = complete_plot[complete_plot$variable == "mod_4_up", ],
-            aes(x = Dates, y = log(value)),
+  geom_line(data = complete_plot %>% filter(variable == "mod_4"),
+            aes(x = Dates, y = log(upper_ci)),
             stat     = "identity",
             linetype = 2,
             size     = 1,
