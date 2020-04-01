@@ -38,6 +38,8 @@ plot_fig_5b <- function(start.date = as.Date("2020-04-30"),
         legend = list(orientation = "h", font = list(size = 16))
     )
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot5b.csv"))
+    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot5b.csv"),
+                delim = ","
+    )
     saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot5b.RDS"))
 }

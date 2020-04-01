@@ -53,6 +53,8 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-01"),
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot1.csv"))
+    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot1.csv"),
+                delim = ","
+    )          
     saveRDS(p, file = paste0("~/cov-ind-19-data/", latest, "/plot1.RDS"))
 }

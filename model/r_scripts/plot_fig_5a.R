@@ -1,10 +1,3 @@
-library(tidyverse)
-library(vroom)
-library(plotly)
-
-start.date <- as.Date("2020-04-30")
-end.date <- as.Date("2020-08-31")
-latest <- Sys.Date() - 1
 plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
                         end.date = end.date <- as.Date("2020-08-31"),
                         latest = Sys.Date())
@@ -46,7 +39,9 @@ plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
         legend = list(orientation = "h", font = list(size = 16))
     )
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot5a.csv"))
+    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot5a.csv"),
+                delim = ","
+    )
     saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot5a.RDS"))
 
 }

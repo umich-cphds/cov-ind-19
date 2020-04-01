@@ -100,6 +100,8 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
               mode = "line", line = list(width = 3, dash = "dash")
     )
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4a.csv"))
+    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4a.csv"),
+                delim = ","
+    )
     saveRDS(p, paste0("~/cov-ind-19-data/", latest, "/plot4a.RDS"))
 }
