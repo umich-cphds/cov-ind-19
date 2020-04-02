@@ -7,47 +7,60 @@ library(glue)
 library(jsonlite)
 library(scales)
 
+github.path <- "https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master"
 
-github.path <- "https://github.com/umich-cphds/cov-ind-19-data/raw/master/"
+
+# authenticate as alexander rix and pull the latest data from the kaggle dataset.
+
+httr_get <- function(file)
+{
+    github.auth <- read_json(".github.json")
+
+    auth    <- authenticate(github.auth$user, github.auth$key)
+    request <- GET(file, auth)
+
+    stop_for_status(request)
+
+    header <- headers(request)
+
+    if (http_type(request) != "application/json")
+        stop(header$date, ": GET did not result in the correct content type.")
+
+    limit     <- as.numeric(header["x-ratelimit-limit"])
+    remaining <- as.numeric(header["x-ratelimit-remaining"])
+
+    if (limit == 60)
+        warning(header$date, ": Github authorization failed",
+                ". Limited to 60 queries an hour!")
+
+    if (remaining < limit / 10)
+        warning(header$date, ": ", remaining, " remaining api calls!")
+
+    content(request)
+}
+
+
+json <- httr_get(github.path)
+trees <- keep(json$tree, ~.x$type == "tree")
+tree <-  trees[[which.max(as.Date(map_chr(trees, ~ .x$path)))]]
+
+latest <- as.Date(tree$path)
+
+url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+                  latest, "/plots.RData"))
+
+load(url)
+close(url)
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
 {
-    get_latest <- function()
-    {
-        # authenticate as alexander rix and pull the latest data from the kaggle dataset.
-        github.auth <- read_json(".github.json")
 
-        auth    <- authenticate(github.auth$user, github.auth$key)
-        request <- GET("https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master", auth)
-
-        stop_for_status(request)
-
-        header <- headers(request)
-
-        if (http_type(request) != "application/json")
-            stop(header$date, ": GET did not result in the correct content type.")
-
-        limit     <- as.numeric(header["x-ratelimit-limit"])
-        remaining <- as.numeric(header["x-ratelimit-remaining"])
-
-        if (limit == 60)
-            warning(header$date, ": Github authorization failed",
-                    ". Limited to 60 queries an hour!")
-
-        if (remaining < limit / 10)
-            warning(header$date, ": ", remaining, " remaining api calls!")
-
-        json <- content(request)
-        dates <- as.Date(map_chr(keep(json$tree, ~.x$type == "tree"), ~.x$path))
-
-        max(dates)
-    }
-    latest <- get_latest()
 
     output$latest <- renderText(paste0("Data last updated ", format(latest, format = "%B %d")))
 
     output$plot1 <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot1.RDS")))
+        p1
     })
 
     # output$download_plot1 <- downloadHandler(
@@ -58,7 +71,7 @@ shinyServer(function(input, output)
     # )
 
     output$plot2 <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot2.RDS")))
+        p2
     })
 
     output$download_plot2 <- downloadHandler(
@@ -71,7 +84,7 @@ shinyServer(function(input, output)
     )
 
     output$plot3 <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot3.RDS")))
+        p3
     })
 
     output$download_plot3 <- downloadHandler(
@@ -85,7 +98,7 @@ shinyServer(function(input, output)
 
 
     output$plot4a_full <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot4a.RDS")))
+        p4a
     })
 
     output$download_plot4a <- downloadHandler(
@@ -98,7 +111,7 @@ shinyServer(function(input, output)
     )
 
     output$plot4b_full <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot4b.RDS")))
+        p4b
     })
 
     output$download_plot4b <- downloadHandler(
@@ -111,7 +124,7 @@ shinyServer(function(input, output)
     )
 
     output$plot5a <- renderPlotly({
-            readRDS(url(paste0(github.path, latest, "/plot5a.RDS")))
+            p5a
     })
 
     output$download_plot5a <- downloadHandler(
@@ -124,7 +137,7 @@ shinyServer(function(input, output)
     )
 
     output$plot5b <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot5b.RDS")))
+        p5b
     })
 
     output$download_plot5b <- downloadHandler(
@@ -137,7 +150,7 @@ shinyServer(function(input, output)
     )
 
     output$plot6a <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot6a.RDS")))
+        p6a
     })
 
     output$download_plot6a <- downloadHandler(
@@ -151,7 +164,7 @@ shinyServer(function(input, output)
 
 
     output$plot6b <- renderPlotly({
-        readRDS(url(paste0(github.path, latest, "/plot6b.RDS")))
+        p6b
     })
 
     output$download_plot6b <- downloadHandler(
@@ -165,7 +178,8 @@ shinyServer(function(input, output)
 
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
-         download.file(paste0(github.path, latest, "/day_sp_animation.gif"), file)
+         download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/",
+                              latest, "/day_sp_animation.gif"), file)
          list(src = file, contentType = "image/gif", alt = "Map not available",
               width = 500)
      }, deleteFile = FALSE)
