@@ -10,7 +10,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-01"),
     filter(Date >= start.date) %>%
     gather(Case, Recovered, Death, key = Type, value = Count) %>%
     mutate(
-        Date = as.factor(format(Date, format = "%b %e")),
+        date.fmt = as.factor(format(Date, format = "%b %e")),
         Type = factor(
             recode(Type,
                 Case = "New Cases",
@@ -21,7 +21,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-01"),
     mutate(count.fmt = format(Count, big.mark = ",",
            scientific = F, trim = T)
     ) %>%
-    mutate(text = paste0(Date, ": ", count.fmt, " ", Type))
+    mutate(text = paste0(date.fmt, ": ", count.fmt, " ", Type))
 
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
@@ -55,6 +55,6 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-01"),
 
     vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot1.csv"),
                 delim = ","
-    )          
+    )
     saveRDS(p, file = paste0("~/cov-ind-19-data/", latest, "/plot1.RDS"))
 }
