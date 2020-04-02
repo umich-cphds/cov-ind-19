@@ -3,7 +3,7 @@ library(vroom)
 library(plotly)
 
 start.date <- as.Date("2020-03-01")
-latest <- Sys.Date() - 1
+latest <- Sys.Date()
 
 source("~/cov-ind-19/model/r_scripts/plot_fig_1.R")
 source("~/cov-ind-19/model/r_scripts/plot_fig_23.R")
