@@ -9,7 +9,10 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
     Day.max <- 30 # nrow(data %>% filter(Country == "India"))
     data <- filter(data, Day <= Day.max) %>%
     mutate(Date = format(Date, format = "%b %e")) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(num.fmt = format(Case, big.mark = ",", scientific = F, trim = T)) %>%
+    mutate(text = paste0(Date, ": ", num.fmt, " cumulative cases"))
+
 
     title <- paste("Cumulative number of COVID-19 cases in India compared",
                    "to other countries affected by the pandemic")
