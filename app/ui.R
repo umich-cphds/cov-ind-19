@@ -32,7 +32,7 @@ shinyUI(fluidPage(
       br(),
       br(),
       p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios.
-      The figure and forecasting models update as new data becomes available (i.e., at least daily). You may download figures for reference.
+      The figure and forecasting models update as new data becomes available (i.e., at least daily). You may download PNG files of each figure by clicking on the camera icon when you are hovering within each plot.
         Please cite our medium article and this website in any publication that you use this resource for."),
       p("Read the original article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
       p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"), " (this is a direct download link, check your downloads folder)"),
@@ -99,9 +99,11 @@ shinyUI(fluidPage(
         "Our codes are available on GitHub and so users can change the nature of interventions."),
       h2("Quick adherence (one-week delay)"),
       h3("Figure 4a"),
+      h4("Please note the y-axis is in log scale."),
       plotlyOutput("plot4a_full", height = "600px"),
       h2("Slow adherence (two-week delay)"),
       h3("Figure 4b"),
+      h4("Please note the y-axis is in log scale."),
       plotlyOutput("plot4b_full", height = "600px"),
       hr(),
       h2("Longer term forecasts post-lockdown"),
