@@ -132,8 +132,8 @@ if (arrayid == 3) {
   print("Running model 3: India 10x cases")
   # Model 3: lockdown + moderate return in India (10x cases)
   india10_mod <- tvt.eSIR(
-   Y_india10,
-   R_india10,
+   Y10_india,
+   R10_india,
    begin_str      = "03/01/2020",
    death_in_R     = 0.2,
    T_fin          = 200,
