@@ -54,7 +54,7 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       h4("(Please wait a few seconds for the figures to load)"),
-      h1(textOutput("latest")),
+      h4(textOutput("latest")),
       h2(""),
       h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India since March 1"),
       p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
