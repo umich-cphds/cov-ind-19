@@ -52,8 +52,9 @@ plot_fig_4b <- function(start.date = as.Date("2020-03-01"),
                          line = list(color = "#979799")
                      )
     ) %>%
-    add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci, type = "scatter",
-              mode = "line", line = list(width = 3, dash = "dash")
+    add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci,
+        name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
+        mode = "line", line = list(width = 3, dash = "dash")
     )
 
     vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4b.csv"),

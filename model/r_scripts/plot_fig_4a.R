@@ -42,9 +42,8 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
                   showline =T)
 
     colors <- c("#979799", "#ED553B", "#f2c82e", "#173F5F")
-
     p <- plot_ly(data, x = ~ Dates, y = ~ value, text = ~text,
-                 color = ~color, colors = colors, type = "bar",
+                 color = ~color, colors = colors, name = ~color, type = "bar",
                  hoverinfo = "text", hoverlabel = list(align = "left")
     ) %>%
     layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
@@ -55,7 +54,8 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
                          line = list(color = "#979799")
                      )
     ) %>%
-    add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci, type = "scatter",
+    add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci,
+              name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
               mode = "line", line = list(width = 3, dash = "dash")
     )
 
