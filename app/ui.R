@@ -97,8 +97,10 @@ shinyUI(fluidPage(
         HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
         "You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.",
         "Our codes are available on GitHub and so users can change the nature of interventions."),
+      h2("Quick adherence (one-week delay)"),
       h3("Figure 4a"),
       plotlyOutput("plot4a_full", height = "600px"),
+      h2("Slow adherence (two-week delay)"),
       h3("Figure 4b"),
       plotlyOutput("plot4b_full", height = "600px"),
       hr(),
@@ -106,9 +108,9 @@ shinyUI(fluidPage(
       p("We present four hypothetical scenarios:",
               tags$ul(
               tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
-              tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('pre-lockdown'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
-              tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate activity'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
-              tags$li(HTML(paste0("post-lockdown activities return to a subdued level ('hesitant'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
+              tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
+              tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
+              tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
               ),
           HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively."))
        ),
