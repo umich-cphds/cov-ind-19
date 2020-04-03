@@ -51,13 +51,15 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
            legend = list(orientation = "h", font = list(size = 16)),
            shapes = list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
                          x1 = latest, layer = "below",
-                         line = list(color = "#979799")
+                         line = list(color = "#eee", size = 3)
                      )
     ) %>%
     add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci,
               name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
               mode = "line", line = list(width = 3, dash = "dash")
-    )
+    ) %>%
+    plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
+
 
     vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4a.csv"),
                 delim = ","

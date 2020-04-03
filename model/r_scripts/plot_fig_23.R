@@ -52,7 +52,9 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
            list(text = cap, xanchor = "left", x = 0), legend =
            list(orientation = "h", font = list(size = 16), y = -0.2),
            margin = list(b = 100)
-    )
+    ) %>%
+    plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
+
 
     p2 <- p %>%
     add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
