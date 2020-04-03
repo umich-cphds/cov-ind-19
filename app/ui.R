@@ -34,7 +34,8 @@ shinyUI(fluidPage(
       p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios.
       The figure and forecasting models update as new data becomes available (i.e., at least daily). You may download PNG files of each figure by clicking on the camera icon when you are hovering within each plot.
         Please cite our medium article and this website in any publication that you use this resource for."),
-      p("Read the original article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
+      p("Read the accompanying April 3 article: link forthcoming"),
+      p("Read the original March 21 article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
       p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"), " (this is a direct download link, check your downloads folder)"),
       p("Country-level data source: ", a("JHU CSSE COVID-19 GitHub", .noWS = "outside", href = "https://github.com/CSSEGISandData/COVID-19")),
       p("State-level data source: ", a("COVID-19 in India Kaggle", .noWS = "outside", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
@@ -84,26 +85,24 @@ shinyUI(fluidPage(
             "These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent.",
             "We use the eSIR model (",a("Wang et al. 2020", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf"), ") for all our projections and create hypothetical reductions in transmission probabilities capturing interventions like social distancing and lockdown.
         This in turn reduces the basic reproduction number over the period.",
-        "It was announced that India would undergo a central lockdown from March 25 until April 15.",
+        "It was announced that India would undergo a central lockdown from March 25 until April 14.",
         "The bar plots below the predicted cumulative short-term case counts represent three hypothetical scenarios: ",
         tags$ol(
           tags$li("No intervention"),
           tags$li("Social distancing and travel ban (without March 25 lockdown)"),
-          tags$li("Lockdown until April 15 with a gradual, moderate resumption of daily activities")
+          tags$li("Lockdown until April 14 with a gradual, moderate resumption of daily activities")
         ),
         "Because we are using SIR models to generate the forecast, we explicitly delay changes in the basic reproduction number one week (Figure 4a) and two weeks (Figure 4b) to capture delayed onset of cases due to incubation period and timeliness of adherence.",
         "In general terms, the one-week delay models (Figures 4a, 5a, and 5b) can be thought of as 'quick adherence' to the lockdown measures, while the 'two-week' delay models (Figures 4b, 6a, and 6b) can be though of as 'slow adherence' to the lockdown measures.",
         HTML(paste0("All models assume a basic reproduction number of 2 under no intervention. The implied R", tags$sub("0"), " is 1.5 under Scenario 2.")),
-        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate release').")),
+        HTML(paste0("We further assume the R", tags$sub("0"), " drops to 0.8 under lockdown and then gradually rises back up to 1.5 after the lockdown ends over a three week period ('lockdown with moderate return').")),
         "You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.",
-        "Our codes are available on GitHub and so users can change the nature of interventions."),
+        "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."),
       h2("Quick adherence (one-week delay)"),
-      h3("Figure 4a"),
-      h4("Please note the y-axis is in log scale."),
+      h3("Figure 4a (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
       plotlyOutput("plot4a_full", height = "600px"),
       h2("Slow adherence (two-week delay)"),
-      h3("Figure 4b"),
-      h4("Please note the y-axis is in log scale."),
+      h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
       plotlyOutput("plot4b_full", height = "600px"),
       hr(),
       h2("Longer term forecasts post-lockdown"),
