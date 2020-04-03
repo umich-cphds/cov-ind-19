@@ -37,7 +37,9 @@ plot_fig_6b <- function(start.date = as.Date("2020-04-30"),
     layout(xaxis = xaxis, yaxis = yaxis,
         title = list(text = cap, xanchor = "left", x = 0),
         legend = list(orientation = "h", font = list(size = 16))
-    )
+    ) %>%
+    plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
+
 
     vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot6b.csv"),
                 delim = ","

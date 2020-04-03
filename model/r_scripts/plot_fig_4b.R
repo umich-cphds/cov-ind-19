@@ -11,7 +11,8 @@ plot_fig_4b <- function(start.date = as.Date("2020-03-01"),
         ci.fmt = format(upper_ci, big.mark = ",", scientific = F, trim = T)
     ) %>%
     mutate(
-        j = color == "Lockdown with moderate release"
+        color = recode(color, "Lockdown with moderate release" = "Lockdown with moderate return"),
+        j = color == "Lockdown with moderate return"
     ) %>%
     filter(Dates <= end.date) %>%
     mutate(text = case_when(
