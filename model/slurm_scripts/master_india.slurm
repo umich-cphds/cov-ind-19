@@ -10,6 +10,7 @@
 
 gitpull=$(sbatch ~/cov-ind-19/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 
+sensitivity=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
 dataframe=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/data.slurm | awk '{print $NF}')
 forecast1wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_1wk_models.slurm | awk '{print $NF}')
 forecast2wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
