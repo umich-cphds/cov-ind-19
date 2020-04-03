@@ -1,7 +1,7 @@
 # COV-IND-19 Study Group
 
 ### Description
-`cov-ind-19` will house code, data, and other products of from the COV-IND-19 Study Group aimed at describing and projecting the COVID-19 outbreak in India along with potential intervenntions.
+`cov-ind-19` houses code, data, and other products of from the COV-IND-19 Study Group aimed at describing and projecting the COVID-19 outbreak in India along with potential intervenntions.
 
 ### Data Sources
 Johns Hopkins University, CSSE (https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data)
@@ -11,7 +11,7 @@ Johns Hopkins University, CSSE (https://github.com/CSSEGISandData/COVID-19/tree/
 
 ### Output
 COVI-IND-19 `R` Shiny app
-* _forthcoming_
+* [covind19.org](https://umich-biostatistics.shinyapps.io/covid19/)
 
 ### Publications and news articles
 * [COV-IND-19 Report](https://bit.ly/COV-IND-19_Report) (direct download link, check your downloads folder) - 20 March 2020
