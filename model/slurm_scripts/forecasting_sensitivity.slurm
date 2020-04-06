@@ -1,8 +1,7 @@
 #!/bin/bash
 
-#SBATCH --mail-type=FAIL,END
+#SBATCH --mail-type=FAIL
 #SBATCH --time=0-12:00:00
-#SBATCH --mail-user=mmsalva@umich.edu
 #SBATCH --job-name=sensitivity
 #SBATCH --mem-per-cpu=8G
 #SBATCH --array=1-3

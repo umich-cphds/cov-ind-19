@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --mail-type=FAIL,END
+#SBATCH --mail-type=FAIL
 #SBATCH --time=10:00
 #SBATCH --job-name=git_commit_and_push_prediction_data
 #SBATCH --mem-per-cpu=1G
