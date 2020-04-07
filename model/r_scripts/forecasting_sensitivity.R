@@ -31,7 +31,7 @@ jhu_recovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_seri
 
   ### check that datasets end on same date ----------
   last_jhuc_case_date     <- as.Date(sub("X", "", rev(names(jhu_cases))[1]), format("%m.%d.%y"))
-  last_jhur_case_date     <- as.Date(sub("X", "", rev(names(jhu_cases))[1]), format("%m.%d.%y"))
+  last_jhur_case_date     <- as.Date(sub("X", "", rev(names(jhu_recovered))[1]), format("%m.%d.%y"))
   min_date                <- min(last_jhuc_case_date, last_jhur_case_date)
 
   jhu_recovered <- jhu_recovered %>%
