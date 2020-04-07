@@ -43,7 +43,7 @@ plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
         yref = "y",
         y0 = 0,
         layer = "below",
-        line = list(color = "#eee", width = 3)
+        line = list(color = "#aaa", width = 3, dash = "dot")
     )
 
     lines <- list()
@@ -64,7 +64,7 @@ plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
     layout(xaxis = xaxis, yaxis = yaxis,
         title = list(text = cap, xanchor = "left", x = 0),
         legend = list(orientation = "h", font = list(size = 16))
-        # shapes = lines
+        #shapes = lines
     ) %>%
     # add_annotations(
     #     x = anno.data$Dates,
@@ -75,7 +75,7 @@ plot_fig_5a <- function(start.date = as.Date("2020-04-30"),
     #                   " cases<br>"
     #     ),
     #     align = "left",
-    #     font = list(size = 16),
+    #     font = list(size = 18),
     #     xref = "x",
     #     yref = "y",
     #     showarrow = F
