@@ -17,7 +17,7 @@ set.seed(20192020) # default: 20192020
 Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
 nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
 R_0                <- 2             # basic reproduction number
-save_mcmc          <- TRUE          # output MCMC files (default = TRUE; needed for incidence CI calculations)
+save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 save_plot_data     <- TRUE
 start_date         <- "2020-03-01"
 

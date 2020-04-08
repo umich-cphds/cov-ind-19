@@ -25,7 +25,7 @@ pi_normal          <- 1             # pi corresponding to normal (pre-interventi
 pi_sdtb            <- 0.75          # pi corresponding to social distancing and travel ban
 R_0                <- 2             # basic reproduction number
 replace_apr3       <- FALSE         # replace April 3 number with count from MOHFW
-save_mcmc          <- TRUE          # output MCMC files (default = TRUE; needed for incidence CI calculations)
+save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 start_date         <- "2020-03-01"
