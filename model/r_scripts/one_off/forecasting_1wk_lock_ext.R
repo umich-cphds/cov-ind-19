@@ -16,8 +16,8 @@ set.seed(20192020) # default: 20192020
 # specificatioons ----------
 delay              <- 7             # in days (default = 7)
 length_of_lockdown <- 21            # in days (default = 21)
-Ms                 <- 5e3           # 5e5 recommended (5e3 for testing - but not stable)
-nburnins           <- 2e3           # 2e5 recommended (2e3 for testing - but not stable)
+Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
+nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
 pi_cautious        <- 0.6           # pi corresponding to cautious return
 pi_lockdown        <- 0.4           # pi corresponding to lockdown
 pi_moderate        <- 0.75          # pi corresponding to moderate return
