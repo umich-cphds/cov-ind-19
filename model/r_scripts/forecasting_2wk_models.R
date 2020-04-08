@@ -29,13 +29,22 @@ setwd(wd)
 # data ----------
 jhu_cases     <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
 jhu_recovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv") # pull data daily
+jhu_deaths    <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
 
 ### check that datasets end on same date ----------
   last_jhuc_case_date     <- as.Date(sub("X", "", rev(names(jhu_cases))[1]), format("%m.%d.%y"))
   last_jhur_case_date     <- as.Date(sub("X", "", rev(names(jhu_recovered))[1]), format("%m.%d.%y"))
-  min_date <- min(last_jhuc_case_date, last_jhur_case_date)
+  last_jhud_case_date     <- as.Date(sub("X", "", rev(names(jhu_deaths))[1]), format("%m.%d.%y"))
+  min_date <- min(c(last_jhuc_case_date, last_jhur_case_date, last_jhud_case_date))
 
   india_recovered <- jhu_recovered %>%
+    filter(Country.Region == "India") %>%
+    select(-c("Province.State", "Lat", "Long")) %>%
+    gather(key = "date", value = "count", -Country.Region) %>%
+    mutate(date = as.Date(sub("X", "", date), format = "%m.%d.%y")) %>%
+    filter(date >= "2020-03-01" & date <= min_date )
+
+  india_deaths <- jhu_deaths %>%
     filter(Country.Region == "India") %>%
     select(-c("Province.State", "Lat", "Long")) %>%
     gather(key = "date", value = "count", -Country.Region) %>%
@@ -50,7 +59,7 @@ jhu_recovered <- read.csv("~/COVID-19/csse_covid_19_data/csse_covid_19_time_seri
     filter(date >= "2020-03-01" & date <= min_date )
 
 NI_complete <- india_cases$count
-RI_complete <- india_recovered$count
+RI_complete <- india_recovered$count + india_deaths$count
 N           <- 1.34e9                          # population of India
 R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
