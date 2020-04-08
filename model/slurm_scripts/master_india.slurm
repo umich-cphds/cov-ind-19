@@ -11,6 +11,7 @@
 gitpull=$(sbatch ~/cov-ind-19/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 
 sensitivity=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
+states=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/states/submit_states.slurm | awk '{print $NF}')
 dataframe=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/data.slurm | awk '{print $NF}')
 forecast1wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_1wk_models.slurm | awk '{print $NF}')
 forecast2wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
@@ -21,7 +22,7 @@ generateplots=$(sbatch --dependency=afterok:$fig4:$fig5:$fig5_inc ~/cov-ind-19/m
 
 spatialmap=$(sbatch ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 
-sbatch --dependency=afterok:$generateplots:$spatialmap ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
+sbatch --dependency=afterok:$generateplots:$spatialmap:$states:$sensitivity ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
 
 sleep 4.5h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
