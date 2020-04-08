@@ -17,26 +17,16 @@ source("~/cov-ind-19/model/r_scripts/plot_fig_5b.R")
 source("~/cov-ind-19/model/r_scripts/plot_fig_6a.R")
 source("~/cov-ind-19/model/r_scripts/plot_fig_6b.R")
 
-plot_fig_1(latest = latest)
-plot_fig_23(latest = latest)
-plot_fig_4a(latest = latest)
-plot_fig_4b(latest = latest)
-plot_fig_5a(latest = latest)
-plot_fig_5b(latest = latest)
-plot_fig_6a(latest = latest)
-plot_fig_6b(latest = latest)
-
-
-p1 <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot1.RDS"))
-p2 <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot2.RDS"))
-p3 <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot3.RDS"))
-p4a <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot4a.RDS"))
-p4b <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot4b.RDS"))
-p5a <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot5a.RDS"))
-p5b <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot5b.RDS"))
-p6a <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot6a.RDS"))
-p6b <- readRDS(paste0("~/cov-ind-19-data/", latest, "/plot6b.RDS"))
-
+p1 <-  plot_fig_1(latest = latest)
+p23 <- plot_fig_23(latest = latest)
+p2  <- p23$p2
+p3  <- p23$p3
+p4a <- plot_fig_4a(latest = latest)
+p4b <- plot_fig_4b(latest = latest)
+p5a <- plot_fig_5a(latest = latest)
+p5b <- plot_fig_5b(latest = latest)
+p6a <- plot_fig_6a(latest = latest)
+p6b <- plot_fig_6b(latest = latest)
 
 save(p1, p2, p3, p4a, p4b, p5a, p5b, p6a, p6b,
      file = paste0("~/cov-ind-19-data/", latest, "/plots.RData")
