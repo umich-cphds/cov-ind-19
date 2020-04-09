@@ -138,34 +138,108 @@ shinyUI(
                       
                       
                       ),
-             navbarMenu("By State or Union Territory",
-                        "-------",
-                        'State',
-                        tabPanel("Delhi",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Delhi")
-                                   )
-                                 )
-                                 ),
-                        tabPanel("Maharashtra",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Maharashtra")
-                                   )
-                                 )
-                                 ),
-                        tabPanel("Kerala",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Kerala")
-                                   )
-                                 )
-                                 )
-             )
+             tabPanel("Delhi",
+                      sidebarLayout(
+                        sidebar_matter,
+                        mainPanel(
+                          titlePanel("COVID-19 Outbreak in Delhi"),
+                          plotlyOutput("plot4a_fulldl", height = "600px"),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
+                          plotlyOutput("plot4b_fulldl", height = "600px"),
+                          hr(),
+                          h2("Longer term forecasts post-lockdown"),
+                          p("We present four hypothetical scenarios:",
+                            tags$ul(
+                              tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
+                            ),
+                            HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively."))
+                          ),
+                          h2("Quick adherence (one-week delay)"),
+                          h3("Figure 5a"),
+                          plotlyOutput("plot5adl", height = "600px"),
+                          h3("Figure 5b"),
+                          plotlyOutput("plot5bdl", height = "600px"),
+                          hr(),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 6a"),
+                          plotlyOutput("plot6adl", height = "600px"),
+                          h3("Figure 6b"),
+                          plotlyOutput("plot6bdl", height = "600px"),
+                          hr()
+                        )
+                      )),
+             tabPanel("Maharashtra",
+                      sidebarLayout(
+                        sidebar_matter,
+                        mainPanel(
+                          titlePanel("COVID-19 Outbreak in Maharashtra"),
+                          plotlyOutput("plot4a_fullmh", height = "600px"),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
+                          plotlyOutput("plot4b_fullmh", height = "600px"),
+                          hr(),
+                          h2("Longer term forecasts post-lockdown"),
+                          p("We present four hypothetical scenarios:",
+                            tags$ul(
+                              tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
+                            ),
+                            HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively."))
+                          ),
+                          h2("Quick adherence (one-week delay)"),
+                          h3("Figure 5a"),
+                          plotlyOutput("plot5amh", height = "600px"),
+                          h3("Figure 5b"),
+                          plotlyOutput("plot5bmh", height = "600px"),
+                          hr(),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 6a"),
+                          plotlyOutput("plot6amh", height = "600px"),
+                          h3("Figure 6b"),
+                          plotlyOutput("plot6bmh", height = "600px"),
+                          hr()
+                        )
+                      )),
+             tabPanel("Kerala",
+                      sidebarLayout(
+                        sidebar_matter,
+                        mainPanel(
+                          titlePanel("COVID-19 Outbreak in Kerala"),
+                          plotlyOutput("plot4a_fullkl", height = "600px"),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
+                          plotlyOutput("plot4b_fullkl", height = "600px"),
+                          hr(),
+                          h2("Longer term forecasts post-lockdown"),
+                          p("We present four hypothetical scenarios:",
+                            tags$ul(
+                              tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
+                              tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
+                            ),
+                            HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively."))
+                          ),
+                          h2("Quick adherence (one-week delay)"),
+                          h3("Figure 5a"),
+                          plotlyOutput("plot5akl", height = "600px"),
+                          h3("Figure 5b"),
+                          plotlyOutput("plot5bkl", height = "600px"),
+                          hr(),
+                          h2("Slow adherence (two-week delay)"),
+                          h3("Figure 6a"),
+                          plotlyOutput("plot6akl", height = "600px"),
+                          h3("Figure 6b"),
+                          plotlyOutput("plot6bkl", height = "600px"),
+                          hr()
+                        )
+                      ))
   )
   
 

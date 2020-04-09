@@ -122,7 +122,82 @@ shinyServer(function(input, output)
     output$plot6b <- renderPlotly({
         India_p6b
     })
-
+    
+    output$plot4a_fulldl <- renderPlotly({
+        dl_p4a
+    })
+    
+    output$plot4b_fulldl <- renderPlotly({
+        dl_p4b
+    })
+    
+    output$plot5adl <- renderPlotly({
+        dl_p5a
+    })
+    
+    
+    output$plot5bdl <- renderPlotly({
+        dl_p5b
+    })
+    
+    output$plot6adl <- renderPlotly({
+        dl_p6a
+    })
+    
+    output$plot6bdl <- renderPlotly({
+        dl_p6b
+    })
+    
+    output$plot4a_fullmh <- renderPlotly({
+        mh_p4a
+    })
+    
+    output$plot4b_fullmh <- renderPlotly({
+        mh_p4b
+    })
+    
+    output$plot5amh <- renderPlotly({
+        mh_p5a
+    })
+    
+    
+    output$plot5bmh <- renderPlotly({
+        mh_p5b
+    })
+    
+    output$plot6amh <- renderPlotly({
+        mh_p6a
+    })
+    
+    output$plot6bmh <- renderPlotly({
+        mh_p6b
+    })
+    
+    output$plot4a_fullkl <- renderPlotly({
+        kl_p4a
+    })
+    
+    output$plot4b_fullkl <- renderPlotly({
+        kl_p4b
+    })
+    
+    output$plot5akl <- renderPlotly({
+        kl_p5a
+    })
+    
+    
+    output$plot5bkl <- renderPlotly({
+        kl_p5b
+    })
+    
+    output$plot6akl <- renderPlotly({
+        kl_p6a
+    })
+    
+    output$plot6bkl <- renderPlotly({
+        kl_p6b
+    })
+    
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
          download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/",
