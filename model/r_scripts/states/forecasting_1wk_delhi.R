@@ -37,7 +37,7 @@ speed_return       <- 21            # length of time for pi to return to post-lo
 state_sub <- "dl"
 
 # data ----------
-data <- vroom(paste0("~/cov-ind-19-data/" Sys.Date(), "covid19india_data.csv"))
+data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(), "/covid19india_data.csv"))
 # populations from http://www.census2011.co.in/states.php
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
