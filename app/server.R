@@ -109,8 +109,7 @@ shinyServer(function(input, output)
     output$plot5a <- renderPlotly({
         India_p5a
     })
-
-
+    
     output$plot5b <- renderPlotly({
         India_p5b
     })
@@ -134,7 +133,6 @@ shinyServer(function(input, output)
     output$plot5adl <- renderPlotly({
         dl_p5a
     })
-    
     
     output$plot5bdl <- renderPlotly({
         dl_p5b
@@ -160,7 +158,6 @@ shinyServer(function(input, output)
         mh_p5a
     })
     
-    
     output$plot5bmh <- renderPlotly({
         mh_p5b
     })
@@ -184,7 +181,6 @@ shinyServer(function(input, output)
     output$plot5akl <- renderPlotly({
         kl_p5a
     })
-    
     
     output$plot5bkl <- renderPlotly({
         kl_p5b
