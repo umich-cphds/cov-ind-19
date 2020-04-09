@@ -1,5 +1,11 @@
+library(httr)
 library(tidyverse)
 library(vroom)
+
+if (!dir.exists(paste0("~/cov-ind-19-data/", Sys.Date()))) {
+    message("Creating" , paste0("~/cov-ind-19-data/", Sys.Date()))
+    dir.create(paste0("~/cov-ind-19-data/", Sys.Date(), recursive = T))
+}
 
 start.date <- as.Date("2020-03-01")
 
@@ -9,9 +15,9 @@ countries <- c("France", "Germany", "India", "Iran", "Italy",
 jhu.path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
 
 jhu.files <- list(
-    Case      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
+    Cases      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
     Recovered = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
-    Death     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
+    Deaths     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
 )
 
 data <- reduce(imap(jhu.files,
@@ -38,10 +44,31 @@ data <- reduce(imap(jhu.files,
 arrange(Country, Date) %>%
 vroom_write(path = paste0("~/cov-ind-19-data/", Sys.Date(), "/jhu_data.csv"))
 
-# mutate_at(vars(Case, Recovered, Death), list(function(x) {
-#     y <- x - lag(x)
-#     ifelse(y < 0, 0, y)
-# })) %>%
-# filter(Date >= start.date) %>%
-# gather(Case, Recovered, Death, key = Type, value = Count) %>%
-# mutate(Date = as.factor(format(Date, format = "%b %d")))
+request <- GET("https://api.covid19india.org/states_daily.json")
+json    <- content(request)
+data    <- map_dfr(json[[1]], ~ .x)
+
+data$tt <- NULL
+state.codes <- setdiff(names(data), c("date", "status"))
+data <- data %>% gather(!!state.codes, key = state, value = count) %>%
+mutate(
+    count = as.numeric(count),
+    date = as.Date(date, format = "%d-%b-%y")
+) %>%
+spread(status, count, fill = 0) %>%
+rename(
+    Cases = Confirmed,
+    Deaths = Deceased,
+    Date = date,
+    State = state) %>%
+arrange(State, Date) %>%
+group_by(State) %>%
+mutate(
+    Cases = accumulate(Cases, `+`),
+    Deaths = accumulate(Deaths, `+`),
+    Recovered = accumulate(Recovered, `+`)
+) %>%
+ungroup() %>%
+filter(Date >= "2020-03-15" & Date < Sys.Date()) %>%
+vroom_write(path = paste0("~/cov-ind-19-data/", Sys.Date(), "/covid19india_data.csv"))
+# & Date < Sys.Date()
