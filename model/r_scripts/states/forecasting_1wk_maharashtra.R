@@ -36,33 +36,14 @@ speed_return       <- 21            # length of time for pi to return to post-lo
 # kl = Kerala
 state_sub <- "mh"
 
-# data ----------
-request <- GET("https://api.covid19india.org/states_daily.json")
-json    <- content(request)
-data      <- map_dfr(json[[1]], ~ .x)
-
-state.codes <- setdiff(names(data), c("date", "status"))
-data <- data %>% gather(!!state.codes, key = state, value = count) %>%
-  mutate(count = as.numeric(count)) %>%
-  spread(status, count) %>%
-  filter(state == state_sub) %>%
-  mutate(date = as.Date(date, "%d-%b-%y")) %>%
-  arrange(date) %>%
-  add_column(
-    cases      = NA,
-    deaths     = NA,
-    recovereds = NA
-  )
-
 # populations from http://www.census2011.co.in/states.php
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
-for (i in 1:dim(data)[1]) {
-  data$cases[i]       <- sum(data$Confirmed[1:i], na.rm = T)
-  data$deaths[i]      <- sum(data$Deceased[1:i], na.rm = T)
-  data$recovereds[i]  <- sum(data$Recovered[1:i], na.rm = T)
-}
-
+# preprocessed data from covid19india.org
+data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(),
+                     "/covid19india_data.csv")
+) %>%
+filter(State == state_sub)
 
 # eSIR ----------
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
@@ -76,12 +57,12 @@ if (!dir.exists(wd)) {
 }
 setwd(wd)
 
-NI_complete <- data$cases
-RI_complete <- data$recovereds + data$deaths
+NI_complete <- data$Cases
+RI_complete <- data$Recovered + data$Deaths
 N           <- pops[state_sub]                         # population of India
-R           <- unlist(RI_complete/N)           # proportion of recovered per day
-Y           <- unlist(NI_complete/N-R)
-start_date  <- min(data$date)
+R           <- RI_complete / N        # proportion of recovered per day
+Y           <- NI_complete / N - R
+start_date  <- min(data$Date)
 
 # dir.create(here("output", glue("{round(delay / 7, 0)}wk")), recursive = TRUE, showWarnings = FALSE)
 # setwd(here("output", glue("{round(delay / 7, 0)}wk")))

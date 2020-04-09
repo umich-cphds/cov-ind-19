@@ -36,13 +36,14 @@ speed_return       <- 21            # length of time for pi to return to post-lo
 # kl = Kerala
 state_sub <- "dl"
 
-# data ----------
+# populations from http://www.census2011.co.in/states.php
+pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
+
+# preprocessed data from covid19india.org
 data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(),
                      "/covid19india_data.csv")
 ) %>%
 filter(State == state_sub)
-# populations from http://www.census2011.co.in/states.php
-pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
 # eSIR ----------
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
