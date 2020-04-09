@@ -16,7 +16,7 @@ jhu.path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
 
 jhu.files <- list(
     Cases      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
-    Recovered = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
+    Recovered  = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
     Deaths     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
 )
 
@@ -44,6 +44,7 @@ data <- reduce(imap(jhu.files,
 arrange(Country, Date) %>%
 vroom_write(path = paste0("~/cov-ind-19-data/", Sys.Date(), "/jhu_data.csv"))
 
+# get state level data from covid19india.org and preprocess it
 request <- GET("https://api.covid19india.org/states_daily.json")
 json    <- content(request)
 data    <- map_dfr(json[[1]], ~ .x)

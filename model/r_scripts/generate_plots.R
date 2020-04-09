@@ -2,7 +2,6 @@ library(tidyverse)
 library(vroom)
 library(plotly)
 
-
 generate_forecast_plots <- function(forecast)
 {
     start.date <- as.Date("2020-03-01")
@@ -14,17 +13,17 @@ generate_forecast_plots <- function(forecast)
         message("creating ", path)
     }
 
-    source("~/cov-ind-19/model/r_scripts/plot_fig_1.R")
-    source("~/cov-ind-19/model/r_scripts/plot_fig_23.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_23.R")
 
-    source("~/cov-ind-19/model/r_scripts/plot_fig_4a.R")
-    source("~/cov-ind-19/model/r_scripts/plot_fig_4b.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4a.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4b.R")
 
-    source("~/cov-ind-19/model/r_scripts/plot_fig_5a.R")
-    source("~/cov-ind-19/model/r_scripts/plot_fig_5b.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5a.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5b.R")
 
-    source("~/cov-ind-19/model/r_scripts/plot_fig_6a.R")
-    source("~/cov-ind-19/model/r_scripts/plot_fig_6b.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_6a.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_6b.R")
 
     assign(paste0(forecast, "_p1"), plot_fig_1(latest = latest))
     p23 <- plot_fig_23(latest = latest)
