@@ -8,6 +8,14 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
+export http_proxy=http://proxy.arc-ts.umich.edu:3128/
+export FTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
+export ftp_proxy=http://proxy.arc-ts.umich.edu:3128/
+export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
+export https_proxy=http://proxy.arc-ts.umich.edu:3128/
+export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
+
+cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )
 local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
 if [[ "$remote_sha" != "$local_sha" ]]; then
