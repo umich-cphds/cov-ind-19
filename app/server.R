@@ -47,10 +47,30 @@ tree <-  trees[[which.max(as.Date(map_chr(trees, ~ .x$path)))]]
 latest <- as.Date(tree$path)
 
 url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
-                  latest, "/plots.RData"))
+                  latest, "/India/plots.RData"))
 
 load(url)
 close(url)
+
+url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+                  latest, "/dl/plots.RData"))
+
+load(url)
+close(url)
+
+
+url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+                  latest, "/kl/plots.RData"))
+
+load(url)
+close(url)
+
+url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+                  latest, "/mh/plots.RData"))
+
+load(url)
+close(url)
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output)
@@ -60,7 +80,7 @@ shinyServer(function(input, output)
     output$latest <- renderText(paste0("Data last updated ", format(latest, format = "%B %d")))
 
     output$plot1 <- renderPlotly({
-        p1
+        India_p1
     })
 
     # output$download_plot1 <- downloadHandler(
@@ -71,110 +91,37 @@ shinyServer(function(input, output)
     # )
 
     output$plot2 <- renderPlotly({
-        p2
+        India_p2
     })
-
-    output$download_plot2 <- downloadHandler(
-        filename = glue("cov-ind-19_figure2a_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 9, height = 6)
-            plot2_input(use_title = TRUE)
-            dev.off()
-        }
-    )
 
     output$plot3 <- renderPlotly({
-        p3
+        India_p3
     })
-
-    output$download_plot3 <- downloadHandler(
-        filename = glue("cov-ind-19_figure2b_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 9, height = 6)
-            plot3_input(use_title = TRUE)
-            dev.off()
-        }
-    )
-
 
     output$plot4a_full <- renderPlotly({
-        p4a
+        India_p4a
     })
-
-    output$download_plot4a <- downloadHandler(
-        filename = glue("cov-ind-19_figure4_1week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure4.Rds"))))
-            dev.off()
-        }
-    )
 
     output$plot4b_full <- renderPlotly({
-        p4b
+        India_p4b
     })
-
-    output$download_plot4b <- downloadHandler(
-        filename = glue("cov-ind-19_figure4_2week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure4.Rds"))))
-            dev.off()
-        }
-    )
 
     output$plot5a <- renderPlotly({
-            p5a
+        India_p5a
     })
 
-    output$download_plot5a <- downloadHandler(
-        filename = glue("cov-ind-19_figure5a_1week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5.Rds"))))
-            dev.off()
-        }
-    )
 
     output$plot5b <- renderPlotly({
-        p5b
+        India_p5b
     })
-
-    output$download_plot5b <- downloadHandler(
-        filename = glue("cov-ind-19_figure5b_1week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/1wk/Figure5_inc.Rds"))))
-            dev.off()
-        }
-    )
 
     output$plot6a <- renderPlotly({
-        p6a
+        India_p6a
     })
-
-    output$download_plot6a <- downloadHandler(
-        filename = glue("cov-ind-19_figure6a_2week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5.Rds"))))
-            dev.off()
-        }
-    )
-
 
     output$plot6b <- renderPlotly({
-        p6b
+        India_p6b
     })
-
-    output$download_plot6b <- downloadHandler(
-        filename = glue("cov-ind-19_figure6b_2week_{Sys.Date()}.pdf"),
-        content = function(file) {
-            pdf(file, width = 11, height = 7)
-            print(readRDS(url(paste0(github.path, latest, "/2wk/Figure5_inc.Rds"))))
-            dev.off()
-        }
-    )
 
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
