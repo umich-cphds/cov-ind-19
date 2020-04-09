@@ -2,7 +2,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
                        latest = Sys.Date())
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
-    group_by(Country) %>% filter(Case >= 100) %>%
+    group_by(Country) %>% filter(Cases >= 100) %>%
     arrange(Date) %>%
     mutate(Day = seq(n()))
 
@@ -10,7 +10,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
     data <- filter(data, Day <= Day.max) %>%
     mutate(Date = format(Date, format = "%b %e")) %>%
     ungroup() %>%
-    mutate(num.fmt = format(Case, big.mark = ",", scientific = F, trim = T)) %>%
+    mutate(num.fmt = format(Cases, big.mark = ",", scientific = F, trim = T)) %>%
     mutate(text = paste0(Date, ": ", num.fmt, " cumulative cases"))
 
 
@@ -43,7 +43,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
         "India"       = "#138808"
     )
 
-    p <- plot_ly(data %>% filter(Country == "India"), x = ~ Day, y = ~Case,
+    p <- plot_ly(data %>% filter(Country == "India"), x = ~ Day, y = ~Cases,
                  text = ~text, color = ~Country, colors = colors,
                  type = "scatter", mode = "lines+markers", hoverinfo = "text",
                  line = list(width = 4), hoverlabel = list(align = "left")
@@ -58,13 +58,13 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
 
     p2 <- p %>%
     add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
-              y = ~Case, text = ~text, color = ~Country,
+              y = ~Cases, text = ~text, color = ~Country,
               type = "scatter", mode = "lines+markers",
               hoverinfo = "text", line = list(width = 4))
 
     p3 <- p %>%
     add_trace(data = data %>% filter(Country != "India"), x = ~ Day,
-                y = ~Case, text = ~text, color = ~Country,
+                y = ~Cases, text = ~text, color = ~Country,
                 type = "scatter", mode = "lines+markers",
                 hoverinfo = "text", line = list(width = 4),
                 visible = "legendonly"

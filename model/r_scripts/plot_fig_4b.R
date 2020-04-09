@@ -1,8 +1,10 @@
-plot_fig_4b <- function(start.date = as.Date("2020-03-01"),
+plot_fig_4b <- function(forecast, start.date = as.Date("2020-03-01"),
                         end.date = as.Date("2020-04-30"),
                         latest = Sys.Date())
 {
-    data <- read_csv(paste0("~/cov-ind-19-data/", latest, "/2wk/figure_4_data.csv")) %>%
+    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/", forecast,
+                            "_figure_4_data.csv")
+    ) %>%
     mutate(
         color = factor(color, levels= c("Observed", "No intervention",
             "Social distancing", "Lockdown with moderate release")),
@@ -60,8 +62,8 @@ plot_fig_4b <- function(start.date = as.Date("2020-03-01"),
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4b.csv"),
-                delim = ","
-    )
+    # vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/", forecast,
+    #                                 "/plot4a.csv"), delim = ","
+    # )
     p
 }

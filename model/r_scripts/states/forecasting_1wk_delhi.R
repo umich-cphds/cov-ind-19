@@ -37,7 +37,10 @@ speed_return       <- 21            # length of time for pi to return to post-lo
 state_sub <- "dl"
 
 # data ----------
-data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(), "/covid19india_data.csv"))
+data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(),
+                     "/covid19india_data.csv")
+) %>%
+filter(State == state_sub)
 # populations from http://www.census2011.co.in/states.php
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
@@ -84,7 +87,7 @@ pi0         <- c(1,
 model_1 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
@@ -118,7 +121,7 @@ pi0         <- c(1,
 model_2 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
@@ -141,7 +144,7 @@ print("Running model_3 (no intervention)")
 model_3 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   R0             = R_0,
@@ -178,7 +181,7 @@ pi0         <- c(1,
 model_4 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
@@ -217,7 +220,7 @@ pi0         <- c(1,
 model_5 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,
@@ -256,7 +259,7 @@ pi0         <- c(1,
 model_6 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = start_date,
+  begin_str      = format(start_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = pi0,

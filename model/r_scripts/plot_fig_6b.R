@@ -1,8 +1,10 @@
-plot_fig_6b <- function(start.date = as.Date("2020-04-30"),
+plot_fig_6b <- function(forecast, start.date = as.Date("2020-04-30"),
                         end.date = end.date <- as.Date("2020-08-31"),
                         latest = Sys.Date())
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/figure_5_inc_data.csv")) %>%
+    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
+                            "_figure_5_data.csv")
+    ) %>%
     mutate(Dates = as.Date(Dates)) %>%
     filter(Dates >= start.date & Dates <= end.date & variable != "mod_3") %>%
     mutate(date.fmt = paste0(format(Dates, "%b %d")),
@@ -40,9 +42,8 @@ plot_fig_6b <- function(start.date = as.Date("2020-04-30"),
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot6b.csv"),
-                delim = ","
-    )
+    # vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot6b.csv"),
+    #             delim = ","
+    # )
     p
 }

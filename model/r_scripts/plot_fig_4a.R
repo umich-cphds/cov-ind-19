@@ -1,11 +1,13 @@
 library(tidyverse)
 library(vroom)
 library(plotly)
-plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
+plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
                         end.date = as.Date("2020-04-30"),
                         latest = Sys.Date())
 {
-    data <- read_csv(paste0("~/cov-ind-19-data/", latest, "/1wk/figure_4_data.csv")) %>%
+    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
+                            "_figure_4_data.csv")
+    ) %>%
     mutate(
         color = factor(color, levels= c("Observed", "No intervention",
             "Social distancing", "Lockdown with moderate release")),
@@ -40,7 +42,7 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
 
     yaxis <- list(title = "Cumulative number of cases", type = "log",
                   dtick = 1, titlefont = axis.title.font, zeroline = T,
-                  showline =T)
+                  showline = T)
 
     colors <- c("#979799", "#ED553B", "#f2c82e", "#173F5F")
     p <- plot_ly(data, x = ~ Dates, y = ~ value, text = ~text,
@@ -61,9 +63,8 @@ plot_fig_4a <- function(start.date = as.Date("2020-03-01"),
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot4a.csv"),
-                delim = ","
-    )
+    # vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/", forecast,
+    #                                 "/plot4a.csv"), delim = ","
+    # )
     p
 }

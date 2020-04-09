@@ -3,19 +3,19 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-15"),
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
     filter(Country == "India") %>%
-    mutate_at(vars(Case, Recovered, Death), list(function(x) {
+    mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
         y <- x - lag(x)
         ifelse(y < 0, 0, y)
     })) %>%
     filter(Date >= start.date) %>%
-    gather(Case, Recovered, Death, key = Type, value = Count) %>%
+    gather(Cases, Recovered, Deaths, key = Type, value = Count) %>%
     mutate(
         date.fmt = as.factor(format(Date, format = "%b %e")),
         Type = factor(
             recode(Type,
-                Case = "New Cases",
+                Cases     = "New Cases",
                 Recovered = "Recovered",
-                Death = "Fatalities"
+                Deaths    = "Fatalities"
             ), levels = c("New Cases", "Fatalities", "Recovered"))
     ) %>%
     mutate(count.fmt = format(Count, big.mark = ",",
