@@ -141,256 +141,6 @@ shinyUI(
              navbarMenu("By State or Union Territory",
                         "-------",
                         'State',
-                        tabPanel("Andhra Pradesh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Andhra Pradesh")
-                                   )
-                                 )
-                                 ),
-                        tabPanel("Arunachal Pradesh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Arunachal Pradesh")
-                                   )
-                                 )
-                                 ),
-                        tabPanel("Assam",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Assam")
-                                   )
-                                 )
-                                 ),
-                        tabPanel("Bihar",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Bihar")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Chhattisgarh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Chhattisgarh")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Goa",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Goa")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Gujarat",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Gujarat")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Haryana",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Haryana")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Himachal Pradesh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Himachal Pradesh")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Jharkhand",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Jharkhand")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Karnataka",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Karnataka")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Kerala",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Kerala")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Madhya Pradesh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Madhya Pradesh")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Maharashtra",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Maharashtra")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Manipur",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Manipur")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Meghalaya",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Meghalaya")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Mizoram",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Mizoram")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Nagaland",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Nagaland")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Odisha",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Odisha")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Punjab",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Punjab")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Rajasthan",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Rajasthan")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Sikkim",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Sikkim")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Tamil Nadu",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Tamil Nadu")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Telangana",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Telangana")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Tripura",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Tripura")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Uttar Pradesh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Uttar Pradesh")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Uttarakhand",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Uttarakhand")
-                                   )
-                                 )
-                        ),
-                        tabPanel("West Bengal",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in West Bengal")
-                                   )
-                                 )
-                        ),
-                        "-------",
-                        'Union Territory',
-                        tabPanel("Andaman and Nicobar Islands",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Andaman and Nicobar Islands")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Chandigarh",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Chandigarh")
-                                   )
-                                 )
-                        ),
-                        tabPanel("Dadra and Nagar Haveli and Daman and Diu",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Dadra and Nagar Haveli and Daman and Diu")
-                                   )
-                                 )
-                        ),
                         tabPanel("Delhi",
                                  sidebarLayout(
                                    sidebar_matter,
@@ -398,39 +148,23 @@ shinyUI(
                                      titlePanel("COVID-19 Outbreak in Delhi")
                                    )
                                  )
-                        ),
-                        tabPanel("Jammu and Kashmir",
+                                 ),
+                        tabPanel("Maharashtra",
                                  sidebarLayout(
                                    sidebar_matter,
                                    mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Jammu and Kashmir")
+                                     titlePanel("COVID-19 Outbreak in Maharashtra")
                                    )
                                  )
-                        ),
-                        tabPanel("Ladakh",
+                                 ),
+                        tabPanel("Kerala",
                                  sidebarLayout(
                                    sidebar_matter,
                                    mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Ladakh")
+                                     titlePanel("COVID-19 Outbreak in Kerala")
                                    )
                                  )
-                        ),
-                        tabPanel("Lakshadweep",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Lakshadweep")
-                                   )
                                  )
-                        ),
-                        tabPanel("Puducherry",
-                                 sidebarLayout(
-                                   sidebar_matter,
-                                   mainPanel(
-                                     titlePanel("COVID-19 Outbreak in Puducherry")
-                                   )
-                                 )
-                        )
              )
   )
   
