@@ -22,9 +22,9 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	echo "JHU data has been updated. Running git pull and forecasts"
 	spatialmap=$(sbatch ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	gitpull=$(sbatch ~/cov-ind-19/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
-	sensitivity=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
-	states=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/states/submit_states.slurm | awk '{print $NF}')
 	dataframe=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/data.slurm | awk '{print $NF}')
+	sensitivity=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
+	states=$(sbatch --dependency=afterok:$gitpull:dataframe ~/cov-ind-19/model/slurm_scripts/states/submit_states.slurm | awk '{print $NF}')
 	forecast1wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_1wk_models.slurm | awk '{print $NF}')
 	forecast2wk=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
 	fig4=$(sbatch --dependency=afterok:$forecast1wk:$forecast2wk ~/cov-ind-19/model/slurm_scripts/plot_figure_4.slurm | awk '{print $NF}')
