@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=FAIL
-#SBATCH --time=5:00:00
+#SBATCH --time=7:00:00
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
@@ -31,8 +31,8 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata ~/cov-ind-19/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
 	sbatch --dependency=afterok:$generateplots:$spatialmap:$states:$sensitivity ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
 else
-	echo "JHU data has NOT been updated since last run. Taking a nap for 4.5 hours and checking again when I wake up."
+	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
 
-sleep 4.5h
+sleep 5.5h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
