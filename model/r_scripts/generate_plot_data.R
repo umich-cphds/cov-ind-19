@@ -3,6 +3,12 @@ library(vroom)
 
 today   <- Sys.Date()
 
+wd <- paste0("~/cov-ind-19-data/", today, "/")
+if (!dir.exists(wd)) {
+    dir.create(wd, recursive = TRUE)
+    message("Creating ", wd)
+}
+
 jhu.data <- vroom(paste0("~/cov-ind-19-data/", today, "/jhu_data.csv")) %>%
 filter(Country == "India" & Date >= "2020-03-01")
 
