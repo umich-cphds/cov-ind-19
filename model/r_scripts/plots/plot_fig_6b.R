@@ -2,7 +2,7 @@ plot_fig_6b <- function(forecast, start.date = as.Date("2020-04-30"),
                         end.date = end.date <- as.Date("2020-08-31"),
                         latest = Sys.getenv("today"))
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
+    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/", forecast,
                             "_figure_5_inc_data.csv")
     ) %>%
     mutate(Dates = as.Date(Dates)) %>%
