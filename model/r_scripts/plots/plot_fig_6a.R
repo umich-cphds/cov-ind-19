@@ -3,7 +3,7 @@ plot_fig_6a <- function(forecast, start.date = as.Date("2020-04-30"),
                         latest = Sys.Date())
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
-                            "_figure_5_data.csv")
+                            "_figure_5_inc_data.csv")
     ) %>%
     mutate(Dates = as.Date(Dates)) %>%
     filter(Dates >= start.date & Dates <= end.date & variable != "mod_3") %>%
