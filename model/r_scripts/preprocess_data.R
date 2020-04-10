@@ -72,6 +72,6 @@ mutate(
     Recovered = accumulate(Recovered, `+`)
 ) %>%
 ungroup() %>%
-filter(Date >= "2020-03-15" & Date < today %>%
+filter(Date >= "2020-03-15" & Date < today) %>%
 vroom_write(path = paste0("~/cov-ind-19-data/", today, "/covid19india_data.csv"))
 # & Date < today
