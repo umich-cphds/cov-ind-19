@@ -64,7 +64,7 @@ generate_forecast_plots <- function(forecast)
     }
 }
 
-forecasts <- c("India", "dl", "mh", "kl")
+forecasts <- c("India", "ap", "br", "dl", "gj", "ka", "mh", "mp", "kl", "rj", "tn", "up", "wb")
 for (forecast in forecasts)
     generate_forecast_plots(forecast)
 

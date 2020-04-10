@@ -20,9 +20,9 @@ adj             <- T
 plot_start_date <- "2020-03-01"
 plot_end_date   <- "2020-04-30"
 
-forecasts <- c("India", "dl", "mh", "kl")
+forecasts <- c("India", "ap", "br", "dl", "gj", "ka", "mh", "mp", "kl", "rj", "tn", "up", "wb")
 
-pops <- c("India" = 1.34e9, "dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
+pops <- c("India" = 1.34e9, "ap" = 84.6e6, "br" = 104.1e6, "dl" = 16.8e6, "gj" = 60.4e6, "ka" = 61.1e6, "mh" = 112.4e6, "mp" = 72.6e6", "kl" = 33.4e6, "rj" = 68.5e6, "tn" = 72.1e6, "up" = 199.8e6, "wb" = 91.3e6)
 for (forecast in forecasts) {
     pop  <- pops[forecast]
     print(pop)

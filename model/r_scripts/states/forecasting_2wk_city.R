@@ -33,13 +33,23 @@ speed_lockdown     <- 7             # length of time for lockdown to drop (in da
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 
 # STATES
+# ap = Andhra Pradesh
+# br = Bihar
 # dl = Delhi
+# gj = Gujarat
+# ka = Karnataka
 # mh = Maharashtra
+# mp = Madhya Pradesh
 # kl = Kerala
+# rj = Rajasthan
+# tn = Tamil Nadu
+# up = Uttar Pradesh
+# wb = West Bengal
+
 state_sub <- city
 
 # populations from http://www.census2011.co.in/states.php
-pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
+pops <- c("ap" = 84.6e6, "br" = 104.1e6, "dl" = 16.8e6, "gj" = 60.4e6, "ka" = 61.1e6, "mh" = 112.4e6, "mp" = 72.6e6", "kl" = 33.4e6, "rj" = 68.5e6, "tn" = 72.1e6, "up" = 199.8e6, "wb" = 91.3e6)
 
 # preprocessed data from covid19india.org
 data <- vroom(paste0("~/cov-ind-19-data/", today,
