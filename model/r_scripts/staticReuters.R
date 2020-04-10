@@ -4,9 +4,9 @@ library(vroom)
 library(ggplot2)
 
 start.date = as.Date("2020-03-01")
-latest = Sys.Date()
+today <- Sys.getenv("today")
 
-data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
+data <- vroom(paste0("~/cov-ind-19-data/", today, "/jhu_data.csv")) %>%
   group_by(Country) %>% filter(Case >= 100) %>%
   arrange(Date) %>%
   mutate(Day = seq(n()))
@@ -22,7 +22,7 @@ data <- filter(data, Day <= Day.max) %>%
 #                "to other countries affected by the pandemic")
 # 
 # cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-#               format(latest, format = "%b %e"), sep = ' ')
+#               format(today, format = "%b %e"), sep = ' ')
 
 colors <- c(
   "China"       = "#ED553B",
