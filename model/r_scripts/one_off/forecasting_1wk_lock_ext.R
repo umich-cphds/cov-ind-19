@@ -34,7 +34,7 @@ start_date         <- "2020-03-01"
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
-today <- Sys.Date()
+today <- Sys.getenv("today")
 wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)

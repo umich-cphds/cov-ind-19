@@ -90,7 +90,7 @@ anim_day <- tm_shape(final_data) +
             tm_legend(scale = 1, legend.title.size = 2, legend.text.size = 1) +
             tm_borders()
 
-today <- Sys.Date()
+today <- Sys.getenv("today")
 path  <- path.expand(paste0("~/cov-ind-19-data/", today))
 if (!dir.exists(path))
     dir.create(path, recursive = TRUE)

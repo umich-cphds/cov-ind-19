@@ -3,7 +3,7 @@ library(vroom)
 library(plotly)
 plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
                         end.date = as.Date("2020-04-30"),
-                        latest = Sys.Date())
+                        latest = Sys.getenv("today"))
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
                             "_figure_4_data.csv")

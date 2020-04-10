@@ -2,10 +2,12 @@ library(tidyverse)
 library(vroom)
 library(plotly)
 
+today <- Sys.getenv("today")
+
 generate_forecast_plots <- function(forecast)
 {
     start.date <- as.Date("2020-03-01")
-    latest     <- Sys.Date()
+    latest     <- today
     path       <- paste0("~/cov-ind-19-data/", latest, "/", forecast)
 
     if (!dir.exists(path)){
@@ -66,7 +68,7 @@ forecasts <- c("India", "dl", "mh", "kl")
 for (forecast in forecasts)
     generate_forecast_plots(forecast)
 
-load(paste0("~/cov-ind-19-data/", Sys.Date(), "/India/plots.RData"))
+load(paste0("~/cov-ind-19-data/", today, "/India/plots.RData"))
 
 p1  <- India_p1
 p2  <- India_p2
@@ -80,4 +82,4 @@ p6b <- India_p6b
 
 
 save(p1, p2, p3, p4a, p4b, p5a, p5b, p6a, p6b,
-     file = paste0("~/cov-ind-19-data/", Sys.Date(), "/plots.RData"))
+     file = paste0("~/cov-ind-19-data/", today, "/plots.RData"))

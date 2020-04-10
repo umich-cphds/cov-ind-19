@@ -17,7 +17,7 @@ nburnins <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
-today <- Sys.Date()
+today <- Sys.getenv("today")
 wd <- paste0("~/cov-ind-19-data/", today, "/sensitivity/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
