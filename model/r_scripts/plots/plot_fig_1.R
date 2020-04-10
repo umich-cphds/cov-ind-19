@@ -1,5 +1,5 @@
 plot_fig_1 <- function(start.date = as.Date("2020-03-15"),
-                       latest = Sys.getenv("today")
+                       latest = Sys.getenv("today"))
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
     filter(Country == "India") %>%
