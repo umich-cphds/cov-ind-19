@@ -12,6 +12,6 @@ cd ~/cov-ind-19/model/slurm_scripts/states
 cities="dl kl mh"
 for i in $cities; do
 	export city=$i
-	sbatch forecasting_1wk_city.slurm
-	sbatch forecasting_2wk_city.slurm
+	sbatch --job-name=1wk_$i forecasting_1wk_city.slurm
+	sbatch --job-name=1wk_$i forecasting_2wk_city.slurm
 done
