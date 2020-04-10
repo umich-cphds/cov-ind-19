@@ -14,6 +14,8 @@ export ftp_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
+today=$(date +%Y-%m-%d)
+export $today
 
 cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )

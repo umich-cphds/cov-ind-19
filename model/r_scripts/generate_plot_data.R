@@ -1,7 +1,7 @@
 library(tidyverse)
 library(vroom)
 
-today   <- Sys.Date()
+today <- Sys.getenv("today")
 
 wd <- paste0("~/cov-ind-19-data/", today, "/")
 if (!dir.exists(wd)) {

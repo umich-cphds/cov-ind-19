@@ -1,6 +1,6 @@
 plot_fig_4b <- function(forecast, start.date = as.Date("2020-03-01"),
                         end.date = as.Date("2020-04-30"),
-                        latest = Sys.Date())
+                        latest = Sys.getenv("today"))
 {
     data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/", forecast,
                             "_figure_4_data.csv")

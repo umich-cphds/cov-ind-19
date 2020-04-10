@@ -11,6 +11,7 @@ library(scales)     # alpha　function
 library(data.table)
 library(devtools)
 
+today = Sys.getenv("today")
 arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
@@ -40,7 +41,7 @@ state_sub <- "dl"
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
 # preprocessed data from covid19india.org
-data <- vroom(paste0("~/cov-ind-19-data/", Sys.Date(),
+data <- vroom(paste0("~/cov-ind-19-data/", today,
                      "/covid19india_data.csv")
 ) %>%
 filter(State == state_sub)
@@ -49,7 +50,6 @@ filter(State == state_sub)
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
-today <- Sys.Date()
 wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
