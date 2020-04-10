@@ -11,6 +11,7 @@ library(scales)     # alpha　function
 library(data.table)
 library(devtools)
 
+city = Sys.getenv("city")
 today = Sys.getenv("today")
 arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
@@ -35,7 +36,7 @@ speed_return       <- 21            # length of time for pi to return to post-lo
 # dl = Delhi
 # mh = Maharashtra
 # kl = Kerala
-state_sub <- "dl"
+state_sub <- city
 
 # populations from http://www.census2011.co.in/states.php
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
@@ -46,8 +47,8 @@ data <- vroom(paste0("~/cov-ind-19-data/", today,
 ) %>%
 filter(State == state_sub)
 
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
+# eSIR relevant model code
+source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE")
 
 # !! directory ----------
 wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
@@ -59,9 +60,9 @@ setwd(wd)
 
 NI_complete <- data$Cases
 RI_complete <- data$Recovered + data$Deaths
-N           <- pops[state_sub]                         # population of India
-R           <- unlist(RI_complete/N)           # proportion of recovered per day
-Y           <- unlist(NI_complete/N-R)
+N           <- pops[state_sub] # population of India / State
+R           <- RI_complete / N # proportion of recovered per day
+Y           <- NI_complete / N - R
 start_date  <- min(data$Date)
 
 # dir.create(here("output", glue("{round(delay / 7, 0)}wk")), recursive = TRUE, showWarnings = FALSE)
