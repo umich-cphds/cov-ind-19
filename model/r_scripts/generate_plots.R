@@ -65,3 +65,19 @@ generate_forecast_plots <- function(forecast)
 forecasts <- c("India", "dl", "mh", "kl")
 for (forecast in forecasts)
     generate_forecast_plots(forecast)
+
+load(paste0("~/cov-ind-19-data/", Sys.Date(), "/India/plots.RData"))
+
+p1  <- India_p1
+p2  <- India_p2
+p3  <- India_p3
+p4a <- India_p4a
+p4b <- India_p4b
+p5a <- India_p5a
+p5b <- India_p5b
+p6a <- India_p6a
+p6b <- India_p6b
+
+
+save(p1, p2, p3, p4a, p4b, p5a, p5b, p6a, p6b,
+     file = paste0("~/cov-ind-19-data/", Sys.Date(), "/plots.RData"))
