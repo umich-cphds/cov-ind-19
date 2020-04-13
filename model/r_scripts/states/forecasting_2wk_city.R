@@ -11,8 +11,20 @@ library(scales)     # alpha　function
 library(data.table)
 library(devtools)
 
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+        data_repo <- "~/cov-ind-19-data/"
+        Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
+        today     <- Sys.getenv("today")
+} else {
+        data_repo <- "~/cov-ind-19-test/"
+        Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
+        today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 city = Sys.getenv("city")
-today = Sys.getenv("today")
 arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
@@ -75,7 +87,7 @@ state_sub <- city
 pops <- c("an" = 0.381e6, "ap" = 84.6e6, "ar" = 1.38e6, "as" = 31.2e6, "br" = 104.1e6, "ch" = 1.01e6, "cg" = 25.5e6, "dh" = 0.343e6, "dd" = 16.8e6, "dl" = 16.8e6, "ga" = 1.46e6, "gj" = 60.4e6, "hr" = 25.4e6, "hp" = 6.86e6, "jk" = 12.5e6, "jh" = 33.0e6, "ka" = 61.1e6, "kl" = 33.4e6, "mp" = 72.6e6, "mh" = 112.4e6, "mn" = 2.86e6, "ml" = 2.97e6, "mz" = 1.10e6, "nl" = 1.98e6, "or" = 42.0e6, "py" = 1.25e6, "pb" = 27.7e6, "rj" = 68.5e6, "sk" = 0.61e6, "tn" = 72.1e6, "tr" = 3.67e6, "up" = 199.8e6, "uk" = 10.1e6, "wb" = 91.3e6)
 
 # preprocessed data from covid19india.org
-data <- vroom(paste0("~/cov-ind-19-data/", today,
+data <- vroom(paste0(data_repo, today,
                      "/covid19india_data.csv")
 ) %>%
 filter(State == state_sub)
@@ -84,7 +96,7 @@ filter(State == state_sub)
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE")
 
 # !! directory ----------
-wd <- paste0("~/cov-ind-19-data/", today, "/2wk/")
+wd <- paste0(data_repo, today, "/2wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)

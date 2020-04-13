@@ -15,6 +15,7 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
+cd ~/cov-ind-19-data/$today
 git add *
 git commit -m "Automated push from slurm job"
 git push

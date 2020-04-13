@@ -4,6 +4,15 @@ library(sf)
 library(tmap)
 library(jsonlite)
 
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+	data_repo <- "~/cov-ind-19-data/"
+	today     <- Sys.getenv("today")
+} else {
+	data_repo <- "~/cov-ind-19-test/"
+	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 plot.height <- 11
 plot.width  <- 8.5
 plot.delay  <- 200
@@ -90,8 +99,7 @@ anim_day <- tm_shape(final_data) +
             tm_legend(scale = 1, legend.title.size = 2, legend.text.size = 1) +
             tm_borders()
 
-today <- Sys.getenv("today")
-path  <- path.expand(paste0("~/cov-ind-19-data/", today))
+path  <- path.expand(paste0(data_repo, today))
 if (!dir.exists(path))
     dir.create(path, recursive = TRUE)
 

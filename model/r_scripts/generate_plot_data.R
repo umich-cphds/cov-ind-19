@@ -1,18 +1,25 @@
 library(tidyverse)
 library(vroom)
 
-today <- Sys.getenv("today")
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+	data_repo <- "~/cov-ind-19-data/"
+	today     <- Sys.getenv("today")
+} else {
+	data_repo <- "~/cov-ind-19-test/"
+	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
 
-wd <- paste0("~/cov-ind-19-data/", today, "/")
+wd <- paste0(data_repo, today, "/")
 if (!dir.exists(wd)) {
     dir.create(wd, recursive = TRUE)
     message("Creating ", wd)
 }
 
-jhu.data <- vroom(paste0("~/cov-ind-19-data/", today, "/jhu_data.csv")) %>%
+jhu.data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
 filter(Country == "India" & Date >= "2020-03-01")
 
-state.data <- vroom(paste0("~/cov-ind-19-data/", today, "/covid19india_data.csv")) %>%
+state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
 filter(Date >= "2020-03-01")
 
 adj_len         <- 2
@@ -36,7 +43,7 @@ for (forecast in forecasts) {
     forecasted.dates <- seq(from = max(data$Date) + 1, by =  1,
                             length.out = forecast.len)
     for (arrayid in 1:2) {
-        path    <- paste0("~/cov-ind-19-data/", today, "/", arrayid, "wk")
+        path    <- paste0(data_repo, today, "/", arrayid, "wk")
 
         fig_4_data <- function(x)
         {

@@ -1,8 +1,7 @@
 plot_fig_6a <- function(forecast, start.date = as.Date("2020-04-30"),
-                        end.date = end.date <- as.Date("2020-08-31"),
-                        latest = Sys.getenv("today"))
+                        end.date = end.date <- as.Date("2020-08-31"))
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/2wk/", forecast,
+    data <- vroom(paste0(data_repo, today, "/2wk/", forecast,
                             "_figure_5_data.csv")
     ) %>%
     mutate(Dates = as.Date(Dates)) %>%
@@ -20,7 +19,7 @@ plot_fig_6a <- function(forecast, start.date = as.Date("2020-04-30"),
     )
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-    format(latest, format = "%b %d"), sep = ' ')
+    format(today, format = "%b %d"), sep = ' ')
 
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
@@ -44,7 +43,7 @@ plot_fig_6a <- function(forecast, start.date = as.Date("2020-04-30"),
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
 
-    # vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot6a.csv"),
+    # vroom_write(data, path = paste0(data_repo, today, "/plot6a.csv"),
     #             delim = ","
     # )
     p
