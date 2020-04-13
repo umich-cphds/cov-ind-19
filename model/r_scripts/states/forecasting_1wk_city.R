@@ -33,23 +33,46 @@ speed_lockdown     <- 7             # length of time for lockdown to drop (in da
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 
 # STATES
+# an = Andaman and Nicobar Islands
 # ap = Andhra Pradesh
+# ar = Arunachal Pradesh
+# as = Assam
 # br = Bihar
+# ch = Chandigarh
+# cg = Chhattisgarh
+# dh = Dadra and Nagar Haveli
+# dd = Daman and Diu
 # dl = Delhi
+# ga = Goa
 # gj = Gujarat
+# hr = Haryana
+# hp = Himachal Pradesh
+# jk = Jammu and Kashmir
+# jh = Jharkhand
 # ka = Karnataka
-# mh = Maharashtra
-# mp = Madhya Pradesh
 # kl = Kerala
+# ld = Lakshadweep #leaving off since population is less than 100k
+# mp = Madhya Pradesh
+# mh = Maharashtra
+# mn = Manipur
+# ml = Meghalaya
+# mz = Mizoram
+# nl = Nagaland
+# or = Orissa
+# py = Puducherry
+# pb = Punjab
 # rj = Rajasthan
+# sk = Sikkim
 # tn = Tamil Nadu
+# tr = Tripura
 # up = Uttar Pradesh
+# uk = Uttarakhand
 # wb = West Bengal
 
 state_sub <- city
 
 # populations from http://www.census2011.co.in/states.php
-pops <- c("ap" = 84.6e6, "br" = 104.1e6, "dl" = 16.8e6, "gj" = 60.4e6, "ka" = 61.1e6, "mh" = 112.4e6, "mp" = 72.6e6", "kl" = 33.4e6, "rj" = 68.5e6, "tn" = 72.1e6, "up" = 199.8e6, "wb" = 91.3e6)
+pops <- c("an" = 0.381e6, "ap" = 84.6e6, "ar" = 1.38e6, "as" = 31.2e6, "br" = 104.1e6, "ch" = 1.01e6, "cg" = 25.5e6, "dh" = 0.343e6, "dd" = 16.8e6, "dl" = 16.8e6, "ga" = 1.46e6, "gj" = 60.4e6, "hr" = 25.4e6, "hp" = 6.86e6, "jk" = 12.5e6, "jh" = 33.0e6, "ka" = 61.1e6, "kl" = 33.4e6, "mp" = 72.6e6, "mh" = 112.4e6, "mn" = 2.86e6, "ml" = 2.97e6, "mz" = 1.10e6, "nl" = 1.98e6, "or" = 42.0e6, "py" = 1.25e6, "pb" = 27.7e6, "rj" = 68.5e6, "sk" = 0.61e6, "tn" = 72.1e6, "tr" = 3.67e6, "up" = 199.8e6, "uk" = 10.1e6, "wb" = 91.3e6)
 
 # preprocessed data from covid19india.org
 data <- vroom(paste0("~/cov-ind-19-data/", today,
