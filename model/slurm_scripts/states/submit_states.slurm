@@ -9,9 +9,9 @@
 #SBATCH --partition=standard
 
 cd ~/cov-ind-19/model/slurm_scripts/states
-cities="dl kl mh"
-for i in $cities; do
-	export city=$i
+states="dl kl mh"
+for i in $states; do
+	export state=$i
 	sbatch --job-name=1wk_$i forecasting_1wk_city.slurm
 	sbatch --job-name=2wk_$i forecasting_2wk_city.slurm
 done
