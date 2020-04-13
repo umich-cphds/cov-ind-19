@@ -2,10 +2,9 @@ library(tidyverse)
 library(vroom)
 library(plotly)
 plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
-                        end.date = as.Date("2020-04-30"),
-                        latest = Sys.getenv("today"))
+                        end.date = as.Date("2020-04-30"))
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/1wk/", forecast,
+    data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
                             "_figure_4_data.csv")
     ) %>%
     mutate(
@@ -31,14 +30,14 @@ plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
                    "to other countries affected by the pandemic")
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                  format(latest, format = "%b %e"), sep = ' ')
+                  format(today, format = "%b %e"), sep = ' ')
 
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
 
     xaxis <- list(title = "", titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = -30, showline = T, zeroline = T, x0 =
-                  format(latest, format = "%b %e"))
+                  format(today, format = "%b %e"))
 
     yaxis <- list(title = "Cumulative number of cases", type = "log",
                   dtick = 1, titlefont = axis.title.font, zeroline = T,
@@ -52,8 +51,8 @@ plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
     layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
            title = list(text = cap, xanchor = "left", x = 0),
            legend = list(orientation = "h", font = list(size = 16)),
-           shapes = list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = latest,
-                         x1 = latest, layer = "below",
+           shapes = list(type = "line", y0 = 0, y1 = 1, yref = "paper", x0 = today,
+                         x1 = today, layer = "below",
                          line = list(color = "#eee", size = 3)
                      )
     ) %>%
@@ -63,7 +62,7 @@ plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    # vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/", forecast,
+    # vroom_write(data, path = paste0(data_repo, today, "/", forecast,
     #                                 "/plot4a.csv"), delim = ","
     # )
     p

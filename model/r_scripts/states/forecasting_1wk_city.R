@@ -11,16 +11,26 @@ library(scales)     # alpha　function
 library(data.table)
 library(devtools)
 
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+        data_repo <- "~/cov-ind-19-data/"
+        Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
+        today     <- Sys.getenv("today")
+} else {
+        data_repo <- "~/cov-ind-19-test/"
+        Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
+        today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 city = Sys.getenv("city")
-today = Sys.getenv("today")
 arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
 delay              <- 7             # in days (default = 7)
 length_of_lockdown <- 21            # in days (default = 21)
-Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
-nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
 pi_cautious        <- 0.6           # pi corresponding to cautious return
 pi_lockdown        <- 0.4           # pi corresponding to lockdown
 pi_moderate        <- 0.75          # pi corresponding to moderate return
@@ -42,7 +52,7 @@ state_sub <- city
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
 # preprocessed data from covid19india.org
-data <- vroom(paste0("~/cov-ind-19-data/", today,
+data <- vroom(paste0(data_repo, today,
                      "/covid19india_data.csv")
 ) %>%
 filter(State == state_sub)
@@ -51,7 +61,7 @@ filter(State == state_sub)
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE")
 
 # !! directory ----------
-wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
+wd <- paste0(data_repo, today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)

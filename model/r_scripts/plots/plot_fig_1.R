@@ -1,7 +1,6 @@
-plot_fig_1 <- function(start.date = as.Date("2020-03-15"),
-                       latest = Sys.getenv("today"))
+plot_fig_1 <- function(start.date = as.Date("2020-03-15"))
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
+    data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
     filter(Country == "India") %>%
     mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
         y <- x - lag(x)
@@ -25,7 +24,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-15"),
 
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                  format(latest, format = "%b %e"), sep = ' ')
+                  format(today, format = "%b %e"), sep = ' ')
 
     title <- paste("Daily number of COVID-19 new cases, fatalities and",
                    "recovered cases in India since March 1")
@@ -53,7 +52,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-03-15"),
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot1.csv"),
+    vroom_write(data, path = paste0(data_repo, today, "/plot1.csv"),
                 delim = ","
     )
     p
