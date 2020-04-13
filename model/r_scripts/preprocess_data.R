@@ -2,11 +2,18 @@ library(httr)
 library(tidyverse)
 library(vroom)
 
-today <- Sys.getenv("today")
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+	data_repo <- "~/cov-ind-19-data/"
+	today     <- Sys.getenv("today")
+} else {
+	data_repo <- "~/cov-ind-19-test/"
+	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
 
-if (!dir.exists(paste0("~/cov-ind-19-data/", today))) {
-    message("Creating" , paste0("~/cov-ind-19-data/", today))
-    dir.create(paste0("~/cov-ind-19-data/", today, recursive = T))
+if (!dir.exists(paste0(data_repo, today))) {
+    message("Creating" , paste0(data_repo, today))
+    dir.create(paste0(data_repo, today, recursive = T))
 }
 
 start.date <- as.Date("2020-03-01")
@@ -44,7 +51,7 @@ data <- reduce(imap(jhu.files,
     }
 ), ~ left_join(.x, .y)) %>%
 arrange(Country, Date) %>%
-vroom_write(path = paste0("~/cov-ind-19-data/", today, "/jhu_data.csv"))
+vroom_write(path = paste0(data_repo, today, "/jhu_data.csv"))
 
 # get state level data from covid19india.org and preprocess it
 request <- GET("https://api.covid19india.org/states_daily.json")
@@ -73,5 +80,5 @@ mutate(
 ) %>%
 ungroup() %>%
 filter(Date >= "2020-03-15" & Date < today) %>%
-vroom_write(path = paste0("~/cov-ind-19-data/", today, "/covid19india_data.csv"))
+vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
 # & Date < today

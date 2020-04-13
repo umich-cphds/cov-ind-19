@@ -1,7 +1,6 @@
-plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
-                       latest = Sys.getenv("today"))
+plot_fig_23 <- function(start.date = as.Date("2020-03-01"))
 {
-    data <- vroom(paste0("~/cov-ind-19-data/", latest, "/jhu_data.csv")) %>%
+    data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
     group_by(Country) %>% filter(Cases >= 100) %>%
     arrange(Date) %>%
     mutate(Day = seq(n()))
@@ -18,7 +17,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
                    "to other countries affected by the pandemic")
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                  format(latest, format = "%b %e"), sep = ' ')
+                  format(today, format = "%b %e"), sep = ' ')
 
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
@@ -70,7 +69,7 @@ plot_fig_23 <- function(start.date = as.Date("2020-03-01"),
                 visible = "legendonly"
     )
 
-    vroom_write(data, path = paste0("~/cov-ind-19-data/", latest, "/plot23.csv"),
+    vroom_write(data, path = paste0(data_repo, today, "/plot23.csv"),
                 delim = ","
     )
     list(p2 = p2, p3 = p3)

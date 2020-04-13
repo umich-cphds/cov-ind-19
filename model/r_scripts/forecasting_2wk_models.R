@@ -8,18 +8,29 @@ library(scales) #alpha　function
 library(data.table)
 library(devtools)
 
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+        data_repo <- "~/cov-ind-19-data/"
+        Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
+	today     <- Sys.getenv("today")
+
+} else {
+        data_repo <- "~/cov-ind-19-test/"
+        Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
+	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 R_0      <- 2      # basic reproduction number
-Ms       <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
-nburnins <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 
 # eSIR ----------
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
-today <- Sys.getenv("today")
-wd <- paste0("~/cov-ind-19-data/", today, "/2wk/")
+wd <- paste0(data_repo, today, "/2wk/")
 if (!dir.exists(wd)) {
     dir.create(wd, recursive = TRUE)
     message("Creating ", wd)
