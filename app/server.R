@@ -7,7 +7,9 @@ library(glue)
 library(jsonlite)
 library(scales)
 
-github.path <- "https://api.github.com/repos/umich-cphds/cov-ind-19-data/git/trees/master"
+data_repo <- "cov-ind-19-data"
+
+github.path <- "https://api.github.com/repos/umich-cphds/", data_repo, "/git/trees/master"
 
 
 # authenticate as alexander rix and pull the latest data from the kaggle dataset.
@@ -46,26 +48,26 @@ tree <-  trees[[which.max(as.Date(map_chr(trees, ~ .x$path)))]]
 
 latest <- as.Date(tree$path)
 
-url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+url <- url(paste0("https://github.com/umich-cphds/", data_repo, "/raw/master/" ,
                   latest, "/India/plots.RData"))
 
 load(url)
 close(url)
 
-url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+url <- url(paste0("https://github.com/umich-cphds/", data_repo, "/raw/master/" ,
                   latest, "/dl/plots.RData"))
 
 load(url)
 close(url)
 
 
-url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+url <- url(paste0("https://github.com/umich-cphds/", data_repo, "/raw/master/" ,
                   latest, "/kl/plots.RData"))
 
 load(url)
 close(url)
 
-url <- url(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/" ,
+url <- url(paste0("https://github.com/umich-cphds/", data_repo, "/raw/master/" ,
                   latest, "/mh/plots.RData"))
 
 load(url)
@@ -196,7 +198,7 @@ shinyServer(function(input, output)
     
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
-         download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/",
+         download.file(paste0("https://github.com/umich-cphds/", data_repo, "/raw/master/",
                               latest, "/day_sp_animation.gif"), file)
          list(src = file, contentType = "image/gif", alt = "Map not available",
               width = 500)
