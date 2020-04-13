@@ -52,6 +52,7 @@ jhu.data <- reduce(imap(jhu.files,
         # filter(Date >= start.date - 1)
     }
 ), ~ left_join(.x, .y)) %>%
+ungroup() %>%
 arrange(Country, Date) %>%
 vroom_write(path = paste0(data_repo, today, "/jhu_data.csv"))
 
@@ -86,12 +87,25 @@ filter(Date >= "2020-03-15" & Date < today) %>%
 vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
 
 
-india_mod <- data %>%
-group_by(Date) %>%
-select(-State) %>%
-summarise_all(sum) %>%
-ungroup() %>%
-mutate(Country = "India_mod")
+request <- GET("https://api.covid19india.org/data.json")
+json    <- content(request)
+data    <- map_dfr(json[[1]], ~ .x)
 
-jhu.data <- add_row(jhu.data, india_mod)
-# & Date < today
+data <- data %>%
+select(
+    Cases = totalconfirmed,
+    Deaths = totaldeceased,
+    Recovered = totalrecovered,
+    Date = date
+) %>%
+mutate(
+    Date = as.Date(paste0(Date, "2020"), format = "%d %B %Y"),
+    Cases = as.numeric(Cases),
+    Deaths = as.numeric(Deaths),
+    Recovered = as.numeric(Recovered),
+    Country = "India"
+) %>% filter (Date < today)
+
+
+rbind(filter(jhu.data, Country != "India"), data) %>%
+vroom_write(path = paste0(data_repo, today, "/jhu_data_mod.csv"))
