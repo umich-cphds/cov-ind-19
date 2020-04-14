@@ -65,12 +65,17 @@ shinyUI(
                             plotlyOutput("plot1", height = "600px"),
                             hr(),
                             h2("Total number of COVID-19 cases and deaths"),
-                            p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases. The second figure represents COVID-19 fatalities where the x-axis starts on the day when each. country exceeded 3 fatalities. These axes allow comparison of counts at similar stages of the outbreak. You can click on countries in the legend to add or remove them and you cann hover your cursor over the lines to see the exact numerical counts."),
+                            p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases. 
+The second figure represents COVID-19 fatalities where the x-axis starts on the day when each country exceeded 3 fatalities. 
+These axes allow comparison of counts at similar stages of the outbreak. 
+You can click on countries in the legend to add or remove them and you cann hover your cursor over the lines to see the exact numerical counts."),
                             plotlyOutput("plot2", height = "800px"),
                             hr(),
-                            h2("Cumulative number of COVID-19 cases in India alone"),
-                            p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases (March 14)."),
+                            h2("Doubling graphs"),
+                            p("The following figures visualize the case and death data to depict how long it takes each country to double its case or death count."),
+                            h3("Cases"),
                             plotlyOutput("plot3a", height = "600px"),
+                            h3("Deaths"),
                             plotlyOutput("plot3b", height = "600px"),
                             hr(),
                             h2("Cumulative case counts by state/union territory"),
@@ -81,8 +86,12 @@ shinyUI(
                               column(width = 9, imageOutput("map", height = "650px")),
                             ),
                             hr(),
-                            h1("Predictive modeling of case counts in India under hypothetical intervention scenarios"),
-                            p("We are in the process of updating our forecasting models. Please check back soon.")
+                            h2("Cumlative COVID-19 case count by state/union territory"),
+                            plotOutput("plot7b", height = "600px"),
+                            h2("Cumlative COVID-19 death count by state/union territory"),
+                            plotOutput("plot7d", height = "660px"),
+                            hr(),
+                            h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
         #                     h2("Short-term impact of social distancing, travel ban, and lockdown"),
         #                     p("In the following Figures we consider various scenarios of intervention effects to assess the effect of the lockdown.",
         #                       "These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent.",
