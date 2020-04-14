@@ -4,7 +4,6 @@ library(chron)
 library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(here)
-library(glue)
 library(devtools)
 
 # Set variables based on testing or production
@@ -25,7 +24,6 @@ set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
 delay              <- 7             # in days (default = 7)
-length_of_lockdown <- 35            # in days (default = 21)
 pi_cautious        <- 0.6           # pi corresponding to cautious return
 pi_lockdown        <- 0.4           # pi corresponding to lockdown
 pi_moderate        <- 0.75          # pi corresponding to moderate return
@@ -39,6 +37,9 @@ start_date         <- "2020-03-01"
 soc_dist_start     <- "2020-03-15"
 soc_dist_end       <- "2020-03-24"
 lockdown_start     <- as.Date(soc_dist_end) + 1
+lockdown_end       <- "2020-05-03"
+
+length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 
 # eSIR ----------
 source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
@@ -52,7 +53,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(glue("{data_repo}/{today}/jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01")
 
 NI_complete <- dat$Cases
@@ -69,7 +70,7 @@ l <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + d
 
 # models ---------
 if (arrayid == 1) {
-print(glue("Running model_4 (lockdown with moderate return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 pi0         <- c(1,
                  rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
                  rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
@@ -96,7 +97,7 @@ model_4 <- tvt.eSIR(
 }
 
 if (arrayid == 2) {
-print(glue("Running model_5 (lockdown with normal [pre-intervention] return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 pi0         <- c(1,
                  rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
                  rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
@@ -123,7 +124,7 @@ model_5 <- tvt.eSIR(
 }
 
 if (arrayid == 3) {
-print(glue("Running model_6 (lockdown with cautious return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_6 (lockdown with cautious return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 pi0         <- c(1,
                  rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
                  rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
