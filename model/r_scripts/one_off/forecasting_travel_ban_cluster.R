@@ -4,6 +4,7 @@ library(chron)
 library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(scales) #alpha　function
+library(glue)
 library(data.table)
 library(devtools)
 
