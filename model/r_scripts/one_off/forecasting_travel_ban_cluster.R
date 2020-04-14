@@ -7,13 +7,21 @@ library(scales) #alpha　function
 library(data.table)
 library(devtools)
 
+# Set variables based on testing or production
+if ( Sys.getenv("production") == "TRUE" ) {
+        data_repo <- "~/cov-ind-19-data/"
+        Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
+} else {
+        data_repo <- "~/cov-ind-19-test/"
+        Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
+        nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
+}
+
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
-length_of_lockdown <- 35            # in days (default = 35)
-Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
-nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
 R_0                <- 2             # basic reproduction number
 save_mcmc          <- TRUE          # output MCMC files (default = TRUE; needed for incidence CI calculations)
 start_date         <- "2020-03-01"
@@ -24,11 +32,7 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TR
 
 # directory ----------
 today <- Sys.getenv("today")
-
-# ------------- # 
-# DAN LOOK HERE #
-# ------------- # 
-wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
+wd    <- paste0("~/cov-ind-19-data/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
@@ -36,7 +40,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(url("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/2020-04-13/jhu_data_mod.csv")) %>%
+dat <- read_tsv(glue("{data_repo}/{today}/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01" & Date <= travel_ban_date)
 
 NI_complete <- dat$Cases
