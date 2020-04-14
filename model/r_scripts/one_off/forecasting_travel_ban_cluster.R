@@ -4,7 +4,6 @@ library(chron)
 library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(scales) #alpha　function
-library(glue)
 library(data.table)
 library(devtools)
 
@@ -41,7 +40,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(glue("{data_repo}/{today}/jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, today, "jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01" & Date <= travel_ban_date)
 
 NI_complete <- dat$Cases
