@@ -38,9 +38,6 @@ Y           <- unlist(NI_complete/N-R)
 
 # models ---------
 if (arrayid == 1) {
-# ------------- # 
-# DAN LOOK HERE #
-# ------------- # 
 wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
@@ -78,10 +75,7 @@ soc_dist <- tvt.eSIR(
 }
 
 if (arrayid == 2) {
-# ------------- # 
-# DAN LOOK HERE #
-# ------------- # 
-wd <- paste0("~/cov-ind-19-data/", today, "/1wk/")
+wd <- paste0("~/cov-ind-19-data/", today, "/2wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
