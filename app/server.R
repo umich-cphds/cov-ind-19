@@ -122,6 +122,14 @@ shinyServer(function(input, output)
     output$plot6b <- renderPlotly({
         India_p6b
     })
+  
+    output$plot7b <- renderPlot({
+        India_p7b
+    })
+  
+    output$plot7d <- renderPlot({
+        India_p7d
+    })
 
     output$plot4a_fulldl <- renderPlotly({
         dl_p4a
