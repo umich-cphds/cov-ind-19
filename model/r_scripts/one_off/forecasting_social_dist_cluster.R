@@ -43,6 +43,7 @@ RI_complete <- dat$Recovered + dat$Deaths
 N           <- 1.34e9                          # population of India
 R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
+delay       <- 7
 
 l <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"))
 
@@ -55,7 +56,6 @@ if (!dir.exists(wd)) {
 }
 setwd(wd)
 
-delay <- 7
 
 print(paste0("Running model_2 (perpetual social distancing and travel ban) with", delay/7, "week delay"))
 
