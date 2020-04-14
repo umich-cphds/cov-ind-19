@@ -19,7 +19,9 @@ if (!dir.exists(paste0(data_repo, today))) {
 start.date <- as.Date("2020-03-01")
 
 countries <- c("France", "Germany", "India", "Iran", "Italy",
-               "Korea, South", "US", "China")
+               "Korea, South", "US", "China", "Canada", "Belgium", "Turkey",
+               "Netherlands", "Switzerland", "United Kingdom"
+)
 
 jhu.path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
 
@@ -29,7 +31,7 @@ jhu.files <- list(
     Deaths     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
 )
 
-data <- reduce(imap(jhu.files,
+jhu.data <- reduce(imap(jhu.files,
     function(file, var)
     {
         vroom(file) %>%
@@ -50,8 +52,10 @@ data <- reduce(imap(jhu.files,
         # filter(Date >= start.date - 1)
     }
 ), ~ left_join(.x, .y)) %>%
+ungroup() %>%
 arrange(Country, Date) %>%
 vroom_write(path = paste0(data_repo, today, "/jhu_data.csv"))
+
 
 # get state level data from covid19india.org and preprocess it
 request <- GET("https://api.covid19india.org/states_daily.json")
@@ -81,4 +85,27 @@ mutate(
 ungroup() %>%
 filter(Date >= "2020-03-15" & Date < today) %>%
 vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
-# & Date < today
+
+
+request <- GET("https://api.covid19india.org/data.json")
+json    <- content(request)
+data    <- map_dfr(json[[1]], ~ .x)
+
+data <- data %>%
+select(
+    Cases = totalconfirmed,
+    Deaths = totaldeceased,
+    Recovered = totalrecovered,
+    Date = date
+) %>%
+mutate(
+    Date = as.Date(paste0(Date, "2020"), format = "%d %B %Y"),
+    Cases = as.numeric(Cases),
+    Deaths = as.numeric(Deaths),
+    Recovered = as.numeric(Recovered),
+    Country = "India"
+) %>% filter (Date < today)
+
+
+rbind(filter(jhu.data, Country != "India"), data) %>%
+vroom_write(path = paste0(data_repo, today, "/jhu_data_mod.csv"))

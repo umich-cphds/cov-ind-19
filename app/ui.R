@@ -11,12 +11,8 @@ library(shiny)
 library(plotly)
 library(tidyverse)
 library(reshape2)
-library(tmap)
-library(sf)
-library(leaflet)
-library(magick)
 
-sidebar_matter = 
+sidebar_matter =
   sidebarPanel(
     h3("COV-IND-19 Study Group"),
     # HTML('<center><img src="group_logo.png" width="200"></center>'),
@@ -48,12 +44,12 @@ sidebar_matter =
 shinyUI(
   navbarPage("COVID-19 Outbreak in India",
              tabPanel("National",
-                      
+
                       fluidPage(
-                        
+
                         # Application title
                         titlePanel("COVID-19 Outbreak in India"),
-                        
+
                         # # Sidebar with a slider input for number of bins
                         sidebarLayout(
                           sidebar_matter,
@@ -74,7 +70,8 @@ shinyUI(
                             hr(),
                             h2("Cumulative number of COVID-19 cases in India alone"),
                             p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases (March 14)."),
-                            plotlyOutput("plot3", height = "600px"),
+                            plotlyOutput("plot3a", height = "600px"),
+                            plotlyOutput("plot3b", height = "600px"),
                             hr(),
                             h2("Cumulative case counts by state/union territory"),
                             p("The map displays the case counts by state/union territory in India over the last few days.",
@@ -137,8 +134,8 @@ shinyUI(
                           )
                         )
                       )
-                      
-                      
+
+
              )
              # ,
         #      tabPanel("Delhi",
@@ -307,6 +304,6 @@ shinyUI(
         #                 )
         #               ))
   )
-  
-  
+
+
 )

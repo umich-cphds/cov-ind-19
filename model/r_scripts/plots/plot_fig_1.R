@@ -1,6 +1,6 @@
 plot_fig_1 <- function(start.date = as.Date("2020-03-15"))
 {
-    data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
+    data <- vroom(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
     filter(Country == "India") %>%
     mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
         y <- x - lag(x)

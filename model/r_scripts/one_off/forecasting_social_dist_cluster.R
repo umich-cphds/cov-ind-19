@@ -4,7 +4,6 @@ library(chron)
 library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(here)
-library(glue)
 library(devtools)
 
 # Set variables based on testing or production
@@ -36,7 +35,7 @@ source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TR
 today <- Sys.getenv("today")
 
 # data ----------
-dat <- read_tsv(glue("{data_repo}/{today}/jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01" & Date <= soc_dist_start)
 
 NI_complete <- dat$Cases
@@ -44,6 +43,7 @@ RI_complete <- dat$Recovered + dat$Deaths
 N           <- 1.34e9                          # population of India
 R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
+delay       <- 7
 
 l <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"))
 
@@ -56,9 +56,8 @@ if (!dir.exists(wd)) {
 }
 setwd(wd)
 
-delay <- 7
 
-print(glue("Running model_2 (perpetual social distancing and travel ban) with {delay/7} week delay"))
+print(paste0("Running model_2 (perpetual social distancing and travel ban) with", delay/7, "week delay"))
 
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date(as.Date(soc_dist_start) + delay + l, origin = "1970-01-01")), "%m/%d/%Y")
@@ -95,7 +94,7 @@ setwd(wd)
 
 delay <- 14
 
-print(glue("Running model_2 (perpetual social distancing and travel ban) with {delay/7} week delay"))
+print(paste0("Running model_2 (perpetual social distancing and travel ban) with", delay/7, "week delay"))
 
 change_time <- format(c(as.Date((as.Date("2020-03-15") + delay):(as.Date("2020-03-15") + delay + 13), origin = "1970-01-01"),
                         as.Date(as.Date("2020-03-15") + delay + 14, origin = "1970-01-01")), "%m/%d/%Y")
