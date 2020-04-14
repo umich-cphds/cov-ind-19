@@ -1,7 +1,4 @@
-source("~/cov-ind-19/model/r_scripts/today.R")
-
-plot_fig_3 <- function(start.date = as.Date("2020-03-01"),
-                       today = get_today())
+plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
 {
     Day.max <- 60
 
@@ -104,7 +101,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"),
     ) %>%
     add_annotations(
         x = c(40, 60, 60),
-        y = 2 + c(log10(2 ^ (1 / 3 * 40)),
+        y = 2 + c(log10(2 ^ (1 / 3 * 39.863)),
                     log10(2 ^ (1 / 7 * 60)),
                     log10(2 ^ (1 / 14 * 60))
         ),
