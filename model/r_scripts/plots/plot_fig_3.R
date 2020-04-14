@@ -106,7 +106,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
                     log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
-        font = list(size = 18),
+        font = list(size = 16),
         xref = "x",
         xanchor = "left",
         yref = "y",
@@ -142,7 +142,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
                     log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
-        font = list(size = 18),
+        font = list(size = 16),
         xref = "x",
         xanchor = "left",
         yref = "y",
