@@ -38,12 +38,12 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"),
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 60)
+                  range = list(1, 70)
     )
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 60)
+                  range = list(1, 70)
     )
 
     cases.yaxis <- list(title = "Cumulative number of reported cases",
@@ -103,19 +103,15 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"),
            margin = list(b = 100)
     ) %>%
     add_annotations(
-        x = c(37, 57, 57),
-        y = 1.9 + c(log10(2 ^ (1 / 3 * 37)),
-                    log10(2 ^ (1 / 7 * 57)),
-                    log10(2 ^ (1 / 14 * 57))
+        x = c(40, 60, 60),
+        y = 2 + c(log10(2 ^ (1 / 3 * 40)),
+                    log10(2 ^ (1 / 7 * 60)),
+                    log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 18),
-        textangle = c(
-            -atan(6 / 3 / log(10, 2)) * 180 / pi,
-            -atan(6 / 7 / log(10, 2)) * 180 / pi,
-            -atan(6 / 14 / log(10, 2)) * 180 / pi
-        ),
         xref = "x",
+        xanchor = "left",
         yref = "y",
         showarrow = F
     ) %>%
@@ -143,25 +139,19 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"),
            margin = list(b = 100)
     ) %>%
     add_annotations(
-        x = c(42, 57, 57),
-        y = log10(3) - 0.1 + c(log10(2 ^ (1 / 3 * 42)),
-                    log10(2 ^ (1 / 7 * 57)),
-                    log10(2 ^ (1 / 14 * 57))
+        x = c(45, 60, 60),
+        y = log10(3) + c(log10(2 ^ (1 / 3 * 45)),
+                    log10(2 ^ (1 / 7 * 60)),
+                    log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 18),
-        textangle = c(
-            -atan(4.75 / 3 / log(10, 2)) * 180 / pi,
-            -atan(4.75 / 7 / log(10, 2)) * 180 / pi,
-            -atan(4.75 / 14 / log(10, 2)) * 180 / pi
-        ),
         xref = "x",
+        xanchor = "left",
         yref = "y",
         showarrow = F
     ) %>%
         plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
-
-
 
     list(p3a = p1, p3b = p2)
 }
