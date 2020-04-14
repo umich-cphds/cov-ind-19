@@ -62,15 +62,58 @@ N           <- 1.34e9                          # population of India
 R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
 
-change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
-                        as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
-                        as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
-
 l <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"))
 
 # models ---------
 if (arrayid == 1) {
+change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+                        as.Date(as.Date(soc_dist_start) + delay + l, origin = "1970-01-01")), "%m/%d/%Y")
+pi0         <- c(1,
+                 rev(seq(pi_sdtb, 1, (1 - pi_sdtb) / l))[-1],
+                 pi_sdtb)
+
+model_2 <- tvt.eSIR(
+  Y,
+  R,
+  begin_str      = "03/01/2020",
+  death_in_R     = 0.2,
+  T_fin          = 200,
+  pi0            = pi0,
+  change_time    = change_time,
+  R0             = R_0,
+  dic            = TRUE,
+  casename       = "India_2",
+  save_files     = FALSE,
+  save_mcmc      = save_mcmc,
+  save_plot_data = TRUE,
+  M              = Ms,
+  nburnin        = nburnins
+)
+}
+
+if (arrayid == 2) {
+model_3 <- tvt.eSIR(
+  Y,
+  R,
+  begin_str      = "03/01/2020",
+  death_in_R     = 0.2,
+  T_fin          = 200,
+  R0             = R_0,
+  dic            = TRUE,
+  casename       = "India_3",
+  save_files     = FALSE,
+  save_mcmc      = save_mcmc,
+  save_plot_data = TRUE,
+  M              = Ms,
+  nburnin        = nburnins
+)
+}
+
+if (arrayid == 3) {
 print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
 pi0         <- c(1,
                  rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
                  rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
@@ -96,13 +139,16 @@ model_4 <- tvt.eSIR(
 )
 }
 
-if (arrayid == 2) {
+if (arrayid == 4) {
 print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
 pi0         <- c(1,
-                 rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
-                 rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
-                 seq(pi_lockdown, pi_normal, (pi_normal - pi_lockdown) / speed_return),
-                 pi_normal)
+               rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
+               rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
+               seq(pi_lockdown, pi_normal, (pi_normal - pi_lockdown) / speed_return),
+               pi_normal)
 
 model_5 <- tvt.eSIR(
   Y,
@@ -123,13 +169,16 @@ model_5 <- tvt.eSIR(
 )
 }
 
-if (arrayid == 3) {
+if (arrayid == 5) {
 print(paste0("Running model_6 (lockdown with cautious return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+                        as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
 pi0         <- c(1,
-                 rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
-                 rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
-                 seq(pi_lockdown, pi_cautious, (pi_cautious - pi_lockdown) / speed_return),
-                 pi_cautious)
+               rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
+               rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
+               seq(pi_lockdown, pi_cautious, (pi_cautious - pi_lockdown) / speed_return),
+               pi_cautious)
 
 model_6 <- tvt.eSIR(
   Y,
