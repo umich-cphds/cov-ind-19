@@ -52,7 +52,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(url(glue("{data_repo}/{today}/jhu_data_mod.csv"))) %>%
+dat <- read_tsv(glue("{data_repo}/{today}/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01")
 
 NI_complete <- dat$Cases
