@@ -150,7 +150,7 @@ ggplot(data = data_caseplot, aes(x = Date, y = Cases, group = full)) +
   theme_bw() + 
   geom_line(aes(x = Date, y = Cases, group = full), color = '#36A30B', size = 1.5) + facet_wrap(~full) + 
   geom_point(shape = 3, size = 0.5) +
-  xlab('\nDate') + ylab('Number of daily cases\n') + 
+  xlab('\nDate') + ylab('Cumulative number of daily cases\n') + 
   theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),
         strip.background = element_blank(),
         panel.grid.minor.x = element_blank(),
@@ -201,7 +201,7 @@ ggplot(data = data_deathplot, aes(x = Date, y = Deaths, group = full)) +
   theme_bw() + 
   geom_line(aes(x = Date, y = Deaths, group = full), color = '#36A30B', size = 1.5) + facet_wrap(~full) + 
   geom_point(shape = 3, size = 0.5) +
-  xlab('\nDate') + ylab('Number of daily deaths\n') + 
+  xlab('\nDate') + ylab('Cumulative number of daily deaths\n') + 
   theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),
         strip.background = element_blank(),
         panel.grid.minor.x = element_blank(),
