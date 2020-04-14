@@ -86,10 +86,10 @@ You can click on countries in the legend to add or remove them and you cann hove
                               column(width = 9, imageOutput("map", height = "650px")),
                             ),
                             hr(),
-                            h2("Cumlative COVID-19 case count by state/union territory"),
+                            h2("Cumulative COVID-19 case count by state/union territory"),
                             plotOutput("plot7b", height = "600px"),
-                            h2("Cumlative COVID-19 death count by state/union territory"),
-                            plotOutput("plot7d", height = "660px"),
+                            h2("Cumulative COVID-19 death count by state/union territory"),
+                            plotOutput("plot7d", height = "600px"),
                             hr(),
                             h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
         #                     h2("Short-term impact of social distancing, travel ban, and lockdown"),
