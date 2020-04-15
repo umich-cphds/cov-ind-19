@@ -83,51 +83,51 @@ shinyServer(function(input, output)
     output$latest <- renderText(paste0("Data last updated ",
                                        format(latest, format = "%B %d")))
 
-    output$plot1 <- renderPlotly({
+    output$India_p1 <- renderPlotly({
         India_p1
     })
 
-    output$plot2 <- renderPlotly({
+    output$India_p2 <- renderPlotly({
         India_p2
     })
 
-    output$plot3a <- renderPlotly({
+    output$India_p3a <- renderPlotly({
         India_p3a
     })
 
-    output$plot3b <- renderPlotly({
+    output$India_p3b <- renderPlotly({
         India_p3b
     })
 
-    output$plot4a_full <- renderPlotly({
+    output$India_p4a <- renderPlotly({
         India_p4a
     })
 
-    output$plot4b_full <- renderPlotly({
+    output$India_p4b <- renderPlotly({
         India_p4b
     })
 
-    output$plot5a <- renderPlotly({
+    output$India_p5a <- renderPlotly({
         India_p5a
     })
 
-    output$plot5b <- renderPlotly({
+    output$India_p5b <- renderPlotly({
         India_p5b
     })
 
-    output$plot6a <- renderPlotly({
+    output$India_p6a <- renderPlotly({
         India_p6a
     })
 
-    output$plot6b <- renderPlotly({
+    output$India_p6b <- renderPlotly({
         India_p6b
     })
   
-    output$plot7b <- renderPlot({
+    output$India_p7b <- renderPlot({
         India_p7b
     })
   
-    output$plot7d <- renderPlot({
+    output$India_p7d <- renderPlot({
         India_p7d
     })
 
