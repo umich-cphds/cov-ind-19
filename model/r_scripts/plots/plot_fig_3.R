@@ -35,12 +35,12 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 70)
+                  range = list(1, 60)
     )
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 70)
+                  range = list(1, 60)
     )
 
     cases.yaxis <- list(title = "Cumulative number of reported cases",
