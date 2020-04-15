@@ -8,12 +8,14 @@ if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-test/"
 }
 
-today     <- Sys.getenv("today")
-wd <- paste0(data_repo, today, "/")
-if (!dir.exists(wd)) {
-    dir.create(wd, recursive = TRUE)
-    message("Creating ", wd)
+today <- Sys.getenv("today")
+path <- paste0(data_repo, today, "/")
+if (!dir.exists(path)) {
+    dir.create(path, recursive = TRUE)
+    message("Creating ", path)
 }
+
+message("Generating plot data in ", path)
 
 jhu.data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
 filter(Country == "India" & Date >= "2020-03-01")
@@ -26,8 +28,8 @@ adj             <- T
 plot_start_date <- "2020-03-01"
 plot_end_date   <- "2020-04-30"
 
+# , "dl", "mh", "kl"
 forecasts <- c("India")
-#forecasts <- c("India", "dl", "mh", "kl")
 
 pops <- c("India" = 1.34e9, "dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 for (forecast in forecasts) {

@@ -2,7 +2,7 @@ library(tidyverse)
 library(vroom)
 library(plotly)
 plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
-                        end.date = as.Date("2020-04-30"))
+                        end.date = as.Date("2020-05-15"))
 {
     data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
                             "_figure_4_data.csv")
@@ -15,8 +15,8 @@ plot_fig_4a <- function(forecast, start.date = as.Date("2020-03-01"),
         ci.fmt = format(upper_ci, big.mark = ",", scientific = F, trim = T)
     ) %>%
     mutate(
-        color = recode(color, "Lockdown with moderate release" = "Lockdown with moderate return"),
-        j = color == "Lockdown with moderate return"
+        color = recode(color, "Lockdown with moderate release" = "40 day lockdown with moderate return"),
+        j = color == "40 day lockdown with moderate return"
     ) %>%
     filter(Dates <= end.date) %>%
     mutate(text = case_when(
