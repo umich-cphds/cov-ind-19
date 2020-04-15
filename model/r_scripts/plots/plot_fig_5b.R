@@ -14,7 +14,9 @@ plot_fig_5b <- function(forecast, start.date = as.Date("2020-05-15"),
         text = paste0(paste0(date.fmt, ": ", val.fmt,
                       " projected cases per day")
         )
-    )
+    ) %>%
+    group_by(color) %>%
+    mutate(value = predict(loess(value ~ as.numeric(Dates), span = .2)))
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
     format(today, format = "%b %d"), sep = ' ')

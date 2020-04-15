@@ -1,8 +1,7 @@
-library(httr)
+library(vroom)
 library(tidyverse)
 library(sf)
 library(tmap)
-library(jsonlite)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -12,8 +11,8 @@ if ( Sys.getenv("production") == "TRUE" ) {
 }
 
 today <- Sys.getenv("today")
-plot.height <- 11
-plot.width  <- 8.5
+plot.height <- 9
+plot.width  <- 7
 plot.delay  <- 200
 plot.dpi    <- 100
 
@@ -57,7 +56,7 @@ anim_day <- tm_shape(final_data) +
             tm_legend(scale = 1, legend.title.size = 2, legend.text.size = 1) +
             tm_borders()
 
-path  <- path.expand(paste0(data_repo, today))
+path <- path.expand(data_repo)
 if (!dir.exists(path))
     dir.create(path, recursive = TRUE)
 

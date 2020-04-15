@@ -14,7 +14,9 @@ plot_fig_6b <- function(forecast, start.date = as.Date("2020-05-15"),
         text = paste0(paste0(date.fmt, ": ", val.fmt,
                       " projected cases per day")
         )
-    )
+    ) %>%
+    group_by(color) %>%
+    mutate(value = predict(loess(value ~ as.numeric(Dates), span = .2)))
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
     format(today, format = "%b %d"), sep = ' ')
@@ -30,10 +32,11 @@ plot_fig_6b <- function(forecast, start.date = as.Date("2020-05-15"),
 
 
     colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-    p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-        color = ~ color, colors = colors, type = "scatter",
-        mode = "line", hoverinfo = "text", line = list(width = 4),
-        hoverlabel = list(align = "left")
+
+    p <- data %>% group_by(color) %>% plot_ly(x = ~Dates, y = ~ value * 1e5 / 1.34e9,
+                 text = ~text, color = ~ color, colors = colors, type = "scatter",
+                 mode = "line", hoverinfo = "text", line = list(width = 4),
+                 hoverlabel = list(align = "left")
     ) %>%
     layout(xaxis = xaxis, yaxis = yaxis,
         title = list(text = cap, xanchor = "left", x = 0),
