@@ -46,12 +46,12 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     cases.yaxis <- list(title = "Cumulative number of reported cases",
                         titlefont = axis.title.font, tickfont = tickfont,
                         zeroline = F, showline = F, dtick = 1, type = "log",
-                        range = list(2, 6))
+                        range = list(2, 6.1))
 
     deaths.yaxis <- list(title = "Cumulative number of reported deaths",
                          titlefont = axis.title.font, tickfont = tickfont,
                          zeroline = F, showline = F, dtick = 1, type = "log",
-                         range = list(0, 5))
+                         range = list(0, 5.1))
 
     cases.doubles <- tibble(Day = 1:60, `3 Days` = 100 * 2 ^ (1 / 3 * 1:60),
                       `1 Week` = 100 * 2 ^ (1 / 7 * 1:60),
@@ -101,14 +101,14 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_annotations(
         x = c(40, 60, 60),
-        y = 2 + c(log10(2 ^ (1 / 3 * 39.863)),
+        y = 2.1 + c(log10(2 ^ (1 / 3 * 39.863)),
                     log10(2 ^ (1 / 7 * 60)),
                     log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 16),
         xref = "x",
-        xanchor = "left",
+        xanchor = "right",
         yref = "y",
         showarrow = F
     ) %>%
@@ -137,14 +137,14 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_annotations(
         x = c(45, 60, 60),
-        y = log10(3) + c(log10(2 ^ (1 / 3 * 45)),
+        y = log10(3) + 0.1 + c(log10(2 ^ (1 / 3 * 45)),
                     log10(2 ^ (1 / 7 * 60)),
                     log10(2 ^ (1 / 14 * 60))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 16),
         xref = "x",
-        xanchor = "left",
+        xanchor = "right",
         yref = "y",
         showarrow = F
     ) %>%
