@@ -7,7 +7,7 @@ library(glue)
 library(jsonlite)
 library(scales)
 
-data_repo <- "cov-ind-19-test"
+data_repo <- "cov-ind-19-data"
 
 github.path <- paste0("https://api.github.com/repos/umich-cphds/",
                       data_repo, "/git/trees/master")
