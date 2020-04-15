@@ -48,16 +48,19 @@ top_matter <- wellPanel(fluidRow(
 
 shinyUI(
   navbarPage("COVID-19 Outbreak in India",
+             
              tabPanel("National Observed",
                       fluidRow(
                         column(width = 12,
                             top_matter
                         )
                         ),
+                      
                       fluidRow(
+                          
                         column(width = 1),
+                          
                         column(width = 10,
-                               h3("Please be patient as we are in the process of updating data sources and forecasts. This message will be removed when update is complete."),
                                h4("(Please wait a few seconds for the figures to load)"),
                                h4(textOutput("latest")),
                                h2(""),
@@ -89,18 +92,21 @@ You can click on countries in the legend to add or remove them and you cann hove
                                plotOutput("India_p7b", height = "600px"),
                                h2("Cumulative COVID-19 death count by state/union territory"),
                                plotOutput("India_p7d", height = "600px"),
-                               hr(),
-                               h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
-                        ),
+                              ),
+                          
                         column(width = 1)
+                          
                       )
                       ),
 
              tabPanel("National Forecast",
+                      
                       fluidRow(
+                          
                         column(width = 1),
+                          
                         column(width = 10,
-                               h2("Short-term impact of social distancing, travel ban, and lockdown"),
+                               h2("Short-term impact of social distancing, travel ban, and 40 day lockdown"),
                                p("In the following Figures we consider various scenarios of intervention effects to assess the effect of the lockdown.",
                                  "These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent.",
                                  "We use the eSIR model (",a("Wang et al. 2020", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf"), ") for all our projections and create hypothetical reductions in transmission probabilities capturing interventions like social distancing and lockdown.
@@ -125,7 +131,7 @@ You can click on countries in the legend to add or remove them and you cann hove
                                h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
                                plotlyOutput("India_p4b", height = "600px"),
                                hr(),
-                               h2("Longer term forecasts post-lockdown"),
+                               h2("Longer term forecasts post-40 day lockdown"),
                                p("We present four hypothetical scenarios:",
                                  tags$ul(
                                    tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
@@ -148,11 +154,10 @@ You can click on countries in the legend to add or remove them and you cann hove
                                plotlyOutput("India_p6b", height = "600px"),
                                hr()
                         ),
+                          
                         column(width = 1)
+                          
                         )
                       )
-
   )
-
-
 )
