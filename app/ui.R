@@ -10,7 +10,6 @@
 library(shiny)
 library(plotly)
 library(tidyverse)
-# library(reshape2)
 
 top_matter <- wellPanel(fluidRow(
   h3("COV-IND-19 Study Group"),
@@ -61,21 +60,21 @@ shinyUI(
                         h2("Daily number of new COVID-19 cases, fatalities and recovered in India"),
                         p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
           You can hover your cursor over the bar to see the exact numerical counts."),
-                      plotlyOutput("plot1", height = "600px"),
+                      plotlyOutput("India_p1", height = "600px"),
                       hr(),
                       h2("Total number of COVID-19 cases and deaths"),
                       p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases. 
 The second figure represents COVID-19 fatalities where the x-axis starts on the day when each country exceeded 3 fatalities. 
 These axes allow comparison of counts at similar stages of the outbreak. 
 You can click on countries in the legend to add or remove them and you cann hover your cursor over the lines to see the exact numerical counts."),
-                      plotlyOutput("plot2", height = "800px"),
+                      plotlyOutput("India_p2", height = "800px"),
                       hr(),
                       h2("Doubling graphs"),
                       p("The following figures visualize the case and death data to depict how long it takes each country to double its case or death count."),
                       h3("Cases"),
-                      plotlyOutput("plot3a", height = "600px"),
+                      plotlyOutput("India_p3a", height = "600px"),
                       h3("Deaths"),
-                      plotlyOutput("plot3b", height = "600px"),
+                      plotlyOutput("India_p3b", height = "600px"),
                       hr(),
                       h2("Cumulative case counts by state/union territory"),
                       p("The map displays the case counts by state/union territory in India over the last few days.",
@@ -86,9 +85,9 @@ You can click on countries in the legend to add or remove them and you cann hove
                       ),
                       hr(),
                       h2("Cumulative COVID-19 case count by state/union territory"),
-                      plotOutput("plot7b", height = "600px"),
+                      plotOutput("India_p7b", height = "600px"),
                       h2("Cumulative COVID-19 death count by state/union territory"),
-                      plotOutput("plot7d", height = "600px"),
+                      plotOutput("India_p7d", height = "600px"),
                       hr(),
                       h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
                       )
@@ -117,10 +116,10 @@ You can click on countries in the legend to add or remove them and you cann hove
                                               "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."),
                                             h2("Quick adherence (one-week delay)"),
                                             h3("Figure 4a (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
-                                            plotlyOutput("plot4a_full", height = "600px"),
+                                            plotlyOutput("India_p4a", height = "600px"),
                                             h2("Slow adherence (two-week delay)"),
                                             h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
-                                            plotlyOutput("plot4b_full", height = "600px"),
+                                            plotlyOutput("India_p4b", height = "600px"),
                                             hr(),
                                             h2("Longer term forecasts post-lockdown"),
                                             p("We present four hypothetical scenarios:",
@@ -134,15 +133,15 @@ You can click on countries in the legend to add or remove them and you cann hove
                                             ),
                                             h2("Quick adherence (one-week delay)"),
                                             h3("Figure 5a"),
-                                            plotlyOutput("plot5a", height = "600px"),
+                                            plotlyOutput("India_p5a", height = "600px"),
                                             h3("Figure 5b"),
-                                            plotlyOutput("plot5b", height = "600px"),
+                                            plotlyOutput("India_p5b", height = "600px"),
                                             hr(),
                                             h2("Slow adherence (two-week delay)"),
                                             h3("Figure 6a"),
-                                            plotlyOutput("plot6a", height = "600px"),
+                                            plotlyOutput("India_p6a", height = "600px"),
                                             h3("Figure 6b"),
-                                            plotlyOutput("plot6b", height = "600px"),
+                                            plotlyOutput("India_p6b", height = "600px"),
                                             hr()
                         
                         )
