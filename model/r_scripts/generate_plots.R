@@ -3,25 +3,24 @@ library(vroom)
 library(plotly)
 
 # Set variables based on testing or production
-data_repo <- "~/cov-ind-19-data/"
 if (Sys.getenv("production") == "TRUE") {
-	today <- Sys.getenv("today")
+	data_repo <- "~/cov-ind-19-data/"
 } else {
-	today <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+	data_repo <- "~/cov-ind-19-test/"
 }
 
+today <- Sys.getenv("today")
 generate_forecast_plots <- function(forecast)
 {
     start.date <- as.Date("2020-03-01")
-    latest     <- today
-    path       <- paste0(data_repo, latest, "/", forecast)
+    path       <- paste0(data_repo, today, "/", forecast)
 
     if (!dir.exists(path)){
         dir.create(path, recursive = T)
         message("creating ", path)
     }
 
-	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_2.R")
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_3.R")
 
@@ -61,7 +60,7 @@ generate_forecast_plots <- function(forecast)
     plots
 }
 
-forecasts <- c("India", "India")
+forecasts <- c("India")
 
 plots <- list()
 for (forecast in forecasts)
