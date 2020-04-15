@@ -46,8 +46,8 @@ shinyServer(function(input, output)
 
      output$map <- renderImage({
          file <- tempfile(fileext = ".gif")
-         download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/master/",
-                              latest, "/day_sp_animation.gif"), file)
+         download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
+                              branch, "/", latest, "/day_sp_animation.gif"), file)
          list(src = file, contentType = "image/gif", alt = "Map not available",
               width = 500)
      }, deleteFile = FALSE)
