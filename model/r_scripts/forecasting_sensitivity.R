@@ -13,14 +13,13 @@ if ( Sys.getenv("production") == "TRUE" ) {
         data_repo <- "~/cov-ind-19-data/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
-	today     <- Sys.getenv("today")
 } else {
         data_repo <- "~/cov-ind-19-test/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
-	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
 }
 
+today     <- Sys.getenv("today")
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 

@@ -3,13 +3,13 @@ library(vroom)
 library(plotly)
 
 # Set variables based on testing or production
-data_repo <- "~/cov-ind-19-data/"
 if (Sys.getenv("production") == "TRUE") {
-	today <- Sys.getenv("today")
+	data_repo <- "~/cov-ind-19-data/"
 } else {
-	today <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+	data_repo <- "~/cov-ind-19-test/"
 }
 
+today <- Sys.getenv("today")
 generate_forecast_plots <- function(forecast)
 {
     start.date <- as.Date("2020-03-01")
