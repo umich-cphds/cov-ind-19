@@ -2,6 +2,15 @@ library(shiny)
 library(plotly)
 library(tidyverse)
 
+if (Sys.getenv("IRIS") == "TRUE") {
+    branch <- "IRIS"
+} else {
+    branch <- "master"
+}
+
+file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/", branch,
+               "/day_sp_animation.gif")
+
 top_matter <- wellPanel(fluidRow(
   h3("COV-IND-19 Study Group"),
   fluidRow(
@@ -42,7 +51,7 @@ shinyUI(
              tabPanel("National Observed",
                       fluidRow(
                         column(width = 12,
-                            top_matter   
+                            top_matter
                         )
                         ),
                       fluidRow(
@@ -58,9 +67,9 @@ shinyUI(
                                plotlyOutput("India_p1", height = "600px"),
                                hr(),
                                h2("Total number of COVID-19 cases and deaths"),
-                               p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases. 
-The second figure represents COVID-19 fatalities where the x-axis starts on the day when each country exceeded 3 fatalities. 
-These axes allow comparison of counts at similar stages of the outbreak. 
+                               p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases.
+The second figure represents COVID-19 fatalities where the x-axis starts on the day when each country exceeded 3 fatalities.
+These axes allow comparison of counts at similar stages of the outbreak.
 You can click on countries in the legend to add or remove them and you cann hover your cursor over the lines to see the exact numerical counts."),
                                plotlyOutput("India_p2", height = "800px"),
                                hr(),
@@ -74,22 +83,19 @@ You can click on countries in the legend to add or remove them and you cann hove
                                h2("Cumulative case counts by state/union territory"),
                                p("The map displays the case counts by state/union territory in India over the last few days.",
                                  "The darker areas of the map indicate a greater number of cases."),
-                               fluidRow(
-                                 column(width = 3),
-                                 column(width = 9, imageOutput("map", height = "650px")),
-                               ),
+                               HTML(paste0("<center><img src=", file , "></center>")),
                                hr(),
                                h2("Cumulative COVID-19 case count by state/union territory"),
                                plotOutput("India_p7b", height = "600px"),
                                h2("Cumulative COVID-19 death count by state/union territory"),
                                plotOutput("India_p7d", height = "600px"),
                                hr(),
-                               h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.") 
+                               h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
                         ),
                         column(width = 1)
                       )
                       ),
-             
+
              tabPanel("National Forecast",
                       fluidRow(
                         column(width = 1),
@@ -145,7 +151,7 @@ You can click on countries in the legend to add or remove them and you cann hove
                         column(width = 1)
                         )
                       )
-             
+
   )
 
 
