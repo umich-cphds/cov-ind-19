@@ -11,12 +11,8 @@ library(shiny)
 library(plotly)
 library(tidyverse)
 library(reshape2)
-library(tmap)
-library(sf)
-library(leaflet)
-library(magick)
 
-sidebar_matter = 
+sidebar_matter =
   sidebarPanel(
     h3("COV-IND-19 Study Group"),
     # HTML('<center><img src="group_logo.png" width="200"></center>'),
@@ -27,11 +23,12 @@ sidebar_matter =
     p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource to describe the COVID-19 outbreak in India to date as well as prediction models under various hypothetical scenarios.
       The figure and forecasting models update as new data becomes available (i.e., at least daily). You may download PNG files of each figure by clicking on the camera icon when you are hovering within each plot.
         Please cite our medium article and this website in any publication that you use this resource for."),
-    p("Read the accompanying April 3 article: link forthcoming"),
+    p("Read the accompanying April 3 article: ", a("Medium article", .noWS = "outside",  href = "https://medium.com/@covind_19/historic-lockdown-prediction-models-to-study-lockdown-effects-and-the-role-of-data-in-the-crisis-a0afeeec5a6")),
     p("Read the original March 21 article: ", a("Medium article", .noWS = "outside", href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6")),
     p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"), " (this is a direct download link, check your downloads folder)"),
-    p("Country-level data source: ", a("JHU CSSE COVID-19 GitHub", .noWS = "outside", href = "https://github.com/CSSEGISandData/COVID-19")),
-    p("State-level data source: ", a("COVID-19 in India Kaggle", .noWS = "outside", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
+    p("Non-India country-level data source: ", a("JHU CSSE COVID-19 GitHub", .noWS = "outside", href = "https://github.com/CSSEGISandData/COVID-19")),
+    p("India data source: ", a("covid19india.org", .noWS = "outside", href = "https://www.covid19india.org")),
+    p("Map data source: ", a("COVID-19 in India Kaggle", .noWS = "outside", href = "https://www.kaggle.com/sudalairajkumar/covid19-in-india")),
     p("R modeling package: ", a("eSIR R package", .noWS = "outside", href = "https://github.com/lilywang1988/eSIR")),
     p("Source code: ", a("COV-IND-19 GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19")),
     p("Please direct inquiries to ",
@@ -47,33 +44,39 @@ sidebar_matter =
 shinyUI(
   navbarPage("COVID-19 Outbreak in India",
              tabPanel("National",
-                      
+
                       fluidPage(
-                        
+
                         # Application title
                         titlePanel("COVID-19 Outbreak in India"),
-                        
+
                         # # Sidebar with a slider input for number of bins
                         sidebarLayout(
                           sidebar_matter,
                           # Show a plot of the generated distribution
                           mainPanel(
+                            h3("Please be patient as we are in the process of updating data sources and forecasts. This message will be removed when update is complete."),
                             h4("(Please wait a few seconds for the figures to load)"),
                             h4(textOutput("latest")),
                             h2(""),
-                            h2("Daily number of COVID-19 new cases, fatalities and recovered cases in India since March 1"),
+                            h2("Daily number of new COVID-19 cases, fatalities and recovered in India"),
                             p("This figure provides the number of COVID-19 new cases (yellow), fatalities (red), and recovered cases (green) in India.
           You can hover your cursor over the bar to see the exact numerical counts."),
                             plotlyOutput("plot1", height = "600px"),
                             hr(),
-                            h2("Cumulative number of COVID-19 cases in India compared to other countries affected by the pandemic"),
-                            p("The x-axis starts on the day when each country exceeded 100 cases in order to allow comparison of case counts at similar stages of the outbreak.
-        Use your cursor to click on countries in the legend to remove them from the plot."),
-                            plotlyOutput("plot2", height = "600px"),
+                            h2("Total number of COVID-19 cases and deaths"),
+                            p("The first figure represents COVID-19 case counts where the x-axis starts on the day when each country passed 100 cases. 
+The second figure represents COVID-19 fatalities where the x-axis starts on the day when each country exceeded 3 fatalities. 
+These axes allow comparison of counts at similar stages of the outbreak. 
+You can click on countries in the legend to add or remove them and you cann hover your cursor over the lines to see the exact numerical counts."),
+                            plotlyOutput("plot2", height = "800px"),
                             hr(),
-                            h2("Cumulative number of COVID-19 cases in India alone"),
-                            p("This figure displays the cumulative number of COVID-19 cases in India since the country reached 100 total cases (March 14)."),
-                            plotlyOutput("plot3", height = "600px"),
+                            h2("Doubling graphs"),
+                            p("The following figures visualize the case and death data to depict how long it takes each country to double its case or death count."),
+                            h3("Cases"),
+                            plotlyOutput("plot3a", height = "600px"),
+                            h3("Deaths"),
+                            plotlyOutput("plot3b", height = "600px"),
                             hr(),
                             h2("Cumulative case counts by state/union territory"),
                             p("The map displays the case counts by state/union territory in India over the last few days.",
@@ -83,8 +86,12 @@ shinyUI(
                               column(width = 9, imageOutput("map", height = "650px")),
                             ),
                             hr(),
-                            h1("Predictive modeling of case counts in India under hypothetical intervention scenarios"),
-                            p("We are in the process of updating our forecasting models. Please check back soon.")
+                            h2("Cumulative COVID-19 case count by state/union territory"),
+                            plotOutput("plot7b", height = "600px"),
+                            h2("Cumulative COVID-19 death count by state/union territory"),
+                            plotOutput("plot7d", height = "600px"),
+                            hr(),
+                            h2("We are in the process of updating our forecasting models. Please check back soon. Thank you for your patience.")
         #                     h2("Short-term impact of social distancing, travel ban, and lockdown"),
         #                     p("In the following Figures we consider various scenarios of intervention effects to assess the effect of the lockdown.",
         #                       "These figures should not be overinterpreted as in reality we do not know how the lockdown will actually reduce the transmission probability in India and to what extent.",
@@ -132,12 +139,12 @@ shinyUI(
         #                     h3("Figure 6b"),
         #                     plotlyOutput("plot6b", height = "600px"),
         #                     hr(),
-                            width = 8,
+        #                     width = 8,
                           )
                         )
                       )
-                      
-                      
+
+
              )
              # ,
         #      tabPanel("Delhi",
@@ -306,6 +313,6 @@ shinyUI(
         #                 )
         #               ))
   )
-  
-  
+
+
 )
