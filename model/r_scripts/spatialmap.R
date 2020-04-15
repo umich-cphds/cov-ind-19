@@ -7,12 +7,11 @@ library(jsonlite)
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
-	today     <- Sys.getenv("today")
 } else {
 	data_repo <- "~/cov-ind-19-test/"
-	today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
 }
 
+today <- Sys.getenv("today")
 plot.height <- 11
 plot.width  <- 8.5
 plot.delay  <- 200
