@@ -9,7 +9,6 @@ if (Sys.getenv("IRIS") == "TRUE") {
 }
 
 source("latest.R")
-
 github.api.path <- paste0("https://api.github.com/repos/umich-cphds/",
                           "cov-ind-19-data/git/trees/", branch)
 
@@ -18,12 +17,10 @@ latest <- get_latest(github.api.path)
 file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/", branch,
                "/", latest, "/new_plots.RData")
 
-message("Downloading ", file)
 url <- url(file)
 load(url)
 close(url)
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output)
 {
     iwalk(plots,
@@ -43,12 +40,4 @@ shinyServer(function(input, output)
 
     output$latest <- renderText(paste0("Data last updated ",
                                        format(latest, format = "%B %d")))
-
-     output$map <- renderImage({
-         file <- tempfile(fileext = ".gif")
-         download.file(paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
-                              branch, "/", latest, "/day_sp_animation.gif"), file)
-         list(src = file, contentType = "image/gif", alt = "Map not available",
-              width = 500)
-     }, deleteFile = FALSE)
 })

@@ -56,6 +56,25 @@ arrange(Country, Date) %>%
 vroom_write(path = paste0(data_repo, today, "/jhu_data.csv"))
 
 
+states.map <- c("Andhra Pradesh" =  "AP", "Arunachal Pradesh" =  "AR",
+	"Assam" =  "AS", "Bihar" =  "BR", "Chhattisgarh" =  "CG", "Goa" =  "GA",
+	"Gujarat" =  "GJ", "Haryana" =  "HR", "Himachal Pradesh" =  "HP",
+	"Jammu and Kashmir" =  "JK", "Jharkhand" =  "JH", "Karnataka" =  "KA",
+	"Kerala" =  "KL", "Madhya Pradesh" =  "MP",  "Maharashtra" =  "MH",
+	"Manipur" =  "MN", "Meghalaya" =  "ML", "Mizoram" =  "MZ", "Nagaland" =  "NL",
+	"Orissa" =  "OR", "Punjab" =  "PB", "Rajasthan" =  "RJ", "Sikkim" =  "SK",
+	"Tamil Nadu" =  "TN", "Tripura" =  "TR", "Uttarakhand" =  "UK",
+	"Uttar Pradesh" =  "UP", "West Bengal" =  "WB", "Tamil Nadu" =  "TN",
+	"Tripura" =  "TR", "Andaman and Nicobar Islands" =  "AN",
+	"Chandigarh" =  "CH", "Dadra and Nagar Haveli" =  "DH",
+	"Daman and Diu" = "DD", "Delhi" =  "DL", "Lakshadweep" =  "LD",
+	"Pondicherry" =  "PY", "Telangana" =  "TG", "Dadra and Nagar Haveli" =  "DN",
+	"Chhattisgarh" =  "CT", "Ladakh" =  "LA", "Uttarakhand" =  "UT"
+)
+
+x <- names(states.map)
+names(x) <- states.map
+
 # get state level data from covid19india.org and preprocess it
 request <- GET("https://api.covid19india.org/states_daily.json")
 json    <- content(request)
@@ -73,7 +92,11 @@ rename(
     Cases = Confirmed,
     Deaths = Deceased,
     Date = date,
-    State = state) %>%
+    State = state
+) %>%
+mutate(
+	Name = recode(str_to_upper(State), !!!x)
+) %>%
 arrange(State, Date) %>%
 group_by(State) %>%
 mutate(
