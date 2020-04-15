@@ -21,7 +21,7 @@ generate_forecast_plots <- function(forecast)
         message("creating ", path)
     }
 
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
+	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_2.R")
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_3.R")
 
@@ -35,51 +35,37 @@ generate_forecast_plots <- function(forecast)
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_6b.R")
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_7.R")
 
-	if (forecast == "India") {
-    	assign(paste0(forecast, "_p1"), plot_fig_1())
-    	assign(paste0(forecast, "_p2"), plot_fig_2())
-		p <- plot_fig_3()
-    	assign(paste0(forecast, "_p3a"), p$p3a)
-		assign(paste0(forecast, "_p3b"), p$p3b)
-	}
 
-    assign(paste0(forecast, "_p4a"), plot_fig_4a(forecast))
-    assign(paste0(forecast, "_p4b"), plot_fig_4b(forecast))
-    assign(paste0(forecast, "_p5a"), plot_fig_5a(forecast))
-    assign(paste0(forecast, "_p5b"), plot_fig_5b(forecast))
-    assign(paste0(forecast, "_p6a"), plot_fig_6a(forecast))
-    assign(paste0(forecast, "_p6b"), plot_fig_6b(forecast))
-    if (forecast == "India") {
-        eval(expr(save(
-            !!paste0(forecast, "_p1"),
-            !!paste0(forecast, "_p2"),
-            !!paste0(forecast, "_p3a"),
-			!!paste0(forecast, "_p3b"),
-            !!paste0(forecast, "_p4a"),
-            !!paste0(forecast, "_p4b"),
-            !!paste0(forecast, "_p5a"),
-            !!paste0(forecast, "_p5b"),
-            !!paste0(forecast, "_p6a"),
-            !!paste0(forecast, "_p6b"),
-			!!paste0(forecast, "_p7a"),
-			!!paste0(forecast, "_p7b"),
-			!!paste0(forecast, "_p7c"),
-			!!paste0(forecast, "_p7d"),
-            file = paste0(path, "/plots.RData")
-        )))
-    } else {
-        eval(expr(save(
-            !!paste0(forecast, "_p4a"),
-            !!paste0(forecast, "_p4b"),
-            !!paste0(forecast, "_p5a"),
-            !!paste0(forecast, "_p5b"),
-            !!paste0(forecast, "_p6a"),
-            !!paste0(forecast, "_p6b"),
-            file = paste0(path, "/plots.RData")
-        )))
-    }
+	plots <- list()
+	if (forecast == "India") {
+		p <- plot_fig_3()
+		plots[["p1"]] = plot_fig_1()
+		plots[["p2"]] = plot_fig_2()
+		plots[["p3a"]] = p$p3a
+		plots[["p3b"]] = p$p3b
+
+		p <- plot_fig_7()
+		plots[["p7a"]] = p$p7a
+		plots[["p7b"]] = p$p7b
+		plots[["p7c"]] = p$p7c
+		plots[["p7d"]] = p$p7d
+
+	}
+	plots[["p4a"]] = plot_fig_4a(forecast)
+	plots[["p4b"]] = plot_fig_4b(forecast)
+	plots[["p5a"]] = plot_fig_5a(forecast)
+	plots[["p5b"]] = plot_fig_5b(forecast)
+	plots[["p6a"]] = plot_fig_6a(forecast)
+	plots[["p6b"]] = plot_fig_6b(forecast)
+
+    plots
 }
 
-forecasts <- c("India", "dl", "mh", "kl")
+forecasts <- c("India", "India")
+
+plots <- list()
 for (forecast in forecasts)
-    generate_forecast_plots(forecast)
+    plots[[forecast]] <- generate_forecast_plots(forecast)
+
+
+save(plots, file = paste0(data_repo, today, "/new_plots.RData"))

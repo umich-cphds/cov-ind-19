@@ -1,5 +1,5 @@
-plot_fig_6b <- function(forecast, start.date = as.Date("2020-04-30"),
-                        end.date = end.date <- as.Date("2020-08-31"))
+plot_fig_6b <- function(forecast, start.date = as.Date("2020-05-15"),
+                        end.date = end.date <- as.Date("2020-07-15"))
 {
     data <- vroom(paste0(data_repo, today, "/2wk/", forecast,
                             "_figure_5_inc_data.csv")
