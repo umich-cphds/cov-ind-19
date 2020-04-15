@@ -88,7 +88,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_trace(data = filter(cases.data, !(Country %in% c("India", "3 Days", "1 Week", "2 Weeks"))),
               x = ~Day, y = ~Cases, text = ~text, type = "scatter",
-              showlegend = T, line = list(width = 2), visible = "legendonly"
+              showlegend = T, line = list(width = 2) #, visible = "legendonly"
     ) %>%
     add_trace(data = filter(cases.data, Country == "India"), type = "scatter",
               x = ~Day, y = ~Cases, text = ~text,
@@ -124,7 +124,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_trace(data = filter(deaths.data, !(Country %in% c("India", "3 Days", "1 Week", "2 Weeks"))),
               x = ~Day, y = ~Deaths, text = ~text, type = "scatter",
-              showlegend = T, line = list(width = 2), visible = "legendonly"
+              showlegend = T, line = list(width = 2) #, visible = "legendonly"
     ) %>%
     add_trace(data = filter(deaths.data, Country == "India"), type = "scatter",
               x = ~Day, y = ~Deaths, text = ~text,
