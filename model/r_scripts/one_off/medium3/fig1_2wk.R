@@ -20,7 +20,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
-# arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
+arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
@@ -41,6 +41,7 @@ lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 
+today <- Sys.getenv("today")
 # data ----------
 dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01" & Date <= "2020-04-14")
@@ -52,7 +53,6 @@ R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
 
 # directory ----------
-today <- Sys.Date()
 wd <- paste0(data_repo, today, "/medium3/2wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)

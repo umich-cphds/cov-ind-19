@@ -62,7 +62,7 @@ setwd(wd)
 if (arrayid == 1) {
 # 21-day model
 length_of_lockdown <- length(as.Date(as.Date(lockdown_start):(as.Date(lockdown_start) + 20), origin = "1970-01-01"))
-print(paste0("Running model_4 (lockdown with moderate return) with " delay/7," week delay and ", length_of_lockdown,"-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7," week delay and ", length_of_lockdown,"-day lockdown"))
 change_time        <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                                as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                                as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -95,7 +95,7 @@ if (arrayid == 2) {
 # 35-day model
 # lockdown_end       <- "2020-05-03"
 length_of_lockdown <- length(as.Date(as.Date(lockdown_start):(as.Date(lockdown_start) + 34), origin = "1970-01-01"))
-print(paste0("Running model_4 (lockdown with moderate return) with", delay/7, "week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7, "week delay and ", length_of_lockdown, "-day lockdown"))
 change_time        <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                                as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                                as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
