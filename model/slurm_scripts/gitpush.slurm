@@ -15,7 +15,16 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-cd ~/cov-ind-19-data/$today
+
+# Set variables based on testing or production
+if [[ $production == "TRUE" ]]
+then
+    data_repo = "~/cov-ind-19-data/"
+else
+    data_repo = "~/cov-ind-19-test/"
+fi
+
+cd $data_repo$today
 git add *
 git commit -m "Automated push from slurm job"
 git push

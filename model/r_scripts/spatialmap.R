@@ -28,7 +28,7 @@ kalends.ides <- as.Date(paste0(c(paste0("2020-", 1:12), paste0("2020-", 1:12)),
 india_shp   <- st_read("~/cov-ind-19/model/map/Indian_States.shp")
 
 
-data <- vroom(paste0("~/cov-ind-19-data/", today, "/covid19india_data.csv")) %>%
+data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
 arrange(Name, Date) %>%
 mutate(State = case_when(
     Name == "Ladakh" ~ "Jammu & Kashmir",
