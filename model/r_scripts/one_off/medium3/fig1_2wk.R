@@ -40,6 +40,7 @@ soc_dist_end       <- "2020-03-24"
 lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
+l                  <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"))
 
 today <- Sys.getenv("today")
 # data ----------
