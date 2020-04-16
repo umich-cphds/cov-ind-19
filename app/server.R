@@ -21,8 +21,16 @@ url <- url(file)
 load(url)
 close(url)
 
+
+source("top_matter.R", local = T)
+source("observed.R", local = T)
+source("forecast.R", local = T)
+
 shinyServer(function(input, output)
 {
+    output$latest <- renderText(paste0("Data last updated ",
+                                       format(latest, format = "%B %d")))
+
     iwalk(plots,
     function(p, forecast) {
         iwalk(p,
@@ -38,6 +46,13 @@ shinyServer(function(input, output)
         })
     })
 
-    output$latest <- renderText(paste0("Data last updated ",
-                                       format(latest, format = "%B %d")))
+    states <- c("Delhi", "Kerala")
+    output$out <- renderUI({
+
+        tabs <- map(states, ~ tabPanel(.x, paste0(.x, ": its a place!")))
+
+        eval(expr(navbarPage("COVID-19 Outbreak in India",
+          observed, forecast, navbarMenu("State Forecasts", !!!tabs))))
+
+    })
 })
