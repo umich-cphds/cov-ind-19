@@ -10,6 +10,7 @@ library(gtools)     # rdirichlet(n, alpha)
 library(scales)     # alpha　function
 library(data.table)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -55,9 +56,6 @@ data <- vroom(paste0(data_repo, today,
                      "/covid19india_data.csv")
 ) %>%
 filter(State == state_sub)
-
-# eSIR relevant model code
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE")
 
 # !! directory ----------
 wd <- paste0(data_repo, today, "/1wk/")

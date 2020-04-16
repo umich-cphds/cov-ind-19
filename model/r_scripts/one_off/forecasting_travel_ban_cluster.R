@@ -6,6 +6,7 @@ library(gtools) #rdirichlet(n, alpha)
 library(scales) #alpha　function
 library(data.table)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -26,9 +27,6 @@ R_0                <- 2             # basic reproduction number
 save_mcmc          <- TRUE          # output MCMC files (default = TRUE; needed for incidence CI calculations)
 start_date         <- "2020-03-01"
 travel_ban_date    <- "2020-03-15"
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # directory ----------
 today <- Sys.getenv("today")

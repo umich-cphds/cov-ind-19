@@ -9,6 +9,7 @@ library(gtools)     # rdirichlet(n, alpha)
 library(scales)     # alpha　function
 library(data.table)
 library(devtools)
+library(eSIR)
 
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
@@ -29,9 +30,6 @@ save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed 
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 start_date         <- "2020-03-01"
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
 today <- Sys.getenv("today")

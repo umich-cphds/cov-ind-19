@@ -9,6 +9,7 @@ library(gtools)     # rdirichlet(n, alpha)
 library(scales)     # alpha　function
 library(data.table)
 library(devtools)
+library(eSIR)
 
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
@@ -20,9 +21,6 @@ R_0                <- 2             # basic reproduction number
 save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 save_plot_data     <- TRUE
 start_date         <- "2020-03-01"
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
 today <- Sys.getenv("today")

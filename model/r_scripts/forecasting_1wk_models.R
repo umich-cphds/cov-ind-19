@@ -5,6 +5,7 @@ library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(here)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) { 
@@ -39,9 +40,6 @@ lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
 
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # directory ----------
 wd <- paste0(data_repo, today, "/1wk/")
