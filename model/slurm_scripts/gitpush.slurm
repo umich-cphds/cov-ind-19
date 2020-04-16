@@ -19,9 +19,9 @@ export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 # Set variables based on testing or production
 if [[ $production == "TRUE" ]]
 then
-    data_repo = "~/cov-ind-19-data/"
+    export data_repo="~/cov-ind-19-data/"
 else
-    data_repo = "~/cov-ind-19-test/"
+    export data_repo="~/cov-ind-19-test/"
 fi
 
 cd $data_repo$today
