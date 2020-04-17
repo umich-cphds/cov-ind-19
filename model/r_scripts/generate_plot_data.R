@@ -28,8 +28,8 @@ adj             <- T
 plot_start_date <- "2020-03-01"
 plot_end_date   <- "2020-04-30"
 
-# , "dl", "mh", "kl"
-forecasts <- c("India")
+#
+forecasts <- c("India", "dl", "mh", "kl")
 
 pops <- c("India" = 1.34e9, "dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 for (forecast in forecasts) {
