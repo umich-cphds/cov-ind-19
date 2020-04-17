@@ -22,9 +22,9 @@ remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep
 local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
 if [[ "$remote_sha" != "$local_sha" ]]; then
 	echo "JHU data has been updated. Running git pull and forecasts"
-	spatialmap=$(sbatch ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	gitpull=$(sbatch ~/cov-ind-19/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 	preprocess=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
+	spatialmap=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	sensitivity=$(sbatch --dependency=afterok:$gitpull:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
 	forecast1wk=$(sbatch --dependency=afterok:$gitpull:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_1wk_models.slurm | awk '{print $NF}')
 	forecast2wk=$(sbatch --dependency=afterok:$gitpull:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
@@ -34,8 +34,8 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	state_jobs=""
 	for i in $states; do
 		export state=$i
-		state1=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=1wk_$i forecasting_1wk_city.slurm | awk '{print $NF}')
-		state2=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=2wk_$i forecasting_2wk_city.slurm | awk '{print $NF}')
+		state1=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=1wk_$i forecasting_1wk_state.slurm | awk '{print $NF}')
+		state2=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=2wk_$i forecasting_2wk_state.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
 			state_jobs=$state_jobs:$state1:$state2
 		else
