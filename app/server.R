@@ -23,6 +23,12 @@ close(url)
 
 # order here matters
 source("top_matter.R", local = T)
+
+
+img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
+                   branch, "/", latest, "/day_sp_animation.gif")
+
+
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)

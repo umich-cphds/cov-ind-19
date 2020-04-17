@@ -56,7 +56,7 @@ anim_day <- tm_shape(final_data) +
             tm_legend(scale = 1, legend.title.size = 2, legend.text.size = 1) +
             tm_borders()
 
-path <- path.expand(data_repo)
+path <- path.expand(paste0(data_repo, today))
 if (!dir.exists(path))
     dir.create(path, recursive = TRUE)
 

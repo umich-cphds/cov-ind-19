@@ -36,7 +36,7 @@ observed <- tabPanel("National Observed",
         over the last few days.", "The darker areas of the map indicate a
         greater number of cases."
       ),
-      HTML(paste0("<center><img src=", file , "></center>")),
+      HTML(paste0("<center><img src=", img.file, "></center>")),
       hr(),
       h2("Cumulative COVID-19 case count by state/union territory"),
       plotOutput("India_p7b", height = "600px"),
