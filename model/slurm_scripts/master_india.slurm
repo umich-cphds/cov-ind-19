@@ -17,6 +17,8 @@ export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export today=$(date +%Y-%m-%d)
 export production=TRUE
 
+module load Rgeospatial/3.6.1-2019-09-29
+
 cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )
 local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
