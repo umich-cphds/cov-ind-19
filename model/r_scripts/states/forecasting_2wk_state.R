@@ -53,7 +53,14 @@ dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv")) %>%
   filter(State == state_sub)
 
 # populations from http://www.census2011.co.in/states.php
-pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
+pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" = 84.6e6,
+           "mp" = 72.1e6, "tn" = 72.1e6, "rj" = 68.5e6, "ka" = 61.1e6, "gj" = 60.4e6,
+           "or" = 42.0e6, "kl" = 33.4e6, "jh" = 33.0e6, "as" = 31.2e6, "pb" = 27.7e6,
+           "ct" = 25.5e6, "hr" = 25.4e6, "dl" = 16.8e6, "jk" = 12.5e6, "ut" = 10.1e6,
+           "hp" = 6.9e6, "tr" = 3.7e6, "ml" = 3.0e6, "mn" = 2.9e6, "nl" = 2.0e6, 
+           "ga" = 1.6e6, "ar" = 1.4e6, "py" = 1.2e6, "mz" = 1.1e6, "ch" = 1.1e6,
+           "sk" = 6.1e5, "an" = 3.8e5, "dn" = 3.4e5, "dd" = 2.4e5, "ld" = 6.4e4,
+           "la" = NA)
 
 start_date <-  min(dat$Date)
 
