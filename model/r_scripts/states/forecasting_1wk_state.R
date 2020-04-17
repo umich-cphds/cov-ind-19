@@ -39,6 +39,7 @@ soc_dist_start     <- "2020-03-15"
 soc_dist_end       <- "2020-03-24"
 lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
+length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 
 # STATES
 # dl = Delhi
