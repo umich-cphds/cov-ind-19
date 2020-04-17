@@ -1,7 +1,6 @@
 # libraries  ----------
 library(tidyverse)
 library(httr)
-library(glue)
 library(vroom)
 library(chron)
 library(reshape2)
@@ -23,16 +22,14 @@ if ( Sys.getenv("production") == "TRUE" ) {
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
-today     <- Sys.getenv("today")
-city = Sys.getenv("city")
-arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
+today   <- Sys.getenv("today")
+city    <- Sys.getenv("city")
+arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
 delay              <- 7             # in days (default = 7)
 length_of_lockdown <- 21            # in days (default = 21)
-Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
-nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
 pi_cautious        <- 0.6           # pi corresponding to cautious return
 pi_lockdown        <- 0.4           # pi corresponding to lockdown
 pi_moderate        <- 0.75          # pi corresponding to moderate return
@@ -54,10 +51,7 @@ state_sub <- city
 pops <- c("dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
 
 # preprocessed data from covid19india.org
-data <- vroom(paste0(data_repo, today,
-                     "/covid19india_data.csv")
-) %>%
-filter(State == state_sub)
+data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>% filter(State == state_sub)
 
 # !! directory ----------
 wd <- paste0(data_repo, today, "/2wk/")
@@ -74,13 +68,10 @@ R           <- RI_complete / N # proportion of recovered per day
 Y           <- NI_complete / N - R
 start_date  <- min(data$Date)
 
-# dir.create(here("output", glue("{round(delay / 7, 0)}wk")), recursive = TRUE, showWarnings = FALSE)
-# setwd(here("output", glue("{round(delay / 7, 0)}wk")))
-
 # models ---------
 
 if (arrayid == 1) {
-print(glue("Running model_1 (perpetual lockdown) with {delay/7} week delay"))
+print(paste0("Running model_1 (perpetual lockdown) with ", delay/7," week delay"))
 # Model 1 ----------
 # Model 1 Scenario: Travel ban + social distancing + lockdown
 #   - March 1 - March 25:  1
@@ -105,7 +96,7 @@ model_1 <- tvt.eSIR(
   change_time    = change_time,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_1"),
+  casename       = paste0(state_sub, "_1"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
@@ -116,7 +107,7 @@ model_1 <- tvt.eSIR(
 
 
 if(arrayid == 2){
-print(glue("Running model_2 (perpetual social distancing and travel ban) with {delay/7} week delay"))
+print(paste0("Running model_2 (perpetual social distancing and travel ban) with ", delay/7, " week delay"))
 # Model 2 ----------
 # Model 2 Scenario: Travel ban + social distancing
 #   - March 1 - March 25:  1
@@ -139,7 +130,7 @@ model_2 <- tvt.eSIR(
   change_time    = change_time,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_2"),
+  casename       = paste0(state_sub, "_2"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
@@ -160,7 +151,7 @@ model_3 <- tvt.eSIR(
   T_fin          = 200,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_3"),
+  casename       = paste0(state_sub, "_3"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
@@ -170,7 +161,7 @@ model_3 <- tvt.eSIR(
 }
 
 if(arrayid==4){
-print(glue("Running model_4 (lockdown with moderate return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7," week delay and ",length_of_lockdown,"-day lockdown"))
 # Model 4 ----------
 # Model 4 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (average)
@@ -199,7 +190,7 @@ model_4 <- tvt.eSIR(
   change_time    = change_time,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_4"),
+  casename       = paste0(state_sub, "_4"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
@@ -209,7 +200,7 @@ model_4 <- tvt.eSIR(
 }
 
 if(arrayid==5){
-print(glue("Running model_5 (lockdown with normal [pre-intervention] return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 # Model 5 ----------
 # Model 5 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (party)
@@ -238,7 +229,7 @@ model_5 <- tvt.eSIR(
   change_time    = change_time,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_5"),
+  casename       = paste0(state_sub, "_5"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
@@ -248,7 +239,7 @@ model_5 <- tvt.eSIR(
 }
 
 if(arrayid==6){
-print(glue("Running model_6 (lockdown with cautious return) with {delay/7} week delay and {length_of_lockdown}-day lockdown"))
+print(paste0("Running model_6 (lockdown with cautious return) with ", delay/7, " week delay and ", length_of_lockdown,"-day lockdown"))
 # Model 6 ----------
 # Model 6 Scenario: Travel ban + social distancing + lockdown,
 #                   then release lockdown (scared)
@@ -277,7 +268,7 @@ model_6 <- tvt.eSIR(
   change_time    = change_time,
   R0             = R_0,
   dic            = TRUE,
-  casename       = glue("{state_sub}_6"),
+  casename       = paste0(state_sub, "_6"),
   save_files     = FALSE,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
