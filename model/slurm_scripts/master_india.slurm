@@ -30,8 +30,7 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	forecast2wk=$(sbatch --dependency=afterok:$gitpull:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
 	#submit_states
 	cd ~/cov-ind-19/model/slurm_scripts/states
-	Rscript get_states.R
-	states= $(Rscript ~/cov-ind-19/model/r_scripts/get_states.R)
+	states=$(Rscript ~/cov-ind-19/model/r_scripts/get_states.R)
 	state_jobs=""
 	for i in $states; do
 		export state=$i
