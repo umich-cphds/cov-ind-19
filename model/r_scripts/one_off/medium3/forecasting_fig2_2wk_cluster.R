@@ -45,7 +45,7 @@ length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 l                  <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"))
 
 # data ----------
-dat <- read_tsv(paste0(data_repo, today, "jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= "2020-03-01" & Date <= "2020-04-14")
 
 NI_complete <- dat$Cases
