@@ -17,6 +17,8 @@ export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export today=$(date +%Y-%m-%d)
 export production=TRUE
 
+module load Rgeospatial/3.6.1-2019-09-29
+
 cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )
 local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
@@ -30,18 +32,16 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	forecast2wk=$(sbatch --dependency=afterok:$gitpull:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
 	#submit_states
 	cd ~/cov-ind-19/model/slurm_scripts/states
-	states="dl kl mh"
+	states=$(Rscript ~/cov-ind-19/model/r_scripts/get_states.R)
 	state_jobs=""
 	for i in $states; do
 		export state=$i
 		state1=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=1wk_$i forecasting_1wk_state.slurm | awk '{print $NF}')
-#		state2=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=2wk_$i forecasting_2wk_state.slurm | awk '{print $NF}')
+		state2=$(sbatch --dependency=afterok:$gitpull:$preprocess --job-name=2wk_$i forecasting_2wk_state.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
-			state_jobs=$state_jobs:$state1
-#			state_jobs=$state_jobs:$state1:$state2
+			state_jobs=$state_jobs:$state1:$state2
 		else
-			state_jobs=$state1
-#			state_jobs=$state1:$state2
+			state_jobs=$state1:$state2
 		fi
 	done
 	#end of submit_states

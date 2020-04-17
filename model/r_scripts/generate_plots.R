@@ -3,7 +3,11 @@ library(vroom)
 library(plotly)
 
 # Set variables based on testing or production
-data_repo <- "~/cov-ind-19-data/"
+if ( Sys.getenv("production") == "TRUE" ) {
+	data_repo <- "~/cov-ind-19-data/"
+} else {
+	data_repo <- "~/cov-ind-19-test/"
+}
 
 today <- Sys.getenv("today")
 
@@ -64,7 +68,9 @@ data <- list(India = generate_forecast_plots("India"),
              codes = c()
 )
 
-states.to.forecast <- c("dl", "kl", "mh")
+source("~/cov-ind-19/model/r_scripts/get_states.R")
+
+states.to.forecast <- x$State
 for (state in states.to.forecast) {
 	data$states <- c(data$states, state.data$Name[match(state, state.data$State)])
     data$codes  <- c(data$codes, state)
