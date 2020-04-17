@@ -21,7 +21,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
-today   <- Sys.getemv("today")
+today   <- Sys.getenv("today")
 arrayid <- Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
