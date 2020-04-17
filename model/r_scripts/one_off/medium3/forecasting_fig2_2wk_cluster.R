@@ -55,7 +55,7 @@ R           <- unlist(RI_complete/N)           # proportion of recovered per day
 Y           <- unlist(NI_complete/N-R)
 
 # directory ----------
-wd <- paste0(repo_data, today, "/medium3/2wk/")
+wd <- paste0(data_repo, today, "/medium3/2wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
