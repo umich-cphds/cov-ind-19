@@ -29,7 +29,7 @@ arrayid = Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # specificatioons ----------
-delay              <- 14            # in days (default = 14)
+delay              <- 7             # in days (default = 7)
 length_of_lockdown <- 21            # in days (default = 21)
 Ms                 <- 5e5           # 5e5 recommended (5e3 for testing - but not stable)
 nburnins           <- 2e5           # 2e5 recommended (2e3 for testing - but not stable)
@@ -41,7 +41,7 @@ pi_sdtb            <- 0.75          # pi corresponding to social distancing and 
 R_0                <- 2             # basic reproduction number
 replace_apr3       <- TRUE          # replace April 3 number with count from MOHFW
 save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
-speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
+speed_lockdown     <- 14            # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 
 # STATES
