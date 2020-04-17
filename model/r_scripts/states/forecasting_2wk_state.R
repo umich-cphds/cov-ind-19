@@ -65,7 +65,7 @@ pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" =
 start_date <-  min(dat$Date)
 
 # !! directory ----------
-wd <- paste0(data_repo, today, "/1wk/")
+wd <- paste0(data_repo, today, "/2wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
