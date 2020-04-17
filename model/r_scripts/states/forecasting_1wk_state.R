@@ -47,7 +47,7 @@ lockdown_end       <- "2020-05-03"
 state_sub <- state
 
 # data ----------
-dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv") %>%
+dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv")) %>%
   filter(State == state_sub)
 
 # populations from http://www.census2011.co.in/states.php
