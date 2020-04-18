@@ -7,6 +7,7 @@ library(gtools) #rdirichlet(n, alpha)
 library(scales) #alpha　function
 library(data.table)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -22,9 +23,6 @@ if ( Sys.getenv("production") == "TRUE" ) {
 today     <- Sys.getenv("today")
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # !! directory ----------
 wd <- paste0(data_repo, today, "/sensitivity/")

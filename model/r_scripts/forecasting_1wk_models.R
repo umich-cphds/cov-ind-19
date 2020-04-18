@@ -5,6 +5,7 @@ library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(here)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) { 
@@ -29,7 +30,7 @@ pi_moderate        <- 0.75          # pi corresponding to moderate return
 pi_normal          <- 1             # pi corresponding to normal (pre-intervention) return
 pi_sdtb            <- 0.75          # pi corresponding to social distancing and travel ban
 R_0                <- 2             # basic reproduction number
-save_mcmc          <- FALSE          # output MCMC files (default = TRUE; needed for incidence CI calculations)
+save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 start_date         <- "2020-03-01"
@@ -39,9 +40,6 @@ lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
 
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # directory ----------
 wd <- paste0(data_repo, today, "/1wk/")

@@ -28,13 +28,20 @@ adj             <- T
 plot_start_date <- "2020-03-01"
 plot_end_date   <- "2020-04-30"
 
-# , "dl", "mh", "kl"
-forecasts <- c("India")
+source("~/cov-ind-19/model/r_scripts/get_states.R")
+forecasts <- c("India", x$State)
 
-pops <- c("India" = 1.34e9, "dl" = 16.8e6, "mh" = 112.4e6, "kl" = 33.4e6)
+pops <- c("India" = 1.34e9, "up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6,
+		  "wb" = 91.3e6, "ap" = 49.67e6, "mp" = 72.1e6, "tn" = 72.1e6, "rj" = 68.5e6,
+		  "ka" = 61.1e6, "gj" = 60.4e6, "or" = 42.0e6, "kl" = 33.4e6, "jh" = 33.0e6,
+		  "as" = 31.2e6, "pb" = 27.7e6, "ct" = 25.5e6, "hr" = 25.4e6, "dl" = 16.8e6,
+		  "jk" = 12.5e6, "ut" = 10.1e6, "hp" = 6.9e6, "tr" = 3.7e6, "ml" = 3.0e6,
+		  "mn" = 2.9e6, "nl" = 2.0e6, "ga" = 1.6e6, "ar" = 1.4e6, "py" = 1.2e6,
+		  "mz" = 1.1e6, "ch" = 1.1e6, "sk" = 6.1e5, "an" = 3.8e5, "dn" = 3.4e5,
+		  "dd" = 2.4e5, "ld" = 6.4e4, "tg" = 35.5e6, "la" = NA)
+
 for (forecast in forecasts) {
     pop  <- pops[forecast]
-    print(pop)
     if (forecast == "India")
         data <- jhu.data
     else

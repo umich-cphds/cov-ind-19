@@ -3,17 +3,19 @@ library(vroom)
 library(plotly)
 
 # Set variables based on testing or production
-if (Sys.getenv("production") == "TRUE") {
+if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
 } else {
 	data_repo <- "~/cov-ind-19-test/"
 }
 
 today <- Sys.getenv("today")
-generate_forecast_plots <- function(forecast)
+
+state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"))
+generate_forecast_plots <- function(state)
 {
     start.date <- as.Date("2020-03-01")
-    path       <- paste0(data_repo, today, "/", forecast)
+    path       <- paste0(data_repo, today, "/", state)
 
     if (!dir.exists(path)){
         dir.create(path, recursive = T)
@@ -36,7 +38,7 @@ generate_forecast_plots <- function(forecast)
 
 
 	plots <- list()
-	if (forecast == "India") {
+	if (state == "India") {
 		p <- plot_fig_3()
 		plots[["p1"]] = plot_fig_1()
 		plots[["p2"]] = plot_fig_2()
@@ -50,21 +52,29 @@ generate_forecast_plots <- function(forecast)
 		plots[["p7d"]] = p$p7d
 
 	}
-	plots[["p4a"]] = plot_fig_4a(forecast)
-	plots[["p4b"]] = plot_fig_4b(forecast)
-	plots[["p5a"]] = plot_fig_5a(forecast)
-	plots[["p5b"]] = plot_fig_5b(forecast)
-	plots[["p6a"]] = plot_fig_6a(forecast)
-	plots[["p6b"]] = plot_fig_6b(forecast)
+	plots[["p4a"]] = plot_fig_4a(state)
+	plots[["p4b"]] = plot_fig_4b(state)
+	plots[["p5a"]] = plot_fig_5a(state)
+	plots[["p5b"]] = plot_fig_5b(state)
+	plots[["p6a"]] = plot_fig_6a(state)
+	plots[["p6b"]] = plot_fig_6b(state)
 
     plots
 }
 
-forecasts <- c("India")
+data <- list(India = generate_forecast_plots("India"),
+			 plots = list(),
+			 states = c(),
+             codes = c()
+)
 
-plots <- list()
-for (forecast in forecasts)
-    plots[[forecast]] <- generate_forecast_plots(forecast)
+source("~/cov-ind-19/model/r_scripts/get_states.R")
 
+states.to.forecast <- x$State
+for (state in states.to.forecast) {
+	data$states <- c(data$states, state.data$Name[match(state, state.data$State)])
+    data$codes  <- c(data$codes, state)
+	data$plots[[state]] <- generate_forecast_plots(state)
+}
 
-save(plots, file = paste0(data_repo, today, "/new_plots.RData"))
+save(data, file = paste0(data_repo, today, "/data.RData"))

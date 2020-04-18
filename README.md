@@ -4,7 +4,10 @@
 `cov-ind-19` houses code, data, and other products of from the COV-IND-19 Study Group aimed at describing and projecting the COVID-19 outbreak in India along with potential intervenntions.
 
 ### Data Sources
-Johns Hopkins University, CSSE (https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data)
+Non-India data source:
+[Johns Hopkins University, CSSE](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data)
+
+India data source: [covid19india.org](https://www.covid19india.org)
 
 ### Relevant R packages
 `eSIR`: https://github.com/lilywang1988/eSIR

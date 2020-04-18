@@ -5,6 +5,7 @@ library(rjags)
 library(gtools) #rdirichlet(n, alpha)
 library(here)
 library(devtools)
+library(eSIR)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -27,9 +28,6 @@ save_mcmc          <- TRUE          # output MCMC files (default = TRUE; needed 
 start_date         <- "2020-03-01"
 soc_dist_start     <- "2020-03-15"
 soc_dist_end       <- "2020-03-24"
-
-# eSIR ----------
-source_url("https://github.com/lilywang1988/eSIR/blob/master/R/tvt.eSIR.R?raw=TRUE") # relevant model code
 
 # directory ----------
 today <- Sys.getenv("today")

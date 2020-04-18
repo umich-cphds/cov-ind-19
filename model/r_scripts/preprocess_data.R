@@ -12,7 +12,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 today     <- Sys.getenv("today")
 if (!dir.exists(paste0(data_repo, today))) {
     message("Creating" , paste0(data_repo, today))
-    dir.create(paste0(data_repo, today, recursive = T))
+    dir.create(paste0(data_repo, today), recursive = T)
 }
 
 start.date <- as.Date("2020-03-01")
