@@ -112,6 +112,7 @@ vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
 request <- GET("https://api.covid19india.org/data.json")
 json    <- content(request)
 data    <- map_dfr(json[[1]], ~ .x)
+data_testing    <- map_dfr(json[['tested']], ~ .x)
 
 data <- data %>%
 select(
@@ -131,3 +132,26 @@ mutate(
 
 rbind(filter(jhu.data, Country != "India"), data) %>%
 vroom_write(path = paste0(data_repo, today, "/jhu_data_mod.csv"))
+
+
+data_testing <- data_testing %>%
+  select(
+    Cases = totalpositivecases,
+    Tests = totalsamplestested,
+    Date = updatetimestamp
+  ) %>%
+  mutate(
+    Date = as.Date(word(Date, 1), format = "%d/%m/%Y"),
+    Cases = as.numeric(str_remove(Cases, ',')),
+    Tests = as.numeric(str_remove(Tests, ',')),
+    Country = "India"
+  )
+
+write_csv(data_testing, paste0(data_repo, today, "/testing.csv"))
+#write_csv(data_testing, paste0('C:/Users/mkleinsa/Box/Projects/covid-india/IRIS5/cov-ind-19-data/today', "/testing.csv"))
+
+
+write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'), 
+          paste0(data_repo, today, "/global_testing.csv"))
+# write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'), 
+#           paste0('C:/Users/mkleinsa/Box/Projects/covid-india/IRIS5/cov-ind-19-data/today', "/global_testing.csv"))
