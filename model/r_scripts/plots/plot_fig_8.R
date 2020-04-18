@@ -48,6 +48,6 @@ plot_fig_8 = function(start.date = as.Date('2020-04-01')) {
   vroom_write(data, path = paste0(data_repo, today, "/plot8.csv"),
               delim = ","
   )
-  p
+  return(p)
   
 }
