@@ -26,6 +26,7 @@ source("top_matter.R", local = T)
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
+source("testing.R", local = T)
 
 shinyServer(function(input, output)
 {
@@ -60,7 +61,7 @@ shinyServer(function(input, output)
         tabs <- map2(states, codes, generate_state_tab)
 
         eval(expr(navbarPage("COVID-19 Outbreak in India",
-          observed, forecast, navbarMenu("State Forecasts", !!!tabs))))
+          observed, forecast, navbarMenu("State Forecasts", !!!tabs), testing)))
 
     })
 })
