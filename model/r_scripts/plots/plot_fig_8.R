@@ -20,7 +20,11 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
            Text_tests = paste0(Date, ": ", format(Tests, big.mark = ",",
                                scientific = F, trim = T), " tests")
     ) %>%
-    drop_na()
+    drop_na() %>%
+    mutate(Percent = (Cases/Tests)*100,
+           Text_cases = paste0(Text_cases, '. Percent cases: ', format(Percent, digits = 3)),
+           Text_tests = paste0(Text_tests, '. Percent cases: ', format(Percent, digits = 3))
+    )
 
   data <- bind_rows(
       data %>%
@@ -33,7 +37,7 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
           select(-Cases, -Text_cases) %>%
           mutate(Count = Tests, Text = Text_tests, Type = "Tests")
     ) %>%
-    mutate(Type = factor(Type, levels = c("Tests", "Cases"))) %>%
+    mutate(Type = factor(Type, levels = c("Cases", "Tests"))) %>%
     select(Date, Count, Text, Type, Country)
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
@@ -50,8 +54,8 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
     yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
                   tickfont = tickfont, zeroline = T)
     colors <- c(
-        "Cases" = "#ED553B",
-        "Tests" = "#f2c82e"
+        "Tests" = "#b3b3b3",
+        "Cases" = "#138808"
     )
 
     p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~Text,
