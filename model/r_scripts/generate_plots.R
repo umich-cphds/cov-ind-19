@@ -47,6 +47,11 @@ generate_forecast_plots <- function(state)
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
 
+        plots[["p5a"]] = plot_fig_5a(state)
+        plots[["p5b"]] = plot_fig_5b(state)
+        plots[["p6a"]] = plot_fig_6a(state)
+        plots[["p6b"]] = plot_fig_6b(state)
+
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
 		plots[["p7b"]] = p$p7b
@@ -55,14 +60,9 @@ generate_forecast_plots <- function(state)
 
 		plots[["p8"]] = plot_fig_8()
 		plots[["p9"]] = plot_fig_9()
-
 	}
 	plots[["p4a"]] = plot_fig_4a(state)
 	plots[["p4b"]] = plot_fig_4b(state)
-	plots[["p5a"]] = plot_fig_5a(state)
-	plots[["p5b"]] = plot_fig_5b(state)
-	plots[["p6a"]] = plot_fig_6a(state)
-	plots[["p6b"]] = plot_fig_6b(state)
 
     plots
 }
@@ -76,6 +76,7 @@ data <- list(India = generate_forecast_plots("India"),
 source("~/cov-ind-19/model/r_scripts/get_states.R")
 
 states.to.forecast <- x$State
+print(states.to.forecast)
 for (state in states.to.forecast) {
 	data$states <- c(data$states, state.data$Name[match(state, state.data$State)])
     data$codes  <- c(data$codes, state)
