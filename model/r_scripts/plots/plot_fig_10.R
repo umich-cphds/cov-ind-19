@@ -6,7 +6,7 @@ if (Sys.getenv("production") == "TRUE") {
   today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
 }
 
-plot_fig_9 <- function(start.date = as.Date("2020-04-01"))
+plot_fig_10 <- function(start.date = as.Date("2020-04-01"))
 {
   data <- vroom(paste0(data_repo, today, "/global_testing.csv")) %>%
     select(location, date, total_cases, total_tests) %>%
