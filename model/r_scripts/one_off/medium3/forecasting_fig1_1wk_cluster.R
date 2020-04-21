@@ -31,6 +31,7 @@ pi_lockdown        <- 0.4           # pi corresponding to lockdown
 pi_moderate        <- 0.75          # pi corresponding to moderate return
 pi_sdtb            <- 0.75          # pi corresponding to social distancing and travel ban
 R_0                <- 2             # basic reproduction number
+save_files         <- TRUE
 save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
@@ -83,7 +84,7 @@ model_21 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_21",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -115,7 +116,7 @@ model_28 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_28",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -148,7 +149,7 @@ change_time        <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Dat
     R0             = R_0,
     dic            = TRUE,
     casename       = "India_40",
-    save_files     = FALSE,
+    save_files     = save_files,
     save_mcmc      = save_mcmc,
     save_plot_data = TRUE,
     M              = Ms,
@@ -180,7 +181,7 @@ model_50 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_50",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -212,7 +213,7 @@ if (arrayid == 5) {
     R0             = R_0,
     dic            = TRUE,
     casename       = "India_60",
-    save_files     = FALSE,
+    save_files     = save_files,
     save_mcmc      = save_mcmc,
     save_plot_data = TRUE,
     M              = Ms,
