@@ -39,6 +39,8 @@ generate_forecast_plots <- function(state)
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_8.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_9.R")
 
+	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_x.R")
+
 	plots <- list()
 	if (state == "India") {
 		p <- plot_fig_3()
@@ -60,6 +62,8 @@ generate_forecast_plots <- function(state)
 
 		plots[["p8"]] = plot_fig_8()
 		plots[["p9"]] = plot_fig_9()
+	} else {
+		plots[["x"]] <- plot_fig_x(state)
 	}
 	plots[["p4a"]] = plot_fig_4a(state)
 	plots[["p4b"]] = plot_fig_4b(state)
