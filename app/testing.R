@@ -14,7 +14,15 @@ testing <- tabPanel("Testing",
                                      p("This figure provides the pattern of testing across countries using cumulative tests
                                        per thousand versus cumulative confirmed cases per million. Data sources: api.covid19india.org and ourworldindata.org/coronavirus"),
                                      plotlyOutput("India_p9", height = "600px"),
-                                     hr()
+                                     hr(),
+                                     h2("Total tests across countries and percentage of tested population"),
+                                     p("This figure provides the number of COVID-19 cases (grey) and positive tests (green) across countries. Data source: api.covid19india.org."),
+                                     plotlyOutput("India_p10", height = "600px"),
+                                     hr(),
+                                     h2("Daily confirmed positive cases and total tests across countries"),
+                                     p("This figure provides the number of COVID-19 cases (grey) and positive tests (green) over location and time. Data source: api.covid19india.org."),
+                                     plotlyOutput("India_p11", height = "600px"),
+                                     hr(),
                               ),
                               column(width = 1)
                      )
