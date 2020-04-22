@@ -202,7 +202,7 @@ if (arrayid == 5) {
                           seq(pi_lockdown, pi_moderate, (pi_moderate - pi_lockdown) / speed_return),
                           pi_moderate)
   
-  model_50 <- tvt.eSIR(
+  model_60 <- tvt.eSIR(
     Y,
     R,
     begin_str      = "03/01/2020",
