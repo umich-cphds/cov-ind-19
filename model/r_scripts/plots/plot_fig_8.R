@@ -16,17 +16,19 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
            Cases = c(NA, diff(Cases)),
            Tests = c(NA, diff(Tests)),
            Text_cases = paste0(Date, ": ", format(Cases, big.mark = ",",
-                               scientific = F, trim = T), " positive tests"),
+                               scientific = F, trim = T), " Positive tests<br>"),
            Text_tests = paste0(Date, ": ", format(Tests, big.mark = ",",
-                               scientific = F, trim = T), " tests")
+                               scientific = F, trim = T), " Tests<br>")
     ) %>%
     drop_na() %>%
-    mutate(Percent = (Cases/Tests)*100,
-           Text_cases = paste0(Text_cases, '. % positive tests: ', format(Percent, digits = 3)),
-           Text_tests = paste0(Text_tests, '. % positive tests: ', format(Percent, digits = 3))
+    mutate(Percent = Cases / Tests * 100,
+           Text_cases = paste0(Text_cases, format(Percent, digits = 3, trim = T),
+                               "% of tests positive"),
+           Text_tests = paste0(Text_tests, format(Percent, digits = 3, trim = T),
+                               "% of tests positive")
     )
 
-  data <- bind_rows(
+    data <- bind_rows(
       data %>%
       select(-Tests, -Text_tests) %>%
       mutate(
