@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=FAIL
-#SBATCH --time=7:00:00
+#SBATCH --time=25:00:00
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
@@ -53,5 +53,5 @@ else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
 
-sleep 5.5h
+sleep 24h
 sbatch ~/cov-ind-19/model/slurm_scripts/master_india.slurm
