@@ -27,12 +27,12 @@ plot_fig_10 <- function(start.date = as.Date("2020-04-01"))
       select(-total_tests) %>%
       mutate(
         Count = total_cases,
-        Text = paste0('Total cases: ', total_cases, '. '),
-        Type = 'Cases')
+        Text = paste0('Total positive tests: ', total_cases, '. '),
+        Type = 'Positive tests')
     ) %>%
-    mutate(Type = factor(Type, levels = c("Cases", "Tests"))) %>%
+    mutate(Type = factor(Type, levels = c("Positive tests", "Tests"))) %>%
     select(-total_cases, - total_tests) %>%
-    mutate(Text = paste0(Text, 'Percent cases: ', format(Percent, digits = 3)))
+    mutate(Text = paste0(Text, '% positive tests: ', format(Percent, digits = 3)))
   
   cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
                 format(today, format = "%b %e"))
@@ -48,9 +48,14 @@ plot_fig_10 <- function(start.date = as.Date("2020-04-01"))
   yaxis <- list(title = "Counts", titlefont = axis.title.font,
                 tickfont = tickfont, zeroline = T)
   
+  # colors <- c(
+  #   "Tests" = "#b3b3b3",
+  #   "Cases" = "#138808"
+  # )
+  
   colors <- c(
-    "Tests" = "#b3b3b3",
-    "Cases" = "#138808"
+    "Tests" = "#B7F1A0",
+    "Positive tests" = "#ED553B"
   )
   
   p = 
@@ -60,7 +65,8 @@ plot_fig_10 <- function(start.date = as.Date("2020-04-01"))
                  list(text = cap, xanchor = "left", x = 0), legend =
                  list(orientation = "h", font = list(size = 16))
   ) %>%
-  plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
+  plotly::config(toImageButtonOptions = list(width = NULL, height = NULL)) %>%
+    layout(legend = list(x = 0, y = 1))
   
   p
 }

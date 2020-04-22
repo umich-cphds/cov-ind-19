@@ -40,8 +40,11 @@ observed <- tabPanel("National Observed",
       hr(),
       h2("Cumulative COVID-19 case count by state/union territory"),
       plotOutput("India_p7b", height = "600px"),
+      downloadLink('downloadFacet_cases', 'Download'),
       h2("Cumulative COVID-19 death count by state/union territory"),
       plotOutput("India_p7d", height = "600px"),
+      downloadLink('downloadFacet_deaths', 'Download'),
+      hr()
     ),
     column(width = 1)
   )

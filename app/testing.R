@@ -21,7 +21,7 @@ testing <- tabPanel("Testing",
                                      hr(),
                                      h2("Daily confirmed positive cases and total tests across countries"),
                                      p("This figure provides the number of COVID-19 cases (grey) and positive tests (green) over location and time. Data source: api.covid19india.org."),
-                                     plotlyOutput("India_p11", height = "600px"),
+                                     plotlyOutput("India_p11", height = "2400px"),
                                      hr(),
                               ),
                               column(width = 1)

@@ -27,22 +27,23 @@ plot_fig_9 <- function(start.date = as.Date("2020-04-01"))
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
 
-    xaxis <- list(title = "Total cases per million", titlefont = axis.title.font,
-                  showticklabels = TRUE)
-
-    yaxis <- list(title = "Total tests per thousand", titlefont = axis.title.font,
+    yaxis <- list(title = "Total positive tests per million", titlefont = axis.title.font,
                   tickfont = tickfont, zeroline = T)
+
+    xaxis <- list(title = "Total tests per thousand", titlefont = axis.title.font,
+                  showticklabels = TRUE)
+    
     line_fmt <- list(dash = "solid", width = 1.5, color = "black")
    
-    p = plot_ly(data, type = "scatter", color = ~location, x = ~total_cases_per_million, y = ~total_tests_per_thousand,
+    p = plot_ly(data, type = "scatter", color = ~location, y = ~total_cases_per_million, x = ~total_tests_per_thousand,
                 mode = "line", hoverinfo = "text", hoverlabel = list(align = "left"), text = ~Text
         ) %>%
         add_fun(
         function(p) {
           p %>% 
             add_segments(data = (data %>% arrange(desc(lmpred)))[c(1,nrow(data)),],
-                         x = ~total_cases_per_million[1], xend = ~total_cases_per_million[2], 
-                         y = ~lmpred[1],  yend = ~lmpred[2], 
+                         y = ~total_cases_per_million[1], yend = ~total_cases_per_million[2], 
+                         x = ~lmpred[1],  xend = ~lmpred[2], 
                          type = "scatter",
                          showlegend = F, line = list(width = 1, color = 'gray'))
         }
