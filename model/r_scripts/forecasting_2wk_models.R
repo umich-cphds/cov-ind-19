@@ -132,7 +132,7 @@ model_3 <- tvt.eSIR(
 }
 
 if (arrayid == 3) {
-print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -163,7 +163,7 @@ model_4 <- tvt.eSIR(
 }
 
 if (arrayid == 4) {
-print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -194,7 +194,7 @@ model_5 <- tvt.eSIR(
 }
 
 if (arrayid == 5) {
-print(paste0("Running model_6 (lockdown with cautious return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_6 (lockdown with cautious return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
