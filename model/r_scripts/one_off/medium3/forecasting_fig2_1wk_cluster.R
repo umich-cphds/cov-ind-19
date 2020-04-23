@@ -47,7 +47,7 @@ l                  <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(
 
 # data ----------
 dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
-  filter(Country == "India" &  Date >= "2020-03-01" & Date <= "2020-04-14")
+  filter(Country == "India" &  Date >= "2020-03-01" & Date <= "2020-04-21")
 
 NI_complete <- dat$Cases
 RI_complete <- dat$Recovered + dat$Deaths
