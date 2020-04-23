@@ -16,28 +16,30 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
            Cases = c(NA, diff(Cases)),
            Tests = c(NA, diff(Tests)),
            Text_cases = paste0(Date, ": ", format(Cases, big.mark = ",",
-                               scientific = F, trim = T), " cases"),
+                               scientific = F, trim = T), " Positive tests<br>"),
            Text_tests = paste0(Date, ": ", format(Tests, big.mark = ",",
-                               scientific = F, trim = T), " tests")
+                               scientific = F, trim = T), " Tests<br>")
     ) %>%
     drop_na() %>%
-    mutate(Percent = (Cases/Tests)*100,
-           Text_cases = paste0(Text_cases, '. Percent cases: ', format(Percent, digits = 3)),
-           Text_tests = paste0(Text_tests, '. Percent cases: ', format(Percent, digits = 3))
+    mutate(Percent = Cases / Tests * 100,
+           Text_cases = paste0(Text_cases, format(Percent, digits = 3, trim = T),
+                               "% of tests positive"),
+           Text_tests = paste0(Text_tests, format(Percent, digits = 3, trim = T),
+                               "% of tests positive")
     )
 
-  data <- bind_rows(
+    data <- bind_rows(
       data %>%
       select(-Tests, -Text_tests) %>%
       mutate(
           Count = Cases,
           Text = Text_cases,
-          Type = "Cases"),
+          Type = "Positive tests"),
           data %>%
           select(-Cases, -Text_cases) %>%
           mutate(Count = Tests, Text = Text_tests, Type = "Tests")
     ) %>%
-    mutate(Type = factor(Type, levels = c("Cases", "Tests"))) %>%
+    mutate(Type = factor(Type, levels = c("Positive tests", "Tests"))) %>%
     select(Date, Count, Text, Type, Country)
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
@@ -54,8 +56,8 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
     yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
                   tickfont = tickfont, zeroline = T)
     colors <- c(
-        "Tests" = "#b3b3b3",
-        "Cases" = "#138808"
+        "Tests" = "#B7F1A0",
+        "Positive tests" = "#ED553B"
     )
 
     p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~Text,

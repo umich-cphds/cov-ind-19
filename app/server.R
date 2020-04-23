@@ -70,4 +70,22 @@ shinyServer(function(input, output)
           observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs))))
 
     })
+    
+    output$downloadFacet_cases = downloadHandler(
+        filename = function() {'cases_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 2000, res = 200)
+            plot(data$India$p7b)
+            dev.off()
+        }
+    )
+    
+    output$downloadFacet_deaths = downloadHandler(
+        filename = function() {'deaths_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 2000, res = 200)
+            plot(data$India$p7d)
+            dev.off()
+        }
+    )
 })
