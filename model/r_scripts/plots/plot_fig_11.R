@@ -17,7 +17,7 @@ plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
   axis.title.font <- list(size = 16)
   tickfont        <- list(size = 16)
 
-  yaxis <- list(title = "Daily counts", titlefont = axis.title.font,
+  yaxis <- list(title = "Cumulative counts", titlefont = axis.title.font,
                 tickfont = tickfont, zeroline = T)
 
 
