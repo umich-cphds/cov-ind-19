@@ -22,7 +22,7 @@ today     <- Sys.getenv("today")
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
-# specificatioons ----------
+# specifications ----------
 delay              <- 7             # in days (default = 7)
 pi_cautious        <- 0.6           # pi corresponding to cautious return
 pi_lockdown        <- 0.4           # pi corresponding to lockdown
@@ -40,6 +40,30 @@ lockdown_start     <- as.Date(soc_dist_end) + 1
 lockdown_end       <- "2020-05-03"
 
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
+
+# function ----------
+elefante <- function(dates, pis, anchor = Sys.Date()) {
+  
+  if (max(as.Date(dates, "%m/%d/%Y")) > anchor) {
+    drpr      <- length(dates[dates <= format(anchor, "%m/%d/%Y")]) + 1
+    tmp_dates <- c(format(anchor, "%m/%d/%Y"), dates[drpr:length(dates)])
+    tmp_pis   <- c(1, pis[drpr:length(pis)])
+  }
+  
+  if (max(as.Date(dates, "%m/%d/%Y")) <= anchor) {
+    tmp_dates <- format(anchor, "%m/%d/%Y")
+    tmp_pis   <- c(1, tail(pis, 1))
+  }
+  
+  return(
+    list(
+      dates = tmp_dates,
+      pis   = tmp_pis,
+      check = ifelse(length(tmp_dates) + 1 == length(tmp_pis), "All good!", "Uh-oh...")
+    )
+  )
+  
+}
 
 # directory ----------
 wd <- paste0(data_repo, today, "/1wk/")
@@ -68,6 +92,7 @@ change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_d
 pi0         <- c(1,
                  rev(seq(pi_sdtb, 1, (1 - pi_sdtb) / l))[-1],
                  pi_sdtb)
+mod         <- elefante(dates = change_time, pis = pi0)
 
 model_2 <- tvt.eSIR(
   Y,
@@ -75,8 +100,8 @@ model_2 <- tvt.eSIR(
   begin_str      = "03/01/2020",
   death_in_R     = 0.2,
   T_fin          = 200,
-  pi0            = pi0,
-  change_time    = change_time,
+  pi0            = mod$pis,
+  change_time    = mod$dates,
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_2",
@@ -107,7 +132,7 @@ model_3 <- tvt.eSIR(
 }
 
 if (arrayid == 3) {
-print(paste0("Running model_4 (lockdown with moderate return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_4 (lockdown with moderate return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -116,6 +141,7 @@ pi0         <- c(1,
                  rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
                  seq(pi_lockdown, pi_moderate, (pi_moderate - pi_lockdown) / speed_return),
                  pi_moderate)
+mod         <- elefante(dates = change_time, pis = pi0)
 
 model_4 <- tvt.eSIR(
   Y,
@@ -123,8 +149,8 @@ model_4 <- tvt.eSIR(
   begin_str      = "03/01/2020",
   death_in_R     = 0.2,
   T_fin          = 200,
-  pi0            = pi0,
-  change_time    = change_time,
+  pi0            = mod$pis,
+  change_time    = mod$dates,
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_4",
@@ -137,7 +163,7 @@ model_4 <- tvt.eSIR(
 }
 
 if (arrayid == 4) {
-print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -146,6 +172,7 @@ pi0         <- c(1,
                rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
                seq(pi_lockdown, pi_normal, (pi_normal - pi_lockdown) / speed_return),
                pi_normal)
+mod         <- elefante(dates = change_time, pis = pi0)
 
 model_5 <- tvt.eSIR(
   Y,
@@ -153,8 +180,8 @@ model_5 <- tvt.eSIR(
   begin_str      = "03/01/2020",
   death_in_R     = 0.2,
   T_fin          = 200,
-  pi0            = pi0,
-  change_time    = change_time,
+  pi0            = mod$pis,
+  change_time    = mod$dates,
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_5",
@@ -167,7 +194,7 @@ model_5 <- tvt.eSIR(
 }
 
 if (arrayid == 5) {
-print(paste0("Running model_6 (lockdown with cautious return) with ", delay/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+print(paste0("Running model_6 (lockdown with cautious return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
 change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
                         as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
@@ -176,6 +203,7 @@ pi0         <- c(1,
                rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
                seq(pi_lockdown, pi_cautious, (pi_cautious - pi_lockdown) / speed_return),
                pi_cautious)
+mod         <- elefante(dates = change_time, pis = pi0)
 
 model_6 <- tvt.eSIR(
   Y,
@@ -183,8 +211,8 @@ model_6 <- tvt.eSIR(
   begin_str      = "03/01/2020",
   death_in_R     = 0.2,
   T_fin          = 200,
-  pi0            = pi0,
-  change_time    = change_time,
+  pi0            = mod$pis,
+  change_time    = mod$dates,
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_6",

@@ -26,6 +26,7 @@ top_matter <- wellPanel(
         ),
         column(5,
           h4("References"),
+          p("Read the study: ", a("Ray et al. 2020", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2020.04.15.20067256v1")),
           p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"),
             " (this is a direct download link, check your downloads folder)"),
           p("Read the original March 21 article: ", a("Medium article", .noWS = "outside",
