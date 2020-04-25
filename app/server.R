@@ -32,6 +32,7 @@ img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
+source("testing.R", local = T)
 
 shinyServer(function(input, output)
 {
@@ -66,7 +67,25 @@ shinyServer(function(input, output)
         tabs <- map2(states, codes, generate_state_tab)
 
         eval(expr(navbarPage("COVID-19 Outbreak in India",
-          observed, forecast, navbarMenu("State Forecasts", !!!tabs))))
+          observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs))))
 
     })
+    
+    output$downloadFacet_cases = downloadHandler(
+        filename = function() {'cases_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 2000, res = 200)
+            plot(data$India$p7b)
+            dev.off()
+        }
+    )
+    
+    output$downloadFacet_deaths = downloadHandler(
+        filename = function() {'deaths_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 2000, res = 200)
+            plot(data$India$p7d)
+            dev.off()
+        }
+    )
 })

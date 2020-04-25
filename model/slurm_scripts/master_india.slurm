@@ -31,6 +31,7 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	forecast1wk=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_1wk_models.slurm | awk '{print $NF}')
 	forecast2wk=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_2wk_models.slurm | awk '{print $NF}')
 	#submit_states
+	sleep 2m #This is to give preprocess data a chance to run before get_states.R which requires the data from preprocess data
 	cd ~/cov-ind-19/model/slurm_scripts/states
 	states=$(Rscript ~/cov-ind-19/model/r_scripts/get_states.R)
 	state_jobs=""

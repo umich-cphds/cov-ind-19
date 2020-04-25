@@ -4,6 +4,13 @@ generate_state_tab <- function(state, code)
     fluidRow(
       column(width = 1),
       column(width = 10,
+      h2("Daily number of new COVID-19 cases, fatalities and recovered in", state),
+      p(paste0("This figure provides the number of COVID-19 new cases (yellow),
+         fatalities (red), and recovered cases (green) in ", state, ". You can
+         hover your cursor over the bar to see the exact numerical counts.")
+      ),
+      plotlyOutput(paste0(code, "_x"), height = "600px"),
+      hr(),
       h2("Impact of social distancing, travel ban, and 40 day lockdown in ", state),
       p("In the following Figures we consider various scenarios of intervention
         effects to assess the effect of the lockdown.", "These figures should
