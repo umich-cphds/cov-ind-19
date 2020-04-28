@@ -41,8 +41,11 @@ forecast <- tabPanel("National Forecast",
         tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
         tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
       ),
-      h3("Figure 5"),
+      h3("Figure 5a"),
       plotlyOutput("India_p5a", height = "600px"),
+      hr(),
+      h3("Figure 5b"),
+      plotlyOutput("India_p5b", height = "600px"),
       hr()
     ),
     column(width = 1)
