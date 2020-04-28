@@ -36,7 +36,7 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	state_jobs=""
 	for i in $states; do
 		export state=$i
-		state1=$(sbatch --dependency=afterok:$preprocess --job-name=1wk_$i state_forecast.slurm | awk '{print $NF}')
+		state1=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_forecast.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
 			state_jobs=$state_jobs:$state1
 		else
