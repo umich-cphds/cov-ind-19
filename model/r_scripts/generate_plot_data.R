@@ -51,7 +51,7 @@ for (forecast in forecasts) {
     forecast.len     <- 200
     forecasted.dates <- seq(from = max(data$Date) + 1, by =  1,
                             length.out = forecast.len)
-    for (arrayid in 1:2) {
+    for (arrayid in 1:1) {
         path    <- paste0(data_repo, today, "/", arrayid, "wk")
 
         fig_4_data <- function(x)
