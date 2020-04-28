@@ -65,7 +65,7 @@ generate_forecast_plots <- function(state)
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
-	plots[["p4"]] = plot_fig_(state)
+	plots[["p4"]] = plot_fig_4(state)
 
     plots
 }
