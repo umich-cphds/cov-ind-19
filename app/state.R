@@ -45,33 +45,7 @@ generate_state_tab <- function(state, code)
           "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."),
         h2("Quick adherence (one-week delay)"),
         h3("Figure 4a (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
-        plotlyOutput(paste0(code, "_p4a"), height = "600px"),
-        h2("Slow adherence (two-week delay)"),
-        h3("Figure 4b (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
-        plotlyOutput(paste0(code, "_p4b"), height = "600px"),
-        hr(),
-#        h2("Longer term forecasts post-40 day lockdown"),
-#        p("We present four hypothetical scenarios:",
-#        tags$ul(
-#          tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
-#          tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
-#          tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
-#          tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
-#        ),
-#        HTML(paste0("As in Figures 4a and 4b, Figures 5a and 5b represent an explicit one- and two-week delay in changes to R", tags$sub("0"), ", respectively."))
-#        ),
-#        h2("Quick adherence (one-week delay)"),
-#        h3("Figure 5a"),
-#        plotlyOutput(paste0(code, "_p5a"), height = "600px"),
-#        h3("Figure 5b"),
-#        plotlyOutput(paste0(code, "_p5b"), height = "600px"),
-#        hr(),
-#        h2("Slow adherence (two-week delay)"),
-#        h3("Figure 6a"),
-#        plotlyOutput(paste0(code, "_p6a"), height = "600px"),
-#        h3("Figure 6b"),
-#        plotlyOutput(paste0(code, "_p6b"), height = "600px"),
-#        hr()
+        plotlyOutput(paste0(code, "_p4"), height = "600px"),
      ),
      column(width = 1)
     )

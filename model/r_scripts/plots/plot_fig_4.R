@@ -1,7 +1,10 @@
-plot_fig_4b <- function(forecast, start.date = as.Date("2020-03-01"),
+library(tidyverse)
+library(vroom)
+library(plotly)
+plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
                         end.date = as.Date("2020-05-15"))
 {
-    data <- vroom(paste0(data_repo, today, "/2wk/", forecast,
+    data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
                             "_figure_4_data.csv")
     ) %>%
     mutate(
@@ -38,12 +41,11 @@ plot_fig_4b <- function(forecast, start.date = as.Date("2020-03-01"),
 
     yaxis <- list(title = "Cumulative number of cases", type = "log",
                   dtick = 1, titlefont = axis.title.font, zeroline = T,
-                  showline =T)
+                  showline = T)
 
     colors <- c("#979799", "#ED553B", "#f2c82e", "#173F5F")
-
     p <- plot_ly(data, x = ~ Dates, y = ~ value, text = ~text,
-                 color = ~color, colors = colors, type = "bar",
+                 color = ~color, colors = colors, name = ~color, type = "bar",
                  hoverinfo = "text", hoverlabel = list(align = "left")
     ) %>%
     layout(barmode = "overlay", xaxis = xaxis, yaxis = yaxis,
@@ -55,11 +57,10 @@ plot_fig_4b <- function(forecast, start.date = as.Date("2020-03-01"),
                      )
     ) %>%
     add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci,
-        name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
-        mode = "line", line = list(width = 3, dash = "dash")
+              name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
+              mode = "line", line = list(width = 3, dash = "dash")
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
-
 
     # vroom_write(data, path = paste0(data_repo, today, "/", forecast,
     #                                 "/plot4a.csv"), delim = ","

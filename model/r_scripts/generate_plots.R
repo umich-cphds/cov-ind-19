@@ -26,21 +26,18 @@ generate_forecast_plots <- function(state)
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_2.R")
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_3.R")
 
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4a.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4b.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4.R")
 
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5a.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5b.R")
 
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_6a.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_6b.R")
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_7.R")
 
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_8.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_9.R")
 
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_x.R")
-    
+
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_10.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_11.R")
 
@@ -52,10 +49,8 @@ generate_forecast_plots <- function(state)
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
 
-        plots[["p5a"]] = plot_fig_5a(state)
-        plots[["p5b"]] = plot_fig_5b(state)
-        plots[["p6a"]] = plot_fig_6a(state)
-        plots[["p6b"]] = plot_fig_6b(state)
+        plots[["p5a"]] = plot_fig_5a("India")
+        plots[["p5b"]] = plot_fig_5b("India")
 
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
@@ -70,8 +65,7 @@ generate_forecast_plots <- function(state)
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
-	plots[["p4a"]] = plot_fig_4a(state)
-	plots[["p4b"]] = plot_fig_4b(state)
+	plots[["p4"]] = plot_fig_(state)
 
     plots
 }
