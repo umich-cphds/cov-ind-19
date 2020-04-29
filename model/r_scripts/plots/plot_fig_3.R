@@ -80,18 +80,18 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     )
 
     p1 <- plot_ly(cases.data, type = "scatter", color = ~Country, colors = colors,
-                 mode = "line", hoverinfo = "text", hoverlabel = list(align = "left")
+                 mode = "lines", hoverinfo = "text", hoverlabel = list(align = "left")
     ) %>%
     add_trace(data = filter(cases.data, Country %in% c("3 Days", "1 Week", "2 Weeks")),
-              x = ~Day, y = ~Cases, type = "scatter",
+              x = ~Day, y = ~Cases, type = "scatter", mode = "lines",
               showlegend = F, line = list(dash = "dash", width = 2)
     ) %>%
     add_trace(data = filter(cases.data, !(Country %in% c("India", "3 Days", "1 Week", "2 Weeks"))),
-              x = ~Day, y = ~Cases, text = ~text, type = "scatter",
+              x = ~Day, y = ~Cases, text = ~text, type = "scatter", mode = "lines",
               showlegend = T, line = list(width = 2) #, visible = "legendonly"
     ) %>%
     add_trace(data = filter(cases.data, Country == "India"), type = "scatter",
-              x = ~Day, y = ~Cases, text = ~text,
+              mode = "lines", x = ~Day, y = ~Cases, text = ~text,
               showlegend = T, line = list(width = 3)
     ) %>%
     layout(xaxis = cases.xaxis, yaxis = cases.yaxis, title =
@@ -115,19 +115,19 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
         plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
     p2 <- plot_ly(deaths.data, type = "scatter", color = ~Country, colors = colors,
-                 mode = "line", hoverinfo = "text", hoverlabel = list(align = "left"),
+                 mode = "lines", hoverinfo = "text", hoverlabel = list(align = "left"),
                  legendgroup = ~Country
     ) %>%
     add_trace(data = filter(deaths.data, Country %in% c("3 Days", "1 Week", "2 Weeks")),
-              x = ~Day, y = ~Deaths, type = "scatter",
+              x = ~Day, y = ~Deaths, type = "scatter", mode = "lines",
               showlegend = F, line = list(dash = "dash", width = 2)
     ) %>%
     add_trace(data = filter(deaths.data, !(Country %in% c("India", "3 Days", "1 Week", "2 Weeks"))),
-              x = ~Day, y = ~Deaths, text = ~text, type = "scatter",
+              x = ~Day, y = ~Deaths, text = ~text, type = "scatter", mode = "lines",
               showlegend = T, line = list(width = 2) #, visible = "legendonly"
     ) %>%
     add_trace(data = filter(deaths.data, Country == "India"), type = "scatter",
-              x = ~Day, y = ~Deaths, text = ~text,
+              mode = "lines", x = ~Day, y = ~Deaths, text = ~text,
               showlegend = T, line = list(width = 3)
     ) %>%
     layout(xaxis = deaths.xaxis, yaxis = deaths.yaxis, title =

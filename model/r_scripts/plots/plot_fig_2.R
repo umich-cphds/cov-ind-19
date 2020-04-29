@@ -81,10 +81,10 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_trace(
         data = cases.data %>% filter(Country != "India"), type = "scatter",
-        visible = "legendonly", line = list(width = 2)
+        mode = "lines", visible = "legendonly", line = list(width = 2)
     ) %>%
     add_trace(data = cases.data %>% filter(Country == "India"),
-              type = "scatter", line = list(width = 3)
+              type = "scatter", mode = "lines", line = list(width = 3)
     )  %>%
     layout(xaxis = cases.xaxis, yaxis = cases.yaxis,
            annotations = list(text = cases.title, xref = "paper", yref = "paper",
@@ -99,10 +99,10 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     ) %>%
     add_trace(
         data = deaths.data %>% filter(Country != "India"), type = "scatter",
-        visible = "legendonly", line = list(width = 2)
+        mode = "lines", visible = "legendonly", line = list(width = 2)
     ) %>%
     add_trace(data = deaths.data %>% filter(Country == "India"),
-              type = "scatter", line = list(width = 3)
+              type = "scatter", mode = "lines", line = list(width = 3)
     ) %>%
     layout(xaxis = deaths.xaxis, yaxis = deaths.yaxis,
            annotations = list(text = deaths.title, xref = "paper", yref = "paper",

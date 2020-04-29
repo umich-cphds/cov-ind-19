@@ -58,7 +58,7 @@ plot_fig_5a <- function(forecast, start.date = as.Date("2020-05-15"),
 
     colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
     p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-        color = ~ color, colors = colors, type = "scatter", mode = "line",
+        color = ~ color, colors = colors, type = "scatter", mode = "lines",
         hoverinfo = "text", hoverlabel = list(align = "left"),
         line = list(width = 4)
     ) %>%
