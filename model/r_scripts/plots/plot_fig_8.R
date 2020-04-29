@@ -10,37 +10,31 @@ if (Sys.getenv("production") == "TRUE") {
 plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
 {
     data <- vroom(paste0(data_repo, today, "/testing.csv")) %>%
-    filter(Country == "India") %>%
-    filter(Date >= start.date) %>%
-    mutate(Date = as.factor(format(Date, format = "%b %e")),
-           Cases = c(NA, diff(Cases)),
-           Tests = c(NA, diff(Tests)),
-           Text_cases = paste0(Date, ": ", format(Cases, big.mark = ",",
-                               scientific = F, trim = T), " Positive tests<br>"),
-           Text_tests = paste0(Date, ": ", format(Tests, big.mark = ",",
-                               scientific = F, trim = T), " Tests<br>")
-    ) %>%
-    drop_na() %>%
-    mutate(Percent = Cases / Tests * 100,
-           Text_cases = paste0(Text_cases, format(Percent, digits = 3, trim = T),
-                               "% of tests positive"),
-           Text_tests = paste0(Text_tests, format(Percent, digits = 3, trim = T),
-                               "% of tests positive")
-    )
+    select(-Country) %>%
 
-    data <- bind_rows(
-      data %>%
-      select(-Tests, -Text_tests) %>%
-      mutate(
-          Count = Cases,
-          Text = Text_cases,
-          Type = "Positive tests"),
-          data %>%
-          select(-Cases, -Text_cases) %>%
-          mutate(Count = Tests, Text = Text_tests, Type = "Tests")
+    # Since we are reporting day by day, take the highest reported values if
+    # there are multiple entries for a day
+    group_by(Date) %>%
+    summarise(Cases = max(Cases), Tests = max(Tests)) %>%
+    ungroup() %>%
+    mutate(
+        Cases = Cases - lag(Cases),
+        Tests = Tests - lag(Tests),
+        Percent = Cases / Tests * 100
     ) %>%
-    mutate(Type = factor(Type, levels = c("Positive tests", "Tests"))) %>%
-    select(Date, Count, Text, Type, Country)
+    gather(Cases, Tests, key = Type, value = Counts) %>%
+    mutate(
+        Type = recode(Type, "Cases" = "Positive tests"),
+        Date.fmt    = format(Date, format = "%b %e"),
+        Counts.fmt  = format(Counts, big.mark = ",", sci = F, trim = T),
+        Percent.fmt = paste0(format(Percent, digits = 3, trim = T))
+    ) %>%
+    mutate(
+        Text = paste0(Date.fmt, ": ", Counts.fmt, " ", Type,
+            "<br>Percent tests positive: ", Percent.fmt
+        )
+    ) %>%
+    filter(Date >= start.date)
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"))
@@ -60,8 +54,9 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
         "Positive tests" = "#ED553B"
     )
 
-    p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~Text,
-                 type = "bar", colors = colors, hoverinfo = "text"
+    p <- plot_ly(data, x = ~Date, y = ~Counts, color = ~Type, text = ~Text,
+                 type = "bar", colors = colors, hoverinfo = "text",
+                 hoverlabel = list(align = "left")
     ) %>%
     layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis, title =
            list(text = cap, xanchor = "left", x = 0), legend =
