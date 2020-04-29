@@ -55,7 +55,8 @@ plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
     )
 
     p <- plot_ly(data, x = ~Date, y = ~Counts, color = ~Type, text = ~Text,
-                 type = "bar", colors = colors, hoverinfo = "text"
+                 type = "bar", colors = colors, hoverinfo = "text",
+                 hoverlabel = list(align = "left")
     ) %>%
     layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis, title =
            list(text = cap, xanchor = "left", x = 0), legend =
