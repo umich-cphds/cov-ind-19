@@ -24,15 +24,15 @@ close(url)
 # order here matters
 source("top_matter.R", local = T)
 
-
 img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
                    branch, "/", latest, "/day_sp_animation.gif")
-
 
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
 source("testing.R", local = T)
+
+print(sessionInfo())
 
 shinyServer(function(input, output)
 {
@@ -48,7 +48,6 @@ shinyServer(function(input, output)
         else
             stop("Unrecognized plot type!")
 
-        print(paste(state.code, plot.name, sep = "_"))
         output[[paste(state.code, plot.name, sep = "_")]] <<- out
     }
 
@@ -70,7 +69,7 @@ shinyServer(function(input, output)
           observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs))))
 
     })
-    
+
     output$downloadFacet_cases = downloadHandler(
         filename = function() {'cases_by_state_in_India.png'},
         content = function(con) {
@@ -79,7 +78,7 @@ shinyServer(function(input, output)
             dev.off()
         }
     )
-    
+
     output$downloadFacet_deaths = downloadHandler(
         filename = function() {'deaths_by_state_in_India.png'},
         content = function(con) {

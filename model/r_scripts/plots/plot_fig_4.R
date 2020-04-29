@@ -58,7 +58,7 @@ plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
     ) %>%
     add_trace(data = filter(data, j), x = ~Dates, y = ~upper_ci,
               name = paste(filter(data, j)$color, "upper CI"), type = "scatter",
-              mode = "line", line = list(width = 3, dash = "dash")
+              mode = "lines", line = list(width = 3, dash = "dash")
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
