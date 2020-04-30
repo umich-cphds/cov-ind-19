@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=FAIL,ARRAY_TASKS
 #SBATCH --time=0-12:00:00
 #SBATCH --job-name=fig2_1wk_alt
 #SBATCH --mem-per-cpu=8G
