@@ -1,6 +1,6 @@
 plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
 {
-    Day.max <- 60
+    Day.max <- 100
 
     data <- vroom(paste0(data_repo, today, "/jhu_data_mod.csv"))
     cases.data <- data %>%
@@ -35,32 +35,32 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 60)
+                  range = list(1, 100)
     )
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                   titlefont = axis.title.font, showticklabels = TRUE,
                   tickangle = 0, showline = T, zeroline = F,
-                  range = list(1, 60)
+                  range = list(1, 100)
     )
 
     cases.yaxis <- list(title = "Cumulative number of reported cases",
                         titlefont = axis.title.font, tickfont = tickfont,
                         zeroline = F, showline = F, dtick = 1, type = "log",
-                        range = list(2, 6.1))
+                        range = list(2, 6.5))
 
     deaths.yaxis <- list(title = "Cumulative number of reported deaths",
                          titlefont = axis.title.font, tickfont = tickfont,
                          zeroline = F, showline = F, dtick = 1, type = "log",
                          range = list(0, 5.1))
 
-    cases.doubles <- tibble(Day = 1:60, `3 Days` = 100 * 2 ^ (1 / 3 * 1:60),
-                      `1 Week` = 100 * 2 ^ (1 / 7 * 1:60),
-                      `2 Weeks` = 100 * 2 ^ (1 / 14 * 1:60)
+    cases.doubles <- tibble(Day = 1:100, `3 Days` = 100 * 2 ^ (1 / 3 * 1:100),
+                      `1 Week` = 100 * 2 ^ (1 / 7 * 1:100),
+                      `2 Weeks` = 100 * 2 ^ (1 / 14 * 1:100)
     ) %>% gather(`3 Days`, `1 Week`, `2 Weeks`, key = Country, value = Cases)
 
-    deaths.doubles <- tibble(Day = 1:60, `3 Days` = 3 * 2 ^ (1 / 3 * 1:60),
-                      `1 Week` = 3 * 2 ^ (1 / 7 * 1:60),
-                      `2 Weeks` = 3 * 2 ^ (1 / 14 * 1:60)
+    deaths.doubles <- tibble(Day = 1:100, `3 Days` = 3 * 2 ^ (1 / 3 * 1:100),
+                      `1 Week` = 3 * 2 ^ (1 / 7 * 1:100),
+                      `2 Weeks` = 3 * 2 ^ (1 / 14 * 1:100)
     ) %>% gather(`3 Days`, `1 Week`, `2 Weeks`, key = Country, value = Deaths)
 
     cases.data <- add_row(cases.data, !!!cases.doubles)
@@ -100,10 +100,10 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
            margin = list(b = 100)
     ) %>%
     add_annotations(
-        x = c(40, 60, 60),
-        y = 2.1 + c(log10(2 ^ (1 / 3 * 39.863)),
-                    log10(2 ^ (1 / 7 * 60)),
-                    log10(2 ^ (1 / 14 * 60))
+        x = c(43.7, 100, 100),
+        y = 2.1 + c(log10(2 ^ (1 / 3 * 43.7)),
+                    log10(2 ^ (1 / 7 * 100)),
+                    log10(2 ^ (1 / 14 * 100))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 16),
@@ -136,10 +136,10 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
            margin = list(b = 100)
     ) %>%
     add_annotations(
-        x = c(45, 60, 60),
+        x = c(45, 100, 100),
         y = log10(3) + 0.1 + c(log10(2 ^ (1 / 3 * 45)),
-                    log10(2 ^ (1 / 7 * 60)),
-                    log10(2 ^ (1 / 14 * 60))
+                    log10(2 ^ (1 / 7 * 100)),
+                    log10(2 ^ (1 / 14 * 100))
         ),
         text = paste0("Doubles every ", c("3 days", "week", "2 weeks")),
         font = list(size = 16),

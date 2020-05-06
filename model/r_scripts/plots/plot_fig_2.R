@@ -1,6 +1,6 @@
 plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
 {
-    Day.max <- 60
+    Day.max <- 100
     cases.threshold <- 100
     deaths.threshold <- 3
 
@@ -46,13 +46,13 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                         titlefont = axis.title.font, showticklabels = TRUE,
                         tickangle = 0, showline = T, zeroline = F,
-                        range = list(0, 60)
+                        range = list(0, 100)
     )
 
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                          titlefont = axis.title.font, showticklabels = TRUE,
                          tickangle = 0, showline = T, zeroline = F,
-                         range = list(0, 60)
+                         range = list(0, 100)
     )
 
 
