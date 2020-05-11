@@ -17,9 +17,9 @@ if (!dir.exists(paste0(data_repo, today))) {
 
 start.date <- as.Date("2020-03-01")
 
-countries <- c("France", "Germany", "India", "Iran", "Italy",
-               "Korea, South", "US", "China", "Canada", "Belgium", "Turkey",
-               "Netherlands", "Switzerland", "United Kingdom"
+countries <- c("France", "Germany", "India", "Iran", "Italy", "Russia", "Brazil",
+			   "Pakistan", "Bangladesh", "Korea, South", "US", "China", "Canada",
+			   "Belgium", "Turkey", "Netherlands", "Switzerland", "United Kingdom"
 )
 
 jhu.path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
@@ -108,7 +108,7 @@ ungroup() %>%
 filter(Date >= "2020-03-15" & Date < today) %>%
 vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
 
-# grab India related data 
+# grab India related data
 request <- GET("https://api.covid19india.org/data.json")
 json    <- content(request)
 data    <- map_dfr(json[[1]], ~ .x)
@@ -148,10 +148,6 @@ mutate(
 )
 
 write_csv(data_testing, paste0(data_repo, today, "/testing.csv"))
-#write_csv(data_testing, paste0('C:/Users/mkleinsa/Box/Projects/covid-india/IRIS5/cov-ind-19-data/today', "/testing.csv"))
-
 
 write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
           paste0(data_repo, today, "/global_testing.csv"))
-# write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
-#           paste0('C:/Users/mkleinsa/Box/Projects/covid-india/IRIS5/cov-ind-19-data/today', "/global_testing.csv"))
