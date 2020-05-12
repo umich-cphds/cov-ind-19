@@ -46,7 +46,17 @@ forecast <- tabPanel("National Forecast",
     plotlyOutput("India_p5a", height = "600px"),
     h3("Figure 5b"),
     plotlyOutput("India_p5b", height = "600px")
-    )
+    ),
+    hr(),
+    h3('Figure 12a'),
+    h4('Long-term projected daily number of incidences by state in India until September 15'),
+    plotOutput("India_p12a", height = "600px"),
+    downloadLink('downloadFacet_inc_projection', 'Download'),
+    h3('Figure 12b'),
+    h4('Long-term projected cumulative number of incidences by state in India until September 15'),
+    plotOutput("India_p12b", height = "600px"),
+    downloadLink('downloadFacet_cumul_projection', 'Download'),
+    hr()
   ),
   column(width = 1)
 ))

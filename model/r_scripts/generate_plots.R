@@ -9,7 +9,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-test/"
 }
 
-today <- Sys.getenv("today")
+today <- '2020-04-28'
 
 state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"))
 generate_forecast_plots <- function(state)
@@ -40,7 +40,8 @@ generate_forecast_plots <- function(state)
 
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_10.R")
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_11.R")
-
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_12.R")
+    
 	plots <- list()
 	if (state == "India") {
 		p <- plot_fig_3()
@@ -62,6 +63,9 @@ generate_forecast_plots <- function(state)
 		plots[["p9"]] = plot_fig_9()
 		plots[["p10"]] = plot_fig_10()
 		plots[["p11"]] = plot_fig_11()
+		plots[["p12a"]] = plot_fig_12()$p12a
+		plots[["p12b"]] = plot_fig_12()$p12b
+		
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
