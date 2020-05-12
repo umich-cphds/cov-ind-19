@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=FAIL,ARRAY_TASKS
 #SBATCH --time=10:00
 #SBATCH --job-name=generate_plots
 #SBATCH --mem-per-cpu=1g
