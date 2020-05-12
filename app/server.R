@@ -92,7 +92,7 @@ shinyServer(function(input, output)
     output$downloadFacet_inc_projection = downloadHandler(
         filename = function() {'projected_incidences_by_state_in_India.png'},
         content = function(con) {
-            png(con, width = 3000, height = 2000, res = 200)
+            png(con, width = 3000, height = 6000, res = 200)
             plot(data$India$p12a)
             dev.off()
         }
@@ -101,7 +101,7 @@ shinyServer(function(input, output)
     output$downloadFacet_cumul_projection = downloadHandler(
         filename = function() {'projected_cumulative_cases_by_state_in_India.png'},
         content = function(con) {
-            png(con, width = 3000, height = 2000, res = 200)
+            png(con, width = 3000, height = 6000, res = 200)
             plot(data$India$p12b)
             dev.off()
         }
