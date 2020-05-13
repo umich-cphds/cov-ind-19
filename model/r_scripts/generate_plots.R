@@ -9,7 +9,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-test/"
 }
 
-today <- '2020-04-28'
+today <- Sys.genenv("today")
 
 state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"))
 generate_forecast_plots <- function(state)
