@@ -27,6 +27,7 @@ source("top_matter.R", local = T)
 img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
                    branch, "/", latest, "/day_sp_animation.gif")
 
+
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
@@ -84,6 +85,24 @@ shinyServer(function(input, output)
         content = function(con) {
             png(con, width = 3000, height = 2000, res = 200)
             plot(data$India$p7d)
+            dev.off()
+        }
+    )
+    
+    output$downloadFacet_inc_projection = downloadHandler(
+        filename = function() {'projected_incidences_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 6000, res = 200)
+            plot(data$India$p12a)
+            dev.off()
+        }
+    )
+    
+    output$downloadFacet_cumul_projection = downloadHandler(
+        filename = function() {'projected_cumulative_cases_by_state_in_India.png'},
+        content = function(con) {
+            png(con, width = 3000, height = 6000, res = 200)
+            plot(data$India$p12b)
             dev.off()
         }
     )

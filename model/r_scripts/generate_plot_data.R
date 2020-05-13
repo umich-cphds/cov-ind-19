@@ -296,3 +296,23 @@ for (forecast in forecasts) {
                                                  "_figure_5_inc_data.csv"))
     }
 }
+
+states <- x$State
+path <- paste0(data_repo, today, "/")
+state.data <- map_dfr(states,
+	function(state)
+	{
+		vroom(paste0(path, "/1wk/", state, "_figure_5_data.csv")) %>%
+		mutate(State = state)
+	}
+)
+vroom_write(state.data, paste0(path, "/", "cumulative_state_data.tsv"))
+
+state.data <- map_dfr(states,
+	function(state)
+	{
+		vroom(paste0(path, "/1wk/", state, "_figure_5_inc_data.csv")) %>%
+		mutate(State = state)
+	}
+)
+vroom_write(state.data, paste0(path, "/", "incident_state_data.tsv"))
