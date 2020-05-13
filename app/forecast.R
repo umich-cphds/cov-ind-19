@@ -2,7 +2,7 @@ forecast <- tabPanel("National Forecast",
   fluidRow(
     column(width = 1),
     column(width = 10,
-    h2("Short-term impact of social distancing, travel ban, and 40 day lockdown"),
+    h2("Short-term impact of social distancing, travel ban, and lockdown"),
     p("In the following Figures we consider various scenarios of intervention
       effects to assess the effect of the lockdown.", "These figures should
       not be overinterpreted as in reality we do not know how the lockdown
@@ -12,14 +12,13 @@ forecast <- tabPanel("National Forecast",
       ") for all our projections and create hypothetical reductions in
       transmission probabilities capturing interventions like social
       distancing and lockdown. This in turn reduces the basic reproduction
-      number over the period.", "It was announced that India would undergo
-      a central lockdown from March 25 until May 3.", "The bar plots below
+      number over the period.", "The bar plots below
       the predicted cumulative short-term case counts represent three
       hypothetical scenarios: ",
       tags$ol(
         tags$li("No intervention"),
-        tags$li("Social distancing and travel ban (without March 25 lockdown)"),
-        tags$li("Lockdown until May 3 with a gradual, moderate resumption of daily activities")
+        tags$li("Social distancing and travel ban (without lockdown)"),
+        tags$li("Lockdown with a gradual, moderate resumption of daily activities")
       ),
       "Because we are using SIR models to generate the forecast, we
       explicitly delay changes in the basic reproduction number one week to capture delayed onset of
@@ -34,7 +33,7 @@ forecast <- tabPanel("National Forecast",
     h3("Figure 4 (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
     plotlyOutput("India_p4", height = "600px"),
     hr(),
-    h2("Longer term forecasts post-40 day lockdown"),
+    h2("Longer term forecasts post-lockdown"),
     p("We present four hypothetical scenarios:",
       tags$ul(
         tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
@@ -46,7 +45,17 @@ forecast <- tabPanel("National Forecast",
     plotlyOutput("India_p5a", height = "600px"),
     h3("Figure 5b"),
     plotlyOutput("India_p5b", height = "600px")
-    )
+    ),
+    hr(),
+    h3('Figure 12a'),
+    h4('Long-term projected daily number of incidences by state in India until September 15'),
+    plotOutput("India_p12a", height = "2000px"),
+    downloadLink('downloadFacet_inc_projection', 'Download'),
+    h3('Figure 12b'),
+    h4('Long-term projected cumulative number of incidences by state in India until September 15'),
+    plotOutput("India_p12b", height = "2000px"),
+    downloadLink('downloadFacet_cumul_projection', 'Download'),
+    hr()
   ),
   column(width = 1)
 ))

@@ -11,7 +11,7 @@ generate_state_tab <- function(state, code)
       ),
       plotlyOutput(paste0(code, "_x"), height = "600px"),
       hr(),
-      h2("Impact of social distancing, travel ban, and 40 day lockdown in ", state),
+      h2("Impact of social distancing, travel ban, and lockdown in ", state),
       p("In the following Figures we consider various scenarios of intervention
         effects to assess the effect of the lockdown.", "These figures should
         not be overinterpreted as in reality we do not know how the lockdown
@@ -21,14 +21,13 @@ generate_state_tab <- function(state, code)
         ") for all our projections and create hypothetical reductions in
         transmission probabilities capturing interventions like social
         distancing and lockdown. This in turn reduces the basic reproduction
-        number over the period.", "It was announced that India would undergo
-        a central lockdown from March 25 until May 3.", "The bar plots below
+        number over the period.", "The bar plots below
         the predicted cumulative short-term case counts represent three
         hypothetical scenarios: ",
         tags$ol(
           tags$li("No intervention"),
-          tags$li("Social distancing and travel ban (without March 25 lockdown)"),
-          tags$li("Lockdown until May 3 with a gradual, moderate resumption of daily activities")
+          tags$li("Social distancing and travel ban (without lockdown)"),
+          tags$li("Lockdown with a gradual, moderate resumption of daily activities")
         ),
         "Because we are using SIR models to generate the forecast, we
         explicitly delay changes in the basic reproduction number one week to capture delayed onset of
