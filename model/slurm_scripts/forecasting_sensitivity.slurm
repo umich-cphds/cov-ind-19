@@ -3,7 +3,7 @@
 #SBATCH --mail-type=FAIL,ARRAY_TASKS
 #SBATCH --time=0-12:00:00
 #SBATCH --job-name=sensitivity
-#SBATCH --mem-per-cpu=8G
+#SBATCH --mem-per-cpu=12G
 #SBATCH --array=1-3
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 #SBATCH --account=covid19_project1
