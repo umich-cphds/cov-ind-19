@@ -25,6 +25,9 @@ testing <- tabPanel("Testing",
                                      p("This figure provides the cumulative number of COVID-19 tests (light green) and positive tests (red) over location and time. Data source: api.covid19india.org."),
                                      plotlyOutput("India_p11", height = "2400px"),
                                      hr(),
+                                     h2("Temporal testing pattern in India"),
+                                     plotOutput("India_p14", height = "1200px"),
+                                     hr()
                               ),
                               column(width = 1)
                      )
