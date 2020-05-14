@@ -78,23 +78,41 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
     #parse(text=l)
   }
   
-  p14 <- ggplot(data = tsing_by_state, aes(x = Dates, y = Total.Tested, group = State)) +
-    facet_wrap(~State, ncol = 4) + geom_line(aes(color = 'Total tested'), size = 1.2) + 
-    geom_line(aes(y = Positive, color = 'Positive tests'), size = 1.2) + 
+  top20test = 
+    tsing_by_state %>% 
+    group_by(State) %>% 
+    summarise(maxtest = max(Total.Tested, na.rm = TRUE)) %>%
+    arrange(desc(maxtest)) %>%
+    top_n(20) %>%
+    pull(State) %>% 
+    as.character()
+  
+  tsing_by_state = 
+    tsing_by_state %>% 
+    filter(State %in% top20test) %>% 
+    drop_na()
+  
+  p14 <- ggplot(data = tsing_by_state, aes(x = Dates, y = Positive/Total.Tested, group = State)) +
+    facet_wrap(~State, ncol = 5) + geom_line(aes(color = 'Positive cases / Total tested'), size = 1.2) + 
+    geom_point(shape = 3, size = 0.5) + 
+    geom_point(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
+               aes(x = Datemax, y = Positive/Total.Tested, group = State), size = 2) +
+    geom_text(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
+              aes(x = Datemax - 20, y = 0.14, group = State, label = paste(Total.Tested, ' total tested', sep = ' '))) +
     theme_bw() + 
-    xlab('\nDate') + ylab('Number of tests\n') +
+    xlab('\nDate') + ylab('Positive cases / Total tested\n') +
     theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),
           strip.background = element_blank(),
           panel.grid.minor.x = element_blank(),
           panel.border = element_blank(),
-          axis.text.x = element_text(angle = 20, size = 14),
+          axis.text.x = element_text(angle = 20, size = 12),
           axis.text.y = element_text(size = 13),
           axis.title.x = element_text(size = 14),
           axis.title.y = element_text(size = 14),
           legend.position = 'bottom',
           legend.text = element_text(size=12)) +
     scale_y_continuous(sec.axis = sec_axis(~ ., labels = NotFancy), labels = NotFancy) +  
-    scale_color_manual(values = c('Total tested' = "#36A30B", 'Positive tests' = "#e63c30"),
+    scale_color_manual(values = c('Positive cases / Total tested' = "#36A30B"),
                        name = 'Testing') + 
     scale_x_date(date_breaks = "2 week", date_labels = "%b %d") + 
     labs(title = '',

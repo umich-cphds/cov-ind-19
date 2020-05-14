@@ -115,7 +115,7 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
   fmt1 <- function(x) paste(round_any(10 ^ x / 1000, 0.01) , "K", sep = "")
   
   p12a <- ggplot(data = fac_inc_data %>% filter(color == 'Moderate return'), aes(x = Dates, y = value, group = full)) +
-    facet_wrap(~full, ncol = 2) + geom_line(aes(color = 'Moderate return'), size = 1.2) +
+    facet_wrap(~full, ncol = 4) + geom_line(aes(color = 'Moderate return'), size = 1.2) +
     geom_line(data = fac_inc_data %>% filter(color == 'Cautious return'), aes(color = 'Cautious return'), size = 1) +
     theme_bw() +
     xlab('\nDate') + ylab('Number of projected daily cases\n') +
@@ -145,7 +145,7 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
 
 
   p12b <- ggplot(data = fac_cumul_data %>% filter(color == 'Moderate return'), aes(x = Dates, y = value, group = full)) +
-    facet_wrap(~full, ncol = 2) + geom_line(aes(color = "Moderate return"), size = 1.2) +
+    facet_wrap(~full, ncol = 4) + geom_line(aes(color = "Moderate return"), size = 1.2) +
     geom_line(data = fac_cumul_data %>% filter(color == 'Cautious return'), aes(color = "Cautious return"), size = 1) +
     theme_bw() +
     xlab('\nDate') + ylab('Cumulative number of projected daily cases\n') +

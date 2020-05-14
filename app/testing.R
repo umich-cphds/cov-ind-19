@@ -26,7 +26,7 @@ testing <- tabPanel("Testing",
                                      plotlyOutput("India_p11", height = "2400px"),
                                      hr(),
                                      h2("Temporal testing pattern in India"),
-                                     plotOutput("India_p14", height = "1200px"),
+                                     plotOutput("India_p14", height = "800px"),
                                      hr()
                               ),
                               column(width = 1)
