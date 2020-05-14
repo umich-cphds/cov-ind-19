@@ -70,6 +70,20 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
     filter(Dates < as.Date('2020-09-16') & Dates >= as.Date(start.date),
            color == 'Cautious return' | color == 'Moderate return') %>%
     left_join(statenames, by = c('State' = 'abbrev'))
+  
+  top20inc = 
+    fac_inc_data %>% 
+    filter(color == 'Moderate return') %>%
+    group_by(full) %>% 
+    summarise(maxproj = max(value)) %>%
+    arrange(desc(maxproj)) %>%
+    top_n(20) %>%
+    pull(full) %>% 
+    as.character()
+  
+  fac_inc_data = 
+    fac_inc_data %>% 
+    filter(full %in% top20inc)
 
   fac_cumul_data =
     fac_cumul_data %>%
@@ -77,6 +91,20 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
     filter(Dates < as.Date('2020-09-16') & Dates >= as.Date(start.date),
            color == 'Cautious return' | color == 'Moderate return') %>%
     left_join(statenames, by = c('State' = 'abbrev'))
+  
+  top20cumul = 
+    fac_cumul_data %>% 
+    filter(color == 'Moderate return') %>%
+    group_by(full) %>% 
+    summarise(maxproj = max(value)) %>%
+    arrange(desc(maxproj)) %>%
+    top_n(20) %>%
+    pull(full) %>% 
+    as.character()
+  
+  fac_cumul_data = 
+    fac_cumul_data %>% 
+    filter(full %in% top20cumul)
 
   NotFancy <- function(l) {
     format(l, scientific = FALSE)
@@ -85,6 +113,7 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
 
 
   fmt1 <- function(x) paste(round_any(10 ^ x / 1000, 0.01) , "K", sep = "")
+  
   p12a <- ggplot(data = fac_inc_data %>% filter(color == 'Moderate return'), aes(x = Dates, y = value, group = full)) +
     facet_wrap(~full, ncol = 2) + geom_line(aes(color = 'Moderate return'), size = 1.2) +
     geom_line(data = fac_inc_data %>% filter(color == 'Cautious return'), aes(color = 'Cautious return'), size = 1) +
@@ -101,12 +130,13 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
           legend.position = 'bottom',
           legend.text = element_text(size=12)) +
     scale_x_date(sec.axis = ~ .) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
-                  labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K")),
-                  sec.axis = sec_axis(~ .,
-                      breaks = scales::trans_breaks("log10", function(x) 10^x),
-                      labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K"))
-    )) +
+    scale_y_continuous(sec.axis = sec_axis(~ ., labels = NotFancy), labels = NotFancy) +
+    # scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+    #               labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K")),
+    #               sec.axis = sec_axis(~ .,
+    #                   breaks = scales::trans_breaks("log10", function(x) 10^x),
+    #                   labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K"))
+    # )) +
     labs(title = '',
          subtitle = subtitle,
          caption = caption) +
@@ -130,12 +160,13 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
           legend.position = 'bottom',
           legend.text = element_text(size=12)) +
     scale_x_date(sec.axis = dup_axis()) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
-                  labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K")),
-                  sec.axis = sec_axis(~ .,
-                      breaks = scales::trans_breaks("log10", function(x) 10^x),
-                      labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K"))
-    )) +
+    scale_y_continuous(sec.axis = sec_axis(~ ., labels = NotFancy), labels = NotFancy) +
+    # scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+    #               labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K")),
+    #               sec.axis = sec_axis(~ .,
+    #                   breaks = scales::trans_breaks("log10", function(x) 10^x),
+    #                   labels = scales::trans_format("log10", function(x) paste0(format(10 ^ x /1000, sci = F), "K"))
+    # )) +
     labs(title = '',
          subtitle = subtitle,
          caption = caption) +
