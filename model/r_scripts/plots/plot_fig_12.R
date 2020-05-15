@@ -63,6 +63,26 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
     as.data.frame()
   colnames(statenames) <- c('full', 'abbrev')
   statenames$abbrev <- tolower(statenames$abbrev)
+  
+  daily = function(x) { c(x[1], diff(x)) }
+  
+  data_caseplot =
+    vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+    group_by(State) %>% #filter(Cases >= 50) %>%
+    arrange(Date) %>%
+    mutate(Day = seq(n()),
+           dailyCases = daily(Cases),
+           totalcases = max(Cases),
+           Datemax = max(Date))
+  
+  data_caseplot =
+    left_join(data_caseplot, statenames, by = c('State' = 'abbrev'))
+  
+  data_caseplot =
+    data_caseplot %>%
+    arrange(desc(totalcases))
+  
+  top20case = (data_caseplot %>% select(full) %>% unique() %>% pull(full))[1:20] # %>% top_n(20)
 
   fac_inc_data =
     fac_inc_data %>%
@@ -71,19 +91,23 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
            color == 'No Intervention') %>%
     left_join(statenames, by = c('State' = 'abbrev'))
   
-  top20inc = 
-    fac_inc_data %>% 
-    filter(color == 'No Intervention') %>%
-    group_by(full) %>% 
-    summarise(maxproj = max(value)) %>%
-    arrange(desc(maxproj)) %>%
-    top_n(20) %>%
-    pull(full) %>% 
-    as.character()
+  # top20inc = 
+  #   fac_inc_data %>% 
+  #   filter(color == 'No Intervention') %>%
+  #   group_by(full) %>% 
+  #   summarise(maxproj = max(value)) %>%
+  #   arrange(desc(maxproj)) %>%
+  #   top_n(20) %>%
+  #   pull(full) %>% 
+  #   as.character()
   
-  fac_inc_data = 
-    fac_inc_data %>% 
-    filter(full %in% top20inc)
+  fac_inc_data =
+    fac_inc_data %>%
+    filter(full %in% top20case)
+  
+  # fac_inc_data = 
+  #   fac_inc_data %>% 
+  #   filter(full %in% top20inc)
 
   fac_cumul_data =
     fac_cumul_data %>%
@@ -92,19 +116,19 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
            color == 'No Intervention') %>%
     left_join(statenames, by = c('State' = 'abbrev'))
   
-  top20cumul = 
-    fac_cumul_data %>% 
-    filter(color == 'No Intervention') %>%
-    group_by(full) %>% 
-    summarise(maxproj = max(value)) %>%
-    arrange(desc(maxproj)) %>%
-    top_n(20) %>%
-    pull(full) %>% 
-    as.character()
+  # top20cumul = 
+  #   fac_cumul_data %>% 
+  #   filter(color == 'No Intervention') %>%
+  #   group_by(full) %>% 
+  #   summarise(maxproj = max(value)) %>%
+  #   arrange(desc(maxproj)) %>%
+  #   top_n(20) %>%
+  #   pull(full) %>% 
+  #   as.character()
   
   fac_cumul_data = 
     fac_cumul_data %>% 
-    filter(full %in% top20cumul)
+    filter(full %in% top20case)
 
   NotFancy <- function(l) {
     format(l, scientific = FALSE)

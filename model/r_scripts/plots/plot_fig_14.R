@@ -14,6 +14,8 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
   subtitle <- paste0('© COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
   
+  daily = function(x) { c(x[1], diff(x)) }
+  
   caption <- 'Source: https://www.covid19india.org'
   
   statenames =
@@ -78,19 +80,42 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
     #parse(text=l)
   }
   
-  top20test = 
-    tsing_by_state %>% 
-    group_by(State) %>% 
-    summarise(maxtest = max(Total.Tested, na.rm = TRUE)) %>%
-    arrange(desc(maxtest)) %>%
-    top_n(20) %>%
-    pull(State) %>% 
-    as.character()
+  # top20test = 
+  #   tsing_by_state %>% 
+  #   group_by(State) %>% 
+  #   summarise(maxtest = max(Total.Tested, na.rm = TRUE)) %>%
+  #   arrange(desc(maxtest)) %>%
+  #   top_n(20) %>%
+  #   pull(State) %>% 
+  #   as.character()
   
-  tsing_by_state = 
-    tsing_by_state %>% 
-    filter(State %in% top20test) %>% 
+  data_caseplot =
+    vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+    group_by(State) %>% #filter(Cases >= 50) %>%
+    arrange(Date) %>%
+    mutate(Day = seq(n()),
+           dailyCases = daily(Cases),
+           totalcases = max(Cases),
+           Datemax = max(Date))
+  
+  data_caseplot =
+    left_join(data_caseplot, statenames, by = c('State' = 'abbrev'))
+  
+  data_caseplot =
+    data_caseplot %>%
+    arrange(desc(totalcases))
+  
+  top20case = (data_caseplot %>% select(full) %>% unique() %>% pull(full))[1:20] # %>% top_n(20)
+  
+  tsing_by_state =
+    tsing_by_state %>%
+    filter(State %in% top20case) %>%
     drop_na()
+  
+  # tsing_by_state = 
+  #   tsing_by_state %>% 
+  #   filter(State %in% top20test) %>% 
+  #   drop_na()
   
   p14 <- ggplot(data = tsing_by_state, aes(x = Dates, y = Positive/Total.Tested, group = State)) +
     facet_wrap(~State, ncol = 5) + geom_line(aes(color = 'Positive cases / Total tested'), size = 1.2) + 
