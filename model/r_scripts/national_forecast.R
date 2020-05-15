@@ -30,6 +30,7 @@ pi_moderate        <- 0.75          # pi corresponding to moderate return
 pi_normal          <- 1             # pi corresponding to normal (pre-intervention) return
 pi_sdtb            <- 0.75          # pi corresponding to social distancing and travel ban
 R_0                <- 2             # basic reproduction number
+save_files         <- TRUE
 save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
@@ -105,7 +106,7 @@ model_2 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_2",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -123,7 +124,7 @@ model_3 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_3",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -154,7 +155,7 @@ model_4 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_4",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -185,7 +186,7 @@ model_5 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_5",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
@@ -216,7 +217,7 @@ model_6 <- tvt.eSIR(
   R0             = R_0,
   dic            = TRUE,
   casename       = "India_6",
-  save_files     = FALSE,
+  save_files     = save_files,
   save_mcmc      = save_mcmc,
   save_plot_data = TRUE,
   M              = Ms,
