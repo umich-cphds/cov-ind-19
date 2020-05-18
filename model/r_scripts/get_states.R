@@ -11,9 +11,9 @@ if ( Sys.getenv("production") == "TRUE" ) {
 today <- Sys.getenv("today")
 
 x <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
-filter(State != "la" & State != "jk") %>%
+group_by(State) %>%
 filter(Date == max(Date)) %>%
-filter(Cases >= 50) %>%
-filter(Deaths >= 1)
+ungroup() %>%
+top_n(20, Cases)
 
 cat(x$State, "\n")
