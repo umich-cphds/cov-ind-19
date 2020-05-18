@@ -48,7 +48,7 @@ state_sub <- state
 
 # data ----------
 dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv")) %>%
-  filter(State == state_sub & Dates >= min_date)
+  filter(State == state_sub & Date >= min_date)
 
 # populations from http://www.census2011.co.in/states.php
 pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" = 49.67e6,
