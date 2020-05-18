@@ -27,7 +27,6 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	gitpull=$(sbatch ~/cov-ind-19/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 	preprocess=$(sbatch --dependency=afterok:$gitpull ~/cov-ind-19/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
 	spatialmap=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
-	sensitivity=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/forecasting_sensitivity.slurm | awk '{print $NF}')
 	national=$(sbatch --dependency=afterok:$preprocess ~/cov-ind-19/model/slurm_scripts/national_forecast.slurm | awk '{print $NF}')
 	#submit_states
 	sleep 2m #This is to give preprocess data a chance to run before get_states.R which requires the data from preprocess data
@@ -47,7 +46,7 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	echo $state_jobs
 	generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs ~/cov-ind-19/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata ~/cov-ind-19/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
-	sbatch --dependency=afterok:$generateplots:$spatialmap:$sensitivity ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
+	sbatch --dependency=afterok:$generateplots:$spatialmap ~/cov-ind-19/model/slurm_scripts/gitpush.slurm
 else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
