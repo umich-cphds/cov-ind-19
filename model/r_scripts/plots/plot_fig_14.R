@@ -38,7 +38,7 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
                     'Meghalaya', 'ML',
                     'Mizoram', 'MZ',
                     'Nagaland', 'NL',
-                    'Orissa', 'OR',
+                    'Odisha', 'OR',
                     'Punjab', 'PB',
                     'Rajasthan', 'RJ',
                     'Sikkim', 'SK',

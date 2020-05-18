@@ -36,7 +36,7 @@ plot_fig_7 <- function()
                       'Meghalaya', 'ML',
                       'Mizoram', 'MZ',
                       'Nagaland', 'NL',
-                      'Orissa', 'OR',
+                      'Odisha', 'OR',
                       'Punjab', 'PB',
                       'Rajasthan', 'RJ',
                       'Sikkim', 'SK',
