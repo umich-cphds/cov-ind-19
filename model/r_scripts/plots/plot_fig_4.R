@@ -18,13 +18,14 @@ plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
         color = recode(color, "Lockdown with moderate release" = "40 day lockdown with moderate return"),
         j = color == "40 day lockdown with moderate return"
     ) %>%
-    filter(Dates <= end.date) %>%
+    #filter(Dates <= end.date) %>%
     mutate(text = case_when(
         color == "Observed" ~ paste0(date.fmt, ": ", val.fmt, " observed cases"),
         TRUE ~ paste0(paste0(date.fmt, ": ", val.fmt, " projected cases"),
                       paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
         )
-    ))
+    )) %>%
+    filter(Dates <= Sys.Date() + 30 & Dates >= Sys.Date() - 15)
 
     title <- paste("Cumulative number of COVID-19 cases in India compared",
                    "to other countries affected by the pandemic")
