@@ -1,4 +1,4 @@
-plot_fig_5a <- function(forecast, start.date = as.Date("2020-05-15"),
+plot_fig_5a <- function(forecast, start.date = as.Date(today),
                         end.date = end.date <- as.Date("2020-07-15"))
 {
     data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
@@ -16,7 +16,7 @@ plot_fig_5a <- function(forecast, start.date = as.Date("2020-05-15"),
         text = paste0(paste0(date.fmt, ": ", val.fmt, " projected total cases"),
                       paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
         )
-    ) %>% 
+    ) %>%
     filter(color != 'Normal (pre-intervention)')
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
