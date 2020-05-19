@@ -151,3 +151,12 @@ write_csv(data_testing, paste0(data_repo, today, "/testing.csv"))
 
 write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
           paste0(data_repo, today, "/global_testing.csv"))
+
+write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv'),
+          paste0(data_repo, today, '/statewise_tested_numbers_data.csv'))
+
+
+
+
+
+
