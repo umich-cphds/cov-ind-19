@@ -116,7 +116,7 @@ plot_fig_7 <- function()
 
     data_deathplot =
       data_deathplot %>%
-      filter(State %in% top20caseDeath)
+      filter(State %in% top20case)
 
 
     # rolling average plots
