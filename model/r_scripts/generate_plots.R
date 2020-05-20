@@ -29,7 +29,7 @@ generate_forecast_plots <- function(state)
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4.R")
 
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5a.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5b.R")
+    # source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5b.R")
 
 	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_7.R")
 
@@ -53,7 +53,7 @@ generate_forecast_plots <- function(state)
 		plots[["p3b"]] = p$p3b
 
         plots[["p5a"]] = plot_fig_5a("India")
-        plots[["p5b"]] = plot_fig_5b("India")
+        # plots[["p5b"]] = plot_fig_5b("India")
 
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
