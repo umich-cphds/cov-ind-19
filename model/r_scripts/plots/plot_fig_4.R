@@ -25,7 +25,7 @@ plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
                       paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
         )
     )) %>%
-    filter(Dates <= Sys.Date() + 30 & Dates >= Sys.Date() - 15)
+    filter(Dates <= Sys.Date() + 30 & Dates >= Sys.Date() - 14)
 
     title <- paste("Cumulative number of COVID-19 cases in India compared",
                    "to other countries affected by the pandemic")

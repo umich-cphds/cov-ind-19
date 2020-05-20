@@ -43,8 +43,8 @@ forecast <- tabPanel("National Forecast",
       ),
     h3("Figure 5a"),
     plotlyOutput("India_p5a", height = "600px"),
-    h3("Figure 5b"),
-    plotlyOutput("India_p5b", height = "600px")
+    #h3("Figure 5b"),
+    #plotlyOutput("India_p5b", height = "600px")
     ),
     hr(),
     #h3('Figure 12a'),

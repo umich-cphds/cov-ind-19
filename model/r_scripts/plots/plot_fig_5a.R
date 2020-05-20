@@ -17,7 +17,8 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
                       paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
         )
     ) %>%
-    filter(color != 'Normal (pre-intervention)')
+    filter(color != 'Normal (pre-intervention)',
+           color != 'Soc. Dist. + Travel Ban')
 
     cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
     format(today, format = "%b %d"), sep = ' ')
