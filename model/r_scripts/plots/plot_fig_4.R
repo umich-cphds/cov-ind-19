@@ -30,7 +30,7 @@ plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
     title <- paste("Cumulative number of COVID-19 cases in India compared",
                    "to other countries affected by the pandemic")
 
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
 
     axis.title.font <- list(size = 16)

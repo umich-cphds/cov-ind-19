@@ -9,7 +9,7 @@ if (Sys.getenv("production") == "TRUE") {
 
 plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
 {
-  cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+  cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                 format(today, format = "%b %e"))
 
   title <- paste("Daily confirmed positive cases and total tests in India")

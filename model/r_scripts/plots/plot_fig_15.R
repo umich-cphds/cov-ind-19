@@ -11,7 +11,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
   
   tsing = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
   
-  subtitle <- paste0('© COV-IND-19 Study Group. Last updated ',
+  subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
   
   daily = function(x) { c(x[1], diff(x)) }
@@ -126,7 +126,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     yaxis = list(title = 'Proportion of positive tests', titlefont = axis.title.font, zeroline = F,
                  showline = F)
     
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
     
     p = plot_ly(tsing, x = ~Dates, y = ~Positive/Total.Tested, text = ~text,

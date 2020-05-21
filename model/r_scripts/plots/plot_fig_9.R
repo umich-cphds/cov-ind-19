@@ -24,7 +24,7 @@ plot_fig_9 <- function(start.date = as.Date("2020-04-01"))
     lmpred = predict(lm(total_tests_per_thousand~total_cases_per_million, data = data),
                         newdata = data.frame(total_cases_per_million = data$total_cases_per_million))
     data$lmpred = lmpred  #= data.frame(lmfit = lmfit, x = data$total_cases_per_million)
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                 format(today, format = "%b %e"))
 
     title <- paste("Testing pattern across countries")

@@ -20,7 +20,7 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
     filter(color != 'Normal (pre-intervention)',
            color != 'Soc. Dist. + Travel Ban')
 
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
     format(today, format = "%b %d"), sep = ' ')
 
     axis.title.font <- list(size = 16)
