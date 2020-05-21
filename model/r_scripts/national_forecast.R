@@ -18,9 +18,10 @@ if ( Sys.getenv("production") == "TRUE" ) {
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
-today     <- Sys.getenv("today")
+today     <- as.Date(Sys.getenv("today"))
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
+min_date <- today - 45
 
 # specifications ----------
 delay              <- 7             # in days (default = 7)
@@ -76,7 +77,7 @@ setwd(wd)
 
 # data ----------
 dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
-  filter(Country == "India" &  Date >= "2020-03-01")
+  filter(Country == "India" &  Date >= min_date)
 
 NI_complete <- dat$Cases
 RI_complete <- dat$Recovered + dat$Deaths
@@ -98,7 +99,7 @@ mod         <- elefante(dates = change_time, pis = pi0)
 model_2 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = "03/01/2020",
+  begin_str      = format(min_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = mod$pis,
@@ -118,7 +119,7 @@ if (arrayid == 2) {
 model_3 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = "03/01/2020",
+  begin_str      = format(min_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   R0             = R_0,
@@ -147,7 +148,7 @@ mod         <- elefante(dates = change_time, pis = pi0)
 model_4 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = "03/01/2020",
+  begin_str      = format(min_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = mod$pis,
@@ -178,7 +179,7 @@ mod         <- elefante(dates = change_time, pis = pi0)
 model_5 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = "03/01/2020",
+  begin_str      = format(min_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = mod$pis,
@@ -209,7 +210,7 @@ mod         <- elefante(dates = change_time, pis = pi0)
 model_6 <- tvt.eSIR(
   Y,
   R,
-  begin_str      = "03/01/2020",
+  begin_str      = format(min_date, "%m/%d/%Y"),
   death_in_R     = 0.2,
   T_fin          = 200,
   pi0            = mod$pis,
