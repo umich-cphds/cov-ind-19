@@ -7,7 +7,7 @@ if (Sys.getenv("production") == "TRUE") {
   today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
 }
 
-plot_fig_15<- function(start.date = "2020-04-01") {
+plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
   
   tsing = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
   
@@ -65,38 +65,79 @@ plot_fig_15<- function(start.date = "2020-04-01") {
   colnames(statenames) <- c('full', 'abbrev')
   statenames$abbrev <- tolower(statenames$abbrev)
   
-  tsing =
-    tsing %>%
-    mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
-    filter(Dates >= as.Date(start.date)) %>%
-    select(Dates, Positive, Total.Tested, State) %>% 
-    mutate(Dates = format(Dates, format = '%b %d'),
-           Dates = as.Date(Dates, format = '%b %d')) %>% 
-    group_by(Dates) %>%
-    summarise(total_positive = sum(Positive, na.rm = TRUE),
-              total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
-    mutate(text = paste('Proportion tested: ', round(total_positive/total_tests, digits = 3), sep = ''))
+  tsing = left_join(tsing, statenames, by = c('State' = 'full'))
   
+  p = NULL
   
-  axis.title.font <- list(size = 16)
-  tickfont        <- list(size = 16)
-  
-  title <- "Proportion of positive COVID-19 tests in India"
-  xaxis = list(title = 'Date', titlefont = axis.title.font, zeroline = F,
-               showline = F)
-  yaxis = list(title = 'Proportion of positive tests', titlefont = axis.title.font, zeroline = F,
-               showline = F)
-  
-  cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
-                format(today, format = "%b %e"), sep = ' ')
-  
-  p15 = plot_ly(tsing, x = ~Dates, y = ~total_positive/total_tests, text = ~text,
-          hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
-          showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
-  ) %>%
-  layout(xaxis = xaxis, yaxis = yaxis, title =
-           list(text = cap, xanchor = "left", x = 0)
-  )
-  
-  list(p15 = p15)
+  if(state == 'India') {
+    
+    tsing =
+      tsing %>%
+      mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
+      filter(Dates >= as.Date(start.date)) %>%
+      select(Dates, Positive, Total.Tested, State) %>% 
+      mutate(Dates = format(Dates, format = '%b %d'),
+             Dates = as.Date(Dates, format = '%b %d')) %>% 
+      group_by(Dates) %>%
+      summarise(total_positive = sum(Positive, na.rm = TRUE),
+                total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
+      mutate(text = paste('Proportion tested: ', round(total_positive/total_tests, digits = 3), sep = ''))
+    
+    
+    axis.title.font <- list(size = 16)
+    tickfont        <- list(size = 16)
+    
+    title <- "Proportion of positive COVID-19 tests in India"
+    xaxis = list(title = 'Date', titlefont = axis.title.font, zeroline = F,
+                 showline = F)
+    yaxis = list(title = 'Proportion of positive tests', titlefont = axis.title.font, zeroline = F,
+                 showline = F)
+    
+    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                  format(today, format = "%b %e"), sep = ' ')
+    
+    p = plot_ly(tsing, x = ~Dates, y = ~total_positive/total_tests, text = ~text,
+                  hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
+                  showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
+    ) %>%
+      layout(xaxis = xaxis, yaxis = yaxis, title =
+               list(text = cap, xanchor = "left", x = 0)
+    )
+    
+  } else {
+    
+    tsing =
+      tsing %>%
+      mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
+      filter(Dates >= as.Date(start.date)) %>%
+      select(Dates, Positive, Total.Tested, State, abbrev) %>% 
+      mutate(Dates = format(Dates, format = '%b %d'),
+             Dates = as.Date(Dates, format = '%b %d')) %>% 
+      filter(abbrev == state) %>%
+      mutate(text = paste('Proportion tested: ', round(Positive/Total.Tested, digits = 3), sep = ''))
+    
+    
+    axis.title.font <- list(size = 16)
+    tickfont        <- list(size = 16)
+    
+    title <- "Proportion of positive COVID-19 tests in India"
+    xaxis = list(title = 'Date', titlefont = axis.title.font, zeroline = F,
+                 showline = F)
+    yaxis = list(title = 'Proportion of positive tests', titlefont = axis.title.font, zeroline = F,
+                 showline = F)
+    
+    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+                  format(today, format = "%b %e"), sep = ' ')
+    
+    p = plot_ly(tsing, x = ~Dates, y = ~Positive/Total.Tested, text = ~text,
+                hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
+                showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
+    ) %>%
+      layout(xaxis = xaxis, yaxis = yaxis, title =
+               list(text = cap, xanchor = "left", x = 0)
+    )
+    
+  }
+
+  p
 }

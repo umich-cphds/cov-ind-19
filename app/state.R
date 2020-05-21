@@ -39,6 +39,9 @@ generate_state_tab <- function(state, code)
           "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."),
         h3("Figure 4 (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
         plotlyOutput(paste0(code, "_p4"), height = "600px"),
+        h3("Figure 15 Proportion of positive tests"),
+        plotlyOutput(paste0(code, "_p15"), height = "600px"),
+      hr()
      ),
      column(width = 1)
     )

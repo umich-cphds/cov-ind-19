@@ -70,13 +70,14 @@ generate_forecast_plots <- function(state)
 		#plots[["p12b"]] = plot_fig_12()$p12b
 
 		plots[["p14"]] = plot_fig_14()$p14
-		plots[["p15"]] = plot_fig_15()$p15
+		#plots[["p15"]] = plot_fig_15()
 		
 
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
 	plots[["p4"]] = plot_fig_4(state)
+	plots[["p15"]] = plot_fig_15(state)
 
     plots
 }
