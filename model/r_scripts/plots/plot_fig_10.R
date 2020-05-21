@@ -124,7 +124,7 @@ plot_fig_10 <- function(start.date = as.Date("2020-04-01"))
                          format(Percent_of_pop, digits = 3))
     )
 
-  cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+  cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                 format(today, format = "%b %e"))
 
   title <- paste("Total tests across countries and percentage of tested population")

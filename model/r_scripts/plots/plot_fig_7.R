@@ -64,7 +64,7 @@ plot_fig_7 <- function()
     statenames$abbrev <- tolower(statenames$abbrev)
 
     # subtitle
-    subtitle <- paste0('© COV-IND-19 Study Group. Last updated ',
+    subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                   format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
     caption <- 'Source: https://www.covid19india.org'
 
@@ -116,7 +116,7 @@ plot_fig_7 <- function()
 
     data_deathplot =
       data_deathplot %>%
-      filter(State %in% top20caseDeath)
+      filter(State %in% top20case)
 
 
     # rolling average plots

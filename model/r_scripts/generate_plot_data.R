@@ -15,13 +15,12 @@ if (!dir.exists(path)) {
     message("Creating ", path)
 }
 
-message("Generating plot data in ", path)
-
+start.date <- as.Date(today) - 45
 jhu.data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
-filter(Country == "India" & Date >= "2020-03-01")
+filter(Country == "India" & Date >= start.date)
 
 state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
-filter(Date >= "2020-03-01")
+filter(Date >= start.date)
 
 adj_len         <- 2
 adj             <- T

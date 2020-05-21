@@ -22,7 +22,7 @@ plot_fig_x <- function(forecast, start.date = as.Date("2020-03-15"))
     ) %>%
     mutate(text = paste0(date.fmt, ": ", count.fmt, " ", Type))
 
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
 
     title <- paste("Daily number of COVID-19 new cases, fatalities and",

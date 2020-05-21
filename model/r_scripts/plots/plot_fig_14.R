@@ -11,7 +11,7 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
   
   tsing_by_state = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
   
-  subtitle <- paste0('© COV-IND-19 Study Group. Last updated ',
+  subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
   
   daily = function(x) { c(x[1], diff(x)) }

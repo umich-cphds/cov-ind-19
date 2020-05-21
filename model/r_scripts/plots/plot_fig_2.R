@@ -37,7 +37,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     deaths.title <- paste("COVID-19 deaths in India compared",
                           "to other countries")
 
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
 
     axis.title.font <- list(size = 16)
