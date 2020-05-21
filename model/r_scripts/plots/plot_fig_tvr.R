@@ -3,7 +3,7 @@ library(EpiEstim)
 
 plot_fig_tvr <- function(forecast)
 {
-  
+  tickfont        <- list(size = 16)
   set_seed <- 46342
   set.seed(set_seed)
   start_date = NULL
