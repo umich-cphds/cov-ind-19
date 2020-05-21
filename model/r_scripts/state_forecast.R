@@ -18,10 +18,11 @@ if ( Sys.getenv("production") == "TRUE" ) {
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
-today    <- Sys.getenv("today")
+today    <- as.Date(Sys.getenv("today"))
 state    <- Sys.getenv("state")
 arrayid  <- Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
+min_date <- today - 45
 
 # specificatioons ----------
 delay              <- 7             # in days (default = 7)
@@ -47,7 +48,7 @@ state_sub <- state
 
 # data ----------
 dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv")) %>%
-  filter(State == state_sub)
+  filter(State == state_sub & Date >= min_date)
 
 # populations from http://www.census2011.co.in/states.php
 pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" = 49.67e6,
