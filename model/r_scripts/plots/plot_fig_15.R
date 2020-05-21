@@ -94,7 +94,8 @@ plot_fig_15<- function(start.date = "2020-04-01") {
           hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
           showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
   ) %>%
-  layout(xaxis = xaxis, yaxis = yaxis, title = title
+  layout(xaxis = xaxis, yaxis = yaxis, title =
+           list(text = cap, xanchor = "left", x = 0)
   )
   
   list(p15 = p15)
