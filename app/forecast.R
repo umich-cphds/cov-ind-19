@@ -56,6 +56,9 @@ forecast <- tabPanel("National Forecast",
     #plotOutput("India_p12b", height = "800px"),
     #downloadLink('downloadFacet_cumul_projection', 'Download'),
     #hr()
+    h3("Time-varying R"),
+    h4("Effective basic reproduction number"),
+    plotlyOutput("India_ptvr", height = '600px')
   ),
   column(width = 1)
 ))
