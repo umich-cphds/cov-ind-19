@@ -41,6 +41,9 @@ generate_state_tab <- function(state, code)
         plotlyOutput(paste0(code, "_p4"), height = "600px"),
         h3("Figure 15 Proportion of positive tests"),
         plotlyOutput(paste0(code, "_p15"), height = "600px"),
+        h3('Time-varying R'),
+        h4("Effective basic reproduction number"),
+        plotlyOutput(paste0(code, "_ptvr"), height = "600px"),
       hr()
      ),
      column(width = 1)

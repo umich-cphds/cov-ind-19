@@ -81,7 +81,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       group_by(Dates) %>%
       summarise(total_positive = sum(Positive, na.rm = TRUE),
                 total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
-      mutate(text = paste('Proportion tested: ', round(total_positive/total_tests, digits = 3), sep = ''))
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nProportion tested: ', round(total_positive/total_tests, digits = 3), sep = ''))
     
     
     axis.title.font <- list(size = 16)
@@ -93,7 +93,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     yaxis = list(title = 'Proportion of positive tests', titlefont = axis.title.font, zeroline = F,
                  showline = F)
     
-    cap <- paste0("© COV-IND-19 Study Group. Last updated: ",
+    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
     
     p = plot_ly(tsing, x = ~Dates, y = ~total_positive/total_tests, text = ~text,
@@ -114,7 +114,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
       filter(abbrev == state) %>%
-      mutate(text = paste('Proportion tested: ', round(Positive/Total.Tested, digits = 3), sep = ''))
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nProportion tested: ', round(Positive/Total.Tested, digits = 3), sep = ''))
     
     
     axis.title.font <- list(size = 16)
