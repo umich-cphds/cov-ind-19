@@ -34,10 +34,8 @@ forecast <- tabPanel("National Forecast",
     plotlyOutput("India_p4", height = "600px"),
     hr(),
     h2("Longer term forecasts post-lockdown"),
-    p("We present four hypothetical scenarios:",
+    p("We present two hypothetical scenarios:",
       tags$ul(
-        tags$li(HTML(paste0("Perpetual social distancing and travel ban (no lockdown; represented in yellow): R", tags$sub("0"), " remains 1.5 over the entire interval."))),
-        tags$li(HTML(paste0("Post-lockdown activities return to normal activities prior to any intervention ('normal (pre-intervention)'; light blue): R", tags$sub("0"), " returns to 2 three weeks after the lockdown ends."))),
         tags$li(HTML(paste0("Post-lockdown activities gradually return to a moderate level ('moderate return'; blue): R", tags$sub("0"), " returns to 1.5 three weeks after the lockdown ends."))),
         tags$li(HTML(paste0("Post-lockdown activities return to a subdued level ('cautious return'; dark blue): R", tags$sub("0"), " returns to 1.2 three weeks after the lockdown ends.")))
       ),
