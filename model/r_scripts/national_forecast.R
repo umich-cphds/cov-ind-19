@@ -75,7 +75,7 @@ pi0         <- c(1,
                  pi_sdtb)
 mod         <- elefante(dates = change_time, pis = pi0)
 
-casename <- "social_dist"        
+casename <- "india_social_dist"        
 
 model_2 <- tvt.eSIR(
   Y,
@@ -100,7 +100,7 @@ clean_out <- model_2 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Soc. D
 }
 
 if (arrayid == 2) {
-casename  <- "no_int"        
+casename  <- "india_no_int"        
         
 model_3 <- tvt.eSIR(
   Y,
@@ -134,7 +134,7 @@ pi0         <- c(1,
                  pi_moderate)
 mod         <- elefante(dates = change_time, pis = pi0)
 
-casename <- "moderate"
+casename <- "india_moderate"
 
 model_4 <- tvt.eSIR(
   Y,
@@ -170,7 +170,7 @@ pi0         <- c(1,
                pi_normal)
 mod         <- elefante(dates = change_time, pis = pi0)
 
-casename <- "normal"        
+casename <- "india_normal"        
         
 model_5 <- tvt.eSIR(
   Y,
@@ -206,7 +206,7 @@ pi0         <- c(1,
                pi_cautious)
 mod         <- elefante(dates = change_time, pis = pi0)
 
-casename <- "cautious"        
+casename <- "india_cautious"        
         
 model_6 <- tvt.eSIR(
   Y,
