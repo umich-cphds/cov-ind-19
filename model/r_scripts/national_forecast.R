@@ -97,8 +97,6 @@ model_2 <- tvt.eSIR(
 
 clean_out <- model_2 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Soc. Dist. + Travel Ban")       
         
-write_tsv(clean_out$data, path = paste0("~/", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("~/", casename, "_out_table.txt"))
 }
 
 if (arrayid == 2) {
@@ -121,9 +119,7 @@ model_3 <- tvt.eSIR(
 )
         
 clean_out <- model_3 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "No intervention")       
-        
-write_tsv(clean_out$data, path = paste0("~/", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("~/", casename, "_out_table.txt"))
+
 }
 
 if (arrayid == 3) {
@@ -159,9 +155,6 @@ model_4 <- tvt.eSIR(
 )
         
 clean_out <- model_4 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Moderate return")       
-        
-write_tsv(clean_out$data, path = paste0("~/", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("~/", casename, "_out_table.txt")) 
         
 }
 
@@ -199,9 +192,6 @@ model_5 <- tvt.eSIR(
         
 clean_out <- model_5 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Normal (pre-intervention)")       
         
-write_tsv(clean_out$data, path = paste0("~/", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("~/", casename, "_out_table.txt"))          
-        
 }
 
 if (arrayid == 5) {
@@ -237,8 +227,9 @@ model_6 <- tvt.eSIR(
 )
         
 clean_out <- model_6 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Cautious return")       
-        
-write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))           
-        
+       
 }
+
+
+write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
+write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))
