@@ -238,7 +238,7 @@ model_6 <- tvt.eSIR(
         
 clean_out <- model_6 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Cautious return")       
         
-write_tsv(clean_out$data, path = paste0("~/", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("~/", casename, "_out_table.txt"))           
+write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
+write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))           
         
 }
