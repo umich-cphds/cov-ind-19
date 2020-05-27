@@ -192,7 +192,7 @@ model_5 <- tvt.eSIR(
   casename       = casename,
   save_files     = save_files,
   save_mcmc      = save_mcmc,
-  save_plot_data = TRUE,
+  save_plot_data = save_plot_data,
   M              = Ms,
   nburnin        = nburnins
 )
