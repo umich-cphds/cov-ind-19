@@ -40,7 +40,7 @@ for (forecast in forecasts) {
   }
 
   path <- paste0(data_repo, today, "/1wk")
-  
+
   observed <- data %>%
   arrange(date) %>%
   mutate(
@@ -52,7 +52,7 @@ for (forecast in forecasts) {
     incidence
   ) %>%
   add_column(scenario = "Observed")
-  
+
   social_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_social_dist_data.txt"), col_types = cols())
   no_int_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_no_int_data.txt"), col_types = cols())
   moderate_forecast <- read_tsv(paste0(path, "/", tolower(forecast), "_moderate_data.txt"), col_types = cols())
@@ -67,11 +67,7 @@ for (forecast in forecasts) {
     normal_forecast,
     cautious_forecast
   )
-  
+
   write_tsv(combined_dat, path = paste0(path, "/", tolower(forecast), "_plot_data.txt"))
 
 }
-
-
-
-
