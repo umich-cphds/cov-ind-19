@@ -59,7 +59,7 @@ for (forecast in forecasts) {
   normal_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_normal_data.txt"), col_types = cols())
   cautious_forecast <- read_tsv(paste0(path, "/", tolower(forecast), "_cautious_data.txt"), col_types = cols())
 
-  forecast <- bind_rows(
+  combined_dat <- bind_rows(
     observed,
     social_forecast,
     no_int_forecast,
@@ -68,7 +68,7 @@ for (forecast in forecasts) {
     cautious_forecast
   )
   
-  write_tsv(forecast, path = paste0(path, "/", tolower(forecast), "_plot_data.txt"))
+  write_tsv(combined_dat, path = paste0(path, "/", tolower(forecast), "_plot_data.txt"))
 
 }
 
