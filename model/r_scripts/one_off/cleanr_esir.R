@@ -1,6 +1,7 @@
 library(tidyverse)
 library(zoo)
 
+# cleanr_esir: clean tvt.eSIR output ----------
 cleanr_esir <- function(f_out = NULL, name = NULL, adj = T, adj_len = 2, out_obs = FALSE, obs_dat = NULL, N = NULL) {
   
   if (is.null(N)) {
@@ -85,5 +86,29 @@ cleanr_esir <- function(f_out = NULL, name = NULL, adj = T, adj_len = 2, out_obs
     )
 
   }
+  
+}
+
+# elefante: truncate pi schedules ----------
+elefante <- function(dates, pis, anchor = Sys.Date()) {
+  
+  if (max(as.Date(dates, "%m/%d/%Y")) > anchor) {
+    drpr      <- length(dates[dates <= format(anchor, "%m/%d/%Y")]) + 1
+    tmp_dates <- c(format(anchor, "%m/%d/%Y"), dates[drpr:length(dates)])
+    tmp_pis   <- c(1, pis[drpr:length(pis)])
+  }
+  
+  if (max(as.Date(dates, "%m/%d/%Y")) <= anchor) {
+    tmp_dates <- format(anchor, "%m/%d/%Y")
+    tmp_pis   <- c(1, tail(pis, 1))
+  }
+  
+  return(
+    list(
+      dates = tmp_dates,
+      pis   = tmp_pis,
+      check = ifelse(length(tmp_dates) + 1 == length(tmp_pis), "All good!", "Uh-oh...")
+    )
+  )
   
 }
