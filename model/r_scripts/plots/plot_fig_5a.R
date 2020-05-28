@@ -1,24 +1,21 @@
 plot_fig_5a <- function(forecast, start.date = as.Date(today),
                         end.date = end.date <- as.Date("2020-07-15"))
 {
-    data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
-                            "_figure_5_data.csv")
+    data <- read_tsv(paste0(data_repo, today, "/1wk/", forecast,
+                            "_plot_data.txt")
     ) %>%
-    mutate(Dates = as.Date(Dates)) %>%
-    filter(Dates >= start.date & Dates <= end.date & variable != "mod_3") %>%
-    mutate(date.fmt = paste0(format(Dates, "%b %d")),
+    filter(date >= start.date & date <= end.date,
+           scenario == "Cautious return" | scenario == "Moderate return"
+    ) %>%
+    mutate(date.fmt = paste0(format(date, "%b %d")),
            val.fmt = format(round(value), big.mark = ",", scientific = FALSE,
                             trim = T),
-            ci.fmt = format(round(upper_ci), big.mark = ",", scientific = FALSE,
+           ci.fmt = format(round(upper_ci), big.mark = ",", scientific = FALSE,
                             trim = T),
-    ) %>%
-    mutate(
-        text = paste0(paste0(date.fmt, ": ", val.fmt, " projected total cases"),
-                      paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
+           text = paste0(paste0(date.fmt, ": ", val.fmt, " projected total cases"),
+                            paste0("<br>Projection upper CI: ", ci.fmt, " cases<br>")
         )
-    ) %>%
-    filter(color != 'Normal (pre-intervention)',
-           color != 'Soc. Dist. + Travel Ban')
+    )
 
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
     format(today, format = "%b %d"), sep = ' ')
@@ -32,10 +29,10 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
     yaxis <- list(title = "Cumulative number of infected cases per 100,000",
     titlefont = axis.title.font, zeroline = T)
 
-    anno.data <- filter(data, as.character(Dates) %in% c("2020-05-15", "2020-06-15",
+    anno.data <- filter(data, as.character(date) %in% c("2020-05-15", "2020-06-15",
                                            "2020-07-15", "2020-08-15")
     ) %>%
-    group_by(Dates) %>% summarise(diff = (max(value) - min(value)),
+    group_by(date) %>% summarise(diff = (max(value) - min(value)),
                                   value = max(value) * 1e5 / 1.34e9
     ) %>%
     mutate(y = ifelse(50 + value < 1.2 * value, 1.2 * value, 50 + value))
@@ -57,10 +54,9 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
         lines[[i]] <- line
     }
 
-
     colors <- c("#173F5F", "#0472CF", "#3CAEA3", "#f2c82e")
-    p <- plot_ly(data, x = ~Dates, y = ~ value * 1e5 / 1.34e9, text = ~text,
-        color = ~ color, colors = colors, type = "scatter", mode = "lines",
+    p <- plot_ly(data, x = ~date, y = ~ value * 1e5 / 1.34e9, text = ~text,
+        color = ~ scenario, colors = colors, type = "scatter", mode = "lines",
         hoverinfo = "text", hoverlabel = list(align = "left"),
         line = list(width = 4)
     ) %>%
