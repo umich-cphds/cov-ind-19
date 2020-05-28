@@ -22,7 +22,7 @@ jhu_data <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = 
 filter(Country == "India" & Date >= start_date) %>%
 clean_names()
 
-state_data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+state_data <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
 filter(Date >= start_date) %>%
 clean_names()
 
