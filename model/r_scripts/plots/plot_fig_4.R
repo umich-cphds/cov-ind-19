@@ -1,8 +1,7 @@
 library(tidyverse)
 library(plotly)
 
-plot_fig_4 <- function(forecast, start.date = as.Date("2020-03-01"),
-                        end.date = as.Date("2020-05-31"))
+plot_fig_4 <- function(forecast)
 {
     data <- read_tsv(paste0(data_repo, today, "/1wk/", forecast,
                             "_plot_data.txt"), col_types = cols()
