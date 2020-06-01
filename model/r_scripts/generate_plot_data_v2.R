@@ -53,11 +53,11 @@ for (forecast in forecasts) {
   ) %>%
   add_column(scenario = "Observed")
 
-  social_forecast   <- read_tsv(paste0(path, "/", forecast, "_social_dist_data.txt"), col_types = cols())
-  no_int_forecast   <- read_tsv(paste0(path, "/", forecast, "_no_int_data.txt"), col_types = cols())
-  moderate_forecast <- read_tsv(paste0(path, "/", forecast, "_moderate_data.txt"), col_types = cols())
-  normal_forecast   <- read_tsv(paste0(path, "/", forecast, "_normal_data.txt"), col_types = cols())
-  cautious_forecast <- read_tsv(paste0(path, "/", forecast, "_cautious_data.txt"), col_types = cols())
+  social_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_social_dist_data.txt"), col_types = cols())
+  no_int_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_no_int_data.txt"), col_types = cols())
+  moderate_forecast <- read_tsv(paste0(path, "/", tolower(forecast), "_moderate_data.txt"), col_types = cols())
+  normal_forecast   <- read_tsv(paste0(path, "/", tolower(forecast), "_normal_data.txt"), col_types = cols())
+  cautious_forecast <- read_tsv(paste0(path, "/", tolower(forecast), "_cautious_data.txt"), col_types = cols())
 
   combined_dat <- bind_rows(
     observed,
