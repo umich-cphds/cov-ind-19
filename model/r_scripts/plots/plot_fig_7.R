@@ -82,7 +82,7 @@ plot_fig_7 <- function()
              Datemax = max(Date))
 
     data_caseplot =
-      left_join(data_caseplot, statenames, by = c('State' = 'abbrev'))
+      inner_join(data_caseplot, statenames, by = c('State' = 'abbrev'))
 
     data_deathplot =
       vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
@@ -94,7 +94,7 @@ plot_fig_7 <- function()
              Datemax = max(Date))
 
     data_deathplot =
-      left_join(data_deathplot, statenames, by = c('State' = 'abbrev'))
+      inner_join(data_deathplot, statenames, by = c('State' = 'abbrev'))
 
     # sort data sets from max to min max cases, plot the first 20
     data_caseplot =
