@@ -84,7 +84,7 @@ generate_forecast_plots <- function(state)
     plots
 }
 
-data <- list(India = generate_forecast_plots("india"),
+data <- list(India = generate_forecast_plots("India"),
 			 plots = list(),
 			 states = c(),
              codes = c()
