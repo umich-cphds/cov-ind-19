@@ -21,7 +21,7 @@ plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
                 tickfont = tickfont, zeroline = T)
 
 
-  data <- vroom(paste0(data_repo, today, "/global_testing.csv")) %>%
+  data <- read_csv(paste0(data_repo, today, "/global_testing.csv"), col_types = cols()) %>%
     select(location, date, total_cases, total_tests) %>%
     group_by(location) %>%
     filter(!is.na(total_cases) & !is.na(total_tests)) %>%

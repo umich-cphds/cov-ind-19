@@ -1,5 +1,4 @@
 library(tidyverse)
-library(vroom)
 library(plotly)
 
 # Set variables based on testing or production
@@ -11,7 +10,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 
 today <- Sys.getenv("today")
 
-state.data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"))
+state.data <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols())
 generate_forecast_plots <- function(state)
 {
     start.date <- as.Date("2020-03-01")

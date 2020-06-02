@@ -3,7 +3,8 @@ top_matter <- wellPanel(
     h3("COV-IND-19 Study Group"),
     fluidRow(
       column(width = 2, shiny::img(src = "group_logo.png", height = 200, width = 200)),
-      column(width = 10,
+      column(width = 1),
+      column(width = 9,
         p("Welcome to the COV-IND-19 shiny app. We aim to provide a resource to
           describe the COVID-19 outbreak in India to date as well as prediction
           models under various hypothetical scenarios. The figure and forecasting

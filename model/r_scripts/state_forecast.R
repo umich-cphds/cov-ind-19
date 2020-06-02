@@ -7,6 +7,8 @@ library(here)
 library(eSIR)
 library(devtools)
 
+source("~/cov-ind-19/model/r_scripts/one_off/cleanr_esir.R")
+
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
         data_repo <- "~/cov-ind-19-data/"
@@ -32,8 +34,9 @@ pi_moderate        <- 0.75          # pi corresponding to moderate return
 pi_normal          <- 1             # pi corresponding to normal (pre-intervention) return
 pi_sdtb            <- 0.75          # pi corresponding to social distancing and travel ban
 R_0                <- 2             # basic reproduction number
-save_files         <- TRUE
+save_files         <- FALSE
 save_mcmc          <- FALSE         # output MCMC files (default = TRUE; needed for incidence CI calculations)
+save_plot_data     <- FALSE
 speed_lockdown     <- 7             # length of time for lockdown to drop (in days)
 speed_return       <- 21            # length of time for pi to return to post-lockdown pi (in days)
 start_date         <- "2020-03-01"
@@ -62,30 +65,6 @@ pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" =
 
 start_date <-  min(dat$Date)
 
-# function ----------
-elefante <- function(dates, pis, anchor = Sys.Date()) {
-  
-  if (max(as.Date(dates, "%m/%d/%Y")) > anchor) {
-    drpr      <- length(dates[dates <= format(anchor, "%m/%d/%Y")]) + 1
-    tmp_dates <- c(format(anchor, "%m/%d/%Y"), dates[drpr:length(dates)])
-    tmp_pis   <- c(1, pis[drpr:length(pis)])
-  }
-  
-  if (max(as.Date(dates, "%m/%d/%Y")) <= anchor) {
-    tmp_dates <- format(anchor, "%m/%d/%Y")
-    tmp_pis   <- c(1, tail(pis, 1))
-  }
-  
-  return(
-    list(
-      dates = tmp_dates,
-      pis   = tmp_pis,
-      check = ifelse(length(tmp_dates) + 1 == length(tmp_pis), "All good!", "Uh-oh...")
-    )
-  )
-  
-}
-
 # directory ----------
 wd <- paste0(data_repo, today, "/1wk/")
 if (!dir.exists(wd)) {
@@ -113,6 +92,8 @@ if (arrayid == 1) {
                    pi_sdtb)
   mod         <- elefante(dates = change_time, pis = pi0)
   
+  casename <- paste0(state_sub, "_social_dist")      
+        
   model_2 <- tvt.eSIR(
     Y,
     R,
@@ -123,16 +104,22 @@ if (arrayid == 1) {
     change_time    = mod$dates,
     R0             = R_0,
     dic            = TRUE,
-    casename       = paste0(state_sub, "_2"),
+    casename       = casename,
     save_files     = save_files,
     save_mcmc      = save_mcmc,
-    save_plot_data = TRUE,
+    save_plot_data = save_plot_data,
     M              = Ms,
     nburnin        = nburnins
   )
+        
+  clean_out <- model_2 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Soc. Dist. + Travel Ban")       
+           
 }
 
 if (arrayid == 2) {
+  
+  casename <- paste0(state_sub, "_no_int")      
+        
   model_3 <- tvt.eSIR(
     Y,
     R,
@@ -144,10 +131,13 @@ if (arrayid == 2) {
     casename       = paste0(state_sub, "_3"),
     save_files     = save_files,
     save_mcmc      = save_mcmc,
-    save_plot_data = TRUE,
+    save_plot_data = save_plot_data,
     M              = Ms,
     nburnin        = nburnins
   )
+
+  clean_out <- model_3 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "No intervention")       
+                    
 }
 
 if (arrayid == 3) {
@@ -162,6 +152,8 @@ if (arrayid == 3) {
                    pi_moderate)
   mod         <- elefante(dates = change_time, pis = pi0)
   
+  casename <- paste0(state_sub, "_moderate")      
+        
   model_4 <- tvt.eSIR(
     Y,
     R,
@@ -172,13 +164,16 @@ if (arrayid == 3) {
     change_time    = mod$dates,
     R0             = R_0,
     dic            = TRUE,
-    casename       = paste0(state_sub, "_4"),
+    casename       = casename,
     save_files     = save_files,
     save_mcmc      = save_mcmc,
-    save_plot_data = TRUE,
+    save_plot_data = save_plot_data,
     M              = Ms,
     nburnin        = nburnins
   )
+        
+  clean_out <- model_4 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Moderate return")       
+             
 }
 
 if (arrayid == 4) {
@@ -193,6 +188,8 @@ if (arrayid == 4) {
                    pi_normal)
   mod         <- elefante(dates = change_time, pis = pi0)
   
+  casename <- paste0(state_sub, "_normal")      
+        
   model_5 <- tvt.eSIR(
     Y,
     R,
@@ -203,13 +200,16 @@ if (arrayid == 4) {
     change_time    = mod$dates,
     R0             = R_0,
     dic            = TRUE,
-    casename       = paste0(state_sub, "_5"),
+    casename       = casename,
     save_files     = save_files,
     save_mcmc      = save_mcmc,
-    save_plot_data = TRUE,
+    save_plot_data = save_plot_data,
     M              = Ms,
     nburnin        = nburnins
   )
+        
+  clean_out <- model_5 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Normal (pre-intervention)")
+        
 }
 
 if (arrayid == 5) {
@@ -224,6 +224,8 @@ if (arrayid == 5) {
                    pi_cautious)
   mod         <- elefante(dates = change_time, pis = pi0)
   
+  casename <- paste0(state_sub, "_cautious")      
+        
   model_6 <- tvt.eSIR(
     Y,
     R,
@@ -234,11 +236,17 @@ if (arrayid == 5) {
     change_time    = mod$dates,
     R0             = R_0,
     dic            = TRUE,
-    casename       = paste0(state_sub, "_6"),
+    casename       = casename,
     save_files     = save_files,
     save_mcmc      = save_mcmc,
-    save_plot_data = TRUE,
+    save_plot_data = save_plot_data,
     M              = Ms,
     nburnin        = nburnins
   )
+        
+  clean_out <- model_6 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Cautious return")      
+        
 }
+
+write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
+write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))
