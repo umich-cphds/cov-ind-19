@@ -1,6 +1,8 @@
 library(shiny)
 library(tidyverse)
 library(plotly)
+library(gridExtra)
+library(ggtext)
 
 if (Sys.getenv("IRIS") == "TRUE") {
     branch <- "IRIS"
@@ -47,6 +49,8 @@ shinyServer(function(input, output)
             out <- renderPlotly(plot)
         else if ("ggplot" %in% class(plot))
             out <- renderPlot(plot)
+        else if ("grob" %in% class(plot))
+            out <- renderPlot(grid.arrange(plot))
         else
             stop("Unrecognized plot type!")
 
@@ -105,6 +109,15 @@ shinyServer(function(input, output)
         content = function(con) {
             png(con, width = 3000, height = 6000, res = 200)
             plot(data$India$p12b)
+            dev.off()
+        }
+    )
+    
+    output$download_dashboard = downloadHandler(
+        filename = function() {'dashboard.png'},
+        content = function(con) {
+            png(con, width = 1300, height = 900)
+            grid.arrange(data$India$pforest_ga)
             dev.off()
         }
     )

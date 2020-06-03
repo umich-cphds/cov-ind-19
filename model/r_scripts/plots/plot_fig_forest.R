@@ -266,7 +266,7 @@ plot_fig_forest = function() {
                        " - Estimation is based on all cases confirmed till May 18.<br>",
                        " - CFR stands for case-fatality rate.")
   
-  (cfr1_for <- test_data %>%
+  cfr1_for <- test_data %>%
       mutate(
         fplot = ifelse(name == "National estimate", "india", ifelse(cfr > cfr_danger, "alarm", ifelse(cfr < cfr_safe, "good", "eh"))) # change 
       ) %>%
@@ -290,7 +290,7 @@ plot_fig_forest = function() {
       coord_flip(
         ylim = c(0, 0.1)
       ) +
-      covind19_base)
+      covind19_base
   
   # dbl time -----------
   national$dbl <- NA
@@ -339,7 +339,7 @@ plot_fig_forest = function() {
   dbl_nat_t7_lci <- national %>% pull(dbl) %>% tail(7) %>% min()
   dbl_nat_t7_uci <- national %>% pull(dbl) %>% tail(7) %>% max()
   
-  (dbl_for <- state_t7_avg %>%
+  dbl_for <- state_t7_avg %>%
       mutate(
         fplot = ifelse(dbl < 7, "alarm", ifelse(dbl > 14, "good", "eh"))
       ) %>%
@@ -367,7 +367,7 @@ plot_fig_forest = function() {
       ) +
       coord_flip() +
       covind19_base
-  )
+  
   
   # r est -----------
   set_seed <- 46342
@@ -443,7 +443,7 @@ plot_fig_forest = function() {
   r_t7_lci <- r_nat_data %>% pull(lower) %>% tail(7) %>% mean()
   r_t7_uci <- r_nat_data %>% pull(upper) %>% tail(7) %>% mean()
   
-  (r_est_for <- state_t7_avg %>%
+  r_est_for <- state_t7_avg %>%
       mutate(
         fplot = ifelse(r > 2, "alarm", ifelse(r < 1, "good", "eh"))
       ) %>%
@@ -480,7 +480,7 @@ plot_fig_forest = function() {
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank()
       )
-  )
+  
   
   # test positive rate ------------
   nat_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
@@ -516,12 +516,12 @@ plot_fig_forest = function() {
     drop_na() %>%
     left_join(tibble(
       state = names(states_map),
-      abbrev = state
+      abbrev = tolower(states_map)
     ), by = c("state"))
   # filter(abbrev %in% use_abbrev)
   
   state_test_plt_dat <- state_test %>%
-    filter(state != "Telangana") %>%
+    filter(state != "Telangana", abbrev %in% xstates$State) %>%
     group_by(state) %>%
     mutate(
       test_pos = positive / total_tested
@@ -539,7 +539,7 @@ plot_fig_forest = function() {
   tpr_nat_t7_lci <- nat_test %>% pull(test_pos) %>% tail(7) %>% min()
   tpr_nat_t7_uci <- nat_test %>% pull(test_pos) %>% tail(7) %>% max()
   
-  (tp_for <- state_test_plt_dat %>%
+  tp_for <- state_test_plt_dat %>%
       # bind_rows(tg_est) %>%
       mutate(
         fplot = ifelse(test_pos > 0.06, "alarm", ifelse(test_pos < 0.03, "good", "eh"))
@@ -567,7 +567,7 @@ plot_fig_forest = function() {
       ) +
       coord_flip() +
       covind19_base
-  )
+  
   
   test_max_date <- max(state_test$date)
   
@@ -580,7 +580,8 @@ plot_fig_forest = function() {
   )
   
   # cairo_pdf(here("figs", "dashboard_v1.pdf"), width = 12, height = 12)
-  grid.arrange(
+  
+  ga_for = arrangeGrob(
     cfr1_for + 
       remove + 
       theme(axis.title.y = element_blank()) + 
@@ -623,6 +624,10 @@ plot_fig_forest = function() {
                       hjust = 0, x = 0.1, gp = gpar(fontsize = 12))
   )
   # dev.off()
-  return()
-  
+  return(list(
+    cfr1_for = cfr1_for, dbl_for = dbl_for, 
+    r_est_for = r_est_for, tp_for = tp_for, 
+    ga_for = ga_for 
+  ))
 }
+
