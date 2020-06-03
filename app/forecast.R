@@ -56,7 +56,16 @@ forecast <- tabPanel("National Forecast",
     #hr()
     h3("Time-varying R"),
     h4("Effective basic reproduction number"),
-    plotlyOutput("India_ptvr", height = '600px')
+    plotlyOutput("India_ptvr", height = '600px'),
+    hr(),
+    h2("Doubling graphs"),
+    p("The following figures visualize the case and death data to depict
+        how long it takes each country to double its case or death count."),
+    h3("Cases"),
+    plotlyOutput("India_p3a", height = "600px"),
+    h3("Deaths"),
+    plotlyOutput("India_p3b", height = "600px"),
+    hr()
   ),
   column(width = 1)
 ))
