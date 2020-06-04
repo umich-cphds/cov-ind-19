@@ -3,6 +3,8 @@ library(tidyverse)
 library(plotly)
 library(gridExtra)
 library(ggtext)
+library(grid)
+library(extrafont)
 
 if (Sys.getenv("IRIS") == "TRUE") {
     branch <- "IRIS"
@@ -116,7 +118,7 @@ shinyServer(function(input, output)
     output$download_dashboard = downloadHandler(
         filename = function() {'dashboard.png'},
         content = function(con) {
-            png(con, width = 1300, height = 900)
+            pdf(file = con, width = 4500, height = 3000)
             grid.arrange(data$India$pforest_ga)
             dev.off()
         }

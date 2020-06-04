@@ -1,0 +1,12 @@
+name: covid19
+title: covid19
+username:
+account: umich-biostatistics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2016409
+bundleId: 3228036
+url: https://umich-biostatistics.shinyapps.io/covid19/
+when: 1591277152.11261
+asMultiple: FALSE
+asStatic: FALSE

@@ -255,7 +255,7 @@ plot_fig_forest = function() {
   cfr_safe   <- 0.01
   
   cfr_title    <- "Case fatality rate for COVID-19 in India by state/union territory"
-  cfr_subtitle <- "as of May 18"
+  cfr_subtitle <- glue("as of {format(as.Date(today), '%B %e')}")
   cfr_x_lab    <- "State/Union territory"
   cfr_y_lab    <- "CFR"
   cfr_caption  <- glue("**\uA9 COV-IND-19 Study Group**<br>",
@@ -356,7 +356,7 @@ plot_fig_forest = function() {
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
       labs(
         title    = "Doubling time for COVID-19 in India<br>by state/union territory",
-        subtitle = glue("as of {format(max(new_dat$date), '%B %e')}"),
+        subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
         x        = "State/Union territory",
         y        = "Doubling time (days)",
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>",
@@ -460,7 +460,7 @@ plot_fig_forest = function() {
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
       labs(
         title    = "R for COVID-19 in India by state/union territory",
-        subtitle = glue("as of {format(max(state_est$date), '%d %B %Y')}"),
+        subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
         x        = "State/Union territory",
         y        = "R",
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>**Note:**<br> - Average estimate and 95% confidence interval for last 7 days are provided in each plot by state.<br> - Colored red if estimate is above 2 and green if below 1.")
@@ -557,7 +557,7 @@ plot_fig_forest = function() {
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
       labs(
         title    = "Test-positive rate for COVID-19 in India<br>by state/union territory",
-        subtitle = glue("as of {format(max(state_est$date), '%B %e')}"),
+        subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
         x        = "State/Union territory",
         y        = "Test-positive rate",
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>",

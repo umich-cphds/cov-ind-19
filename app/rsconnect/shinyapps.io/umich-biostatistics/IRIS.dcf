@@ -1,0 +1,12 @@
+name: IRIS
+title: IRIS
+username:
+account: umich-biostatistics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2009063
+bundleId: 3225222
+url: https://umich-biostatistics.shinyapps.io/IRIS/
+when: 1591216696.18131
+asMultiple: FALSE
+asStatic: FALSE
