@@ -116,9 +116,9 @@ shinyServer(function(input, output)
     )
     
     output$download_dashboard = downloadHandler(
-        filename = function() {'dashboard.png'},
+        filename = function() {'dashboard.pdf'},
         content = function(con) {
-            pdf(file = con, width = 4500, height = 3000)
+            cairo_pdf(file = con, width = 12, height = 12)
             grid.arrange(data$India$pforest_ga)
             dev.off()
         }

@@ -570,7 +570,7 @@ plot_fig_forest = function() {
   
   ga_for = arrangeGrob(
     cfr1_for + 
-      remove + 
+      #remove + 
       theme(axis.title.y = element_blank()) + 
       labs(
         title = "a. Case-fatality rate",
@@ -578,7 +578,7 @@ plot_fig_forest = function() {
                        " - 7-day average estimate with 95% confidence interval shown.<br>",
                        " - Colored red if estimate is above 0.03 and green if below 0.01.")),
     dbl_for + 
-      remove + 
+      #remove + 
       theme(axis.title.y = element_blank()) +
       labs(
         title = "b. Doubling time",
@@ -586,7 +586,7 @@ plot_fig_forest = function() {
                        " - 7-day average estimate with range shown.<br>",
                        " - Colored red if estimate is below 7 and green if above 14.")),
     r_est_for + 
-      remove + 
+      #remove + 
       theme(axis.title.y = element_blank()) + 
       labs(
         title = "c. Effective reproduction number",
@@ -595,7 +595,7 @@ plot_fig_forest = function() {
                        " - Colored red if estimate is above 2 and green if below 1.")
       ),
     tp_for +
-      remove +
+      #remove +
       labs(
         title   = "d. Test-positive rate",
         caption = glue("**Notes:**<br>", 
