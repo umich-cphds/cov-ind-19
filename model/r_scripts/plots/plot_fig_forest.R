@@ -26,7 +26,7 @@ plot_fig_forest = function() {
   # ggplot theme ------------
   covind19_base <- theme_minimal() +
     theme(
-      text               = element_text(family = "Helvetica Neue"),
+      # text               = element_text(family = "Helvetica Neue"),
       plot.title         = ggtext::element_markdown(size = 18, face = "bold"),
       plot.subtitle      = element_text(size = 14, color = "#36454f"),
       plot.caption       = ggtext::element_markdown(hjust = 0, size = 10, lineheight = 1.1),
@@ -466,20 +466,7 @@ plot_fig_forest = function() {
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>**Note:**<br> - Average estimate and 95% confidence interval for last 7 days are provided in each plot by state.<br> - Colored red if estimate is above 2 and green if below 1.")
       ) +
       coord_flip(ylim = c(0, 3.5)) +
-      theme_minimal() +
-      theme(
-        text               = element_text(family = "Helvetica Neue"),
-        plot.title         = ggtext::element_markdown(size = 18, face = "bold"),
-        plot.subtitle      = element_text(size = 14, color = "#36454f"),
-        plot.caption       = ggtext::element_markdown(hjust = 0, size = 10, lineheight = 1.1),
-        axis.text          = element_text(size = 10, color = "#36454f"),
-        axis.title         = element_text(size = 12, face = "italic"),
-        legend.position    = "none",
-        panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank()
-      )
+      covind19_base
   
   
   # test positive rate ------------
