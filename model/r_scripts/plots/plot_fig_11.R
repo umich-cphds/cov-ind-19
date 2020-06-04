@@ -157,9 +157,11 @@ plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
     lapply(names, nationbarplot)
   }
 
-  names = c('United States', 'United Kingdom', 'Canada', 'South Korea', 'Turkey', 'India')
+  names = c('India')
 
-  p = subplot(plotList(names), nrows = 6, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE) %>%
-    plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
-  p
+  # p = subplot(plotList(names), nrows = 6, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE) %>%
+  #   plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
+  # p
+  
+  nationbarplot(name = names)
 }

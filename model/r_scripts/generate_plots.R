@@ -1,5 +1,6 @@
 library(tidyverse)
 library(plotly)
+library(ggtext)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -45,6 +46,7 @@ generate_forecast_plots <- function(state)
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_15.R")
     
     source("~/cov-ind-19/model/r_scripts/plots/plot_fig_tvr.R")
+    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_forest.R")
 
 	plots <- list()
 	if (state == "India") {
@@ -72,7 +74,12 @@ generate_forecast_plots <- function(state)
 
 		plots[["p14"]] = plot_fig_14()$p14
 		#plots[["p15"]] = plot_fig_15()
-		
+		pforest = plot_fig_forest()
+		plots[["pforest_cfr1"]] = pforest$cfr1_for
+		plots[["pforest_dbl"]] = pforest$dbl_for
+		plots[["pforest_r_est"]] = pforest$r_est_for
+		plots[["pforest_tp"]] = pforest$tp_for
+		plots[["pforest_ga"]] = pforest$ga_for
 
 	} else {
 		plots[["x"]] <- plot_fig_x(state)

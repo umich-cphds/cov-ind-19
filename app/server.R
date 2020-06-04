@@ -1,6 +1,10 @@
 library(shiny)
 library(tidyverse)
 library(plotly)
+library(gridExtra)
+library(ggtext)
+library(grid)
+library(extrafont)
 
 if (Sys.getenv("IRIS") == "TRUE") {
     branch <- "IRIS"
@@ -32,6 +36,7 @@ source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
 source("testing.R", local = T)
+source("metrics.R", local = T)
 
 print(sessionInfo())
 
@@ -46,6 +51,8 @@ shinyServer(function(input, output)
             out <- renderPlotly(plot)
         else if ("ggplot" %in% class(plot))
             out <- renderPlot(plot)
+        else if ("grob" %in% class(plot))
+            out <- renderPlot(grid.arrange(plot))
         else
             stop("Unrecognized plot type!")
 
@@ -67,7 +74,8 @@ shinyServer(function(input, output)
         tabs <- map2(states, codes, generate_state_tab)
 
         eval(expr(navbarPage("COVID-19 Outbreak in India",
-          observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs))))
+          observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
+          metrics)))
 
     })
 
@@ -103,6 +111,15 @@ shinyServer(function(input, output)
         content = function(con) {
             png(con, width = 3000, height = 6000, res = 200)
             plot(data$India$p12b)
+            dev.off()
+        }
+    )
+    
+    output$download_dashboard = downloadHandler(
+        filename = function() {'dashboard.pdf'},
+        content = function(con) {
+            cairo_pdf(file = con, width = 12, height = 12)
+            grid.arrange(data$India$pforest_ga)
             dev.off()
         }
     )
