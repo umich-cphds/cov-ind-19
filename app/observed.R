@@ -36,6 +36,14 @@ observed <- tabPanel("National Observed",
       h2("Cumulative COVID-19 death count by state/union territory"),
       plotOutput("India_p7d", height = "600px"),
       downloadLink('downloadFacet_deaths', 'Download'),
+      hr(),
+      h2("Doubling graphs"),
+      p("The following figures visualize the case and death data to depict
+        how long it takes each country to double its case or death count."),
+      h3("Cases"),
+      plotlyOutput("India_p3a", height = "600px"),
+      h3("Deaths"),
+      plotlyOutput("India_p3b", height = "600px"),
       hr()
     ),
     column(width = 1)
