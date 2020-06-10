@@ -1,5 +1,4 @@
 testing <- tabPanel("Testing",
-                     fluidRow(column(width = 12, top_matter)),
                      fluidRow(column(width = 1),
                               column(width = 10,
                                      h4("(Please wait a few seconds for the figures to load)"),

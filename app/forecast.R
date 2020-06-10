@@ -16,7 +16,6 @@ forecast <- tabPanel("National Forecast",
       the predicted cumulative short-term case counts represent three
       hypothetical scenarios: ",
       tags$ol(
-        tags$li("No intervention"),
         tags$li("Social distancing and travel ban (without lockdown)"),
         tags$li("Lockdown with a gradual, moderate resumption of daily activities")
       ),
@@ -57,14 +56,6 @@ forecast <- tabPanel("National Forecast",
     h3("Time-varying R"),
     h4("Effective basic reproduction number"),
     plotlyOutput("India_ptvr", height = '600px'),
-    hr(),
-    h2("Doubling graphs"),
-    p("The following figures visualize the case and death data to depict
-        how long it takes each country to double its case or death count."),
-    h3("Cases"),
-    plotlyOutput("India_p3a", height = "600px"),
-    h3("Deaths"),
-    plotlyOutput("India_p3b", height = "600px"),
     hr()
   ),
   column(width = 1)

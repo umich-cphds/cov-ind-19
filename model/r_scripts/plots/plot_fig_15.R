@@ -81,7 +81,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       group_by(Dates) %>%
       summarise(total_positive = sum(Positive, na.rm = TRUE),
                 total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nProportion tested: ', round(total_positive/total_tests, digits = 3), sep = ''))
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent tested: ', round(total_positive*100/total_tests, digits = 2), '%', sep = ''))
     
     
     axis.title.font <- list(size = 16)
@@ -114,7 +114,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
       filter(abbrev == state) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nProportion tested: ', round(Positive/Total.Tested, digits = 3), sep = ''))
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent tested: ', round(Positive*100/Total.Tested, digits = 2), '%', sep = ''))
     
     
     axis.title.font <- list(size = 16)
