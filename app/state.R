@@ -25,7 +25,6 @@ generate_state_tab <- function(state, code)
         the predicted cumulative short-term case counts represent three
         hypothetical scenarios: ",
         tags$ol(
-          tags$li("No intervention"),
           tags$li("Social distancing and travel ban (without lockdown)"),
           tags$li("Lockdown with a gradual, moderate resumption of daily activities")
         ),
