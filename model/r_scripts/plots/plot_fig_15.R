@@ -81,8 +81,9 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       group_by(Dates) %>%
       summarise(total_positive = sum(Positive, na.rm = TRUE),
                 total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
+      mutate(total_positive = cumsum(total_positive),
+             total_tests = cumsum(total_tests)) %>%
       mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', round(total_positive*100/total_tests, digits = 2), '%', sep = ''))
-    
     
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
