@@ -43,6 +43,10 @@ generate_state_tab <- function(state, code)
         h3('Time-varying R'),
         h4("Effective basic reproduction number"),
         plotlyOutput(paste0(code, "_ptvr"), height = "600px"),
+      hr(),
+      h3("Doubling time"),
+      h4("Each point represents the estimated time for cases to double based on relative growth observed in the trailing 7 days."),
+      plotlyOutput(paste0(code, "_pdbl"), height = '600px'),
       hr()
      ),
      column(width = 1)

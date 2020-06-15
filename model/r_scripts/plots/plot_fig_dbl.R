@@ -1,5 +1,13 @@
 library(janitor)
 
+if (Sys.getenv("production") == "TRUE") {
+  data_repo <- "~/cov-ind-19-data/"
+  today     <- Sys.getenv("today")
+} else {
+  data_repo <- "~/cov-ind-19-test/"
+  today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 # calculate dbl_time ----------
 dbl_timr <- function(data, end_date, time) {
   
@@ -55,7 +63,7 @@ plot_fig_dbl <- function(forecast)
 
   
   if (forecast == "India") {
-    plt_data <- data %>% drop_na(dbl) %>% filter(date >= "2020-03-15") %>% 
+    plt_data <- data %>% drop_na(dbl) %>% filter(date >= "2020-03-15")
   } else {
     plt_data <- data %>% drop_na(dbl) %>% filter(date >= "2020-03-24")
   }
@@ -78,11 +86,11 @@ plot_fig_dbl <- function(forecast)
                    tickfont = tickfont, zeroline = T),
       yaxis = list(title = "Doubling time (days)", titlefont = axis_title_font,
                    tickfont = tickfont, zeroline = T),
-      shapes = list(
-        type = "line", xref = "paper", yref = "data",
-        x0 = 0, x1 = 1, y0 = 1, y1 = 1, 
-        line = list(color = "rgba(255, 153, 51, 0.5)")
-      ),
+      # shapes = list(
+      #   type = "line", xref = "paper", yref = "data",
+      #   x0 = 0, x1 = 1, y0 = 1, y1 = 1, 
+      #   line = list(color = "rgba(255, 153, 51, 0.5)")
+      # ),
       showlegend = FALSE
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
