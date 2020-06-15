@@ -83,8 +83,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
                 total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
       mutate(total_positive = cumsum(total_positive),
              total_tests = cumsum(total_tests)) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent tested: ', round(total_positive*100/total_tests, digits = 2), '%', sep = ''))
-    
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', round(total_positive*100/total_tests, digits = 2), '%', sep = ''))
     
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
@@ -116,7 +115,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
       filter(abbrev == state) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent tested: ', round(Positive*100/Total.Tested, digits = 2), '%', sep = ''))
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', round(Positive*100/Total.Tested, digits = 2), '%', sep = ''))
     
     
     axis.title.font <- list(size = 16)
