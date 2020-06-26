@@ -113,5 +113,6 @@ for (state in states.to.forecast) {
 
 source("~/cov-ind-19/app/sum_table_app.R")
 data$gt <- India_gt_table()
+gtsave(data$gt, filename = path.expand(paste0(data_repo, today, "/COVIND_table.png")))
 
 save(data, file = paste0(data_repo, today, "/data.RData"))

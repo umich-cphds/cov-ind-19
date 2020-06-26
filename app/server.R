@@ -127,4 +127,14 @@ shinyServer(function(input, output)
     output$India_gt = render_gt({
         data$gt
     })
+    
+    output$download_gt = downloadHandler(
+        filename = function() {'COVIND_table.png'},
+        content = function(con) {
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table.png'),
+                          'COVIND_table.png', mode = 'wb')
+            file.copy(from = 'COVIND_table.png',
+                      to = con)
+        }
+    )
 })
