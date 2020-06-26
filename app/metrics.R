@@ -1,7 +1,11 @@
+library(gt)
+
 metrics <- tabPanel("Metrics",
                     fluidRow(column(width = 1),
                              column(width = 10,
                                     h4("(Please wait a few seconds for the figures to load)"),
+                                    hr(),
+                                    gt_output("India_gt"),
                                     hr(),
                                     plotOutput("India_pforest_cfr1", height = "500px", width = "800px"),
                                     hr(),

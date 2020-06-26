@@ -123,4 +123,8 @@ shinyServer(function(input, output)
             dev.off()
         }
     )
+    
+    output$India_gt = render_gt({
+        data$gt
+    })
 })
