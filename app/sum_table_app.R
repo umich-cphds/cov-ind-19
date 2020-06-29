@@ -147,7 +147,7 @@ sf <- test %>%
   mutate(
     sf = format(round(sf), big.mark = ",")
   )
-
+today = as.Date(today)
 # pull forecast estimates ----------
   # cautious 
     for (i in seq_along(use_abbrevs)) {
@@ -343,3 +343,4 @@ tib %>%
   )
 tabl
 }
+
