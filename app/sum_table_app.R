@@ -6,18 +6,26 @@ library(lubridate)
 library(janitor)
 library(scales)
 
+if (Sys.getenv("production") == "TRUE") {
+  data_repo <- "~/cov-ind-19-data/"
+  today     <- Sys.getenv("today")
+} else {
+  data_repo <- "~/cov-ind-19-test/"
+  today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
+}
+
 India_gt_table = function() {
 # Compute daily counts from cumulative sums
 daily = function(x) { c(x[1], diff(x)) }
 
 # @MKLEINSA: REPLACE WITH TODAY VARIABLE
-today <- list.files("~/cov-ind-19-data/") %>%
-  as.Date() %>%
-  na.omit() %>%
-  max()
+# today <- list.files("~/cov-ind-19-data/") %>%
+#   as.Date() %>%
+#   na.omit() %>%
+#   max()
 
 # @MKLEINSA: REPLACE WITH DATA.RDATA
-load(glue("~/cov-ind-19-data/{today}/data.RData"))
+load(paste0(data_repo, glue("{today}/data.RData")))
 
 # extract data from plots
 cfr1  <- data$India$pforest_cfr1$data %>%
@@ -38,7 +46,7 @@ tp    <- data$India$pforest_tp$data %>%
 use_states <- r_est %>% filter(name != "National estimate") %>% pull(name)
 
 # state data ----------
-state_tib <- read_tsv(glue("~/cov-ind-19-data/{today}/covid19india_data.csv"), col_types = cols()) %>%
+state_tib <- read_tsv(paste0(data_repo, glue("{today}/covid19india_data.csv")), col_types = cols()) %>%
   clean_names() %>%
   filter(name %in% use_states) %>%
   group_by(name) %>%
@@ -146,7 +154,7 @@ sf <- test %>%
       eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
 
-    cautious_india <- read_tsv(glue("~/cov-ind-19-data/{today}/1wk/india_cautious_data.txt"), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
+    cautious_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_cautious_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
     
     eval(parse(text = glue("cautious_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, cautious_india)")))
     cautious_est <- cautious_est %>%
@@ -169,7 +177,7 @@ sf <- test %>%
       eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
     
-    moderate_india <- read_tsv(glue("~/cov-ind-19-data/{today}/1wk/india_moderate_data.txt"), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
+    moderate_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_moderate_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
     
     eval(parse(text = glue("moderate_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, moderate_india)")))
     moderate_est <- moderate_est %>%
