@@ -25,7 +25,7 @@ daily = function(x) { c(x[1], diff(x)) }
 #   max()
 
 # @MKLEINSA: REPLACE WITH DATA.RDATA
-load(paste0(data_repo, glue("{today}/data.RData")))
+#load(paste0(data_repo, glue("{today}/data.RData")))
 
 # extract data from plots
 cfr1  <- data$India$pforest_cfr1$data %>%
