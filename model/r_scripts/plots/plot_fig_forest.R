@@ -251,8 +251,8 @@ plot_fig_forest = function() {
     "india" = "black"
   )
   
-  cfr_danger <- 0.03
-  cfr_safe   <- 0.01
+  cfr_danger <- 0.06
+  cfr_safe   <- 0.03
   
   cfr_title    <- "Case fatality rate for COVID-19 in India by state/union territory"
   cfr_subtitle <- glue("as of {format(as.Date(today), '%B %e')}")
@@ -341,7 +341,7 @@ plot_fig_forest = function() {
   
   dbl_for <- state_t7_avg %>%
       mutate(
-        fplot = ifelse(dbl < 7, "alarm", ifelse(dbl > 14, "good", "eh"))
+        fplot = ifelse(dbl < 21, "alarm", ifelse(dbl > 28, "good", "eh"))
       ) %>%
       add_row(name = "National estimate", dbl = dbl_nat_t7_avg, lower = dbl_nat_t7_lci, upper = dbl_nat_t7_uci, fplot = "india") %>%
       mutate(
@@ -349,8 +349,8 @@ plot_fig_forest = function() {
         size  = ifelse(shape == "india", .5, .2)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(name, desc(dbl)), "National estimate"), y = dbl, shape = shape)) +
-      geom_hline(yintercept = 7, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = 14, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = 21, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = 28, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
@@ -445,7 +445,7 @@ plot_fig_forest = function() {
   
   r_est_for <- state_t7_avg %>%
       mutate(
-        fplot = ifelse(r > 2, "alarm", ifelse(r < 1, "good", "eh"))
+        fplot = ifelse(r > 1.5, "alarm", ifelse(r < 1, "good", "eh"))
       ) %>%
       add_row(name = "National estimate", r = r_t7_avg, lower = r_t7_lci, upper = r_t7_uci, fplot = "india") %>%
       mutate(
@@ -454,7 +454,7 @@ plot_fig_forest = function() {
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(name, r), "National estimate"), y = r, shape = shape)) +
       geom_hline(yintercept = 1, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = 2, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = 1.5, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
@@ -529,7 +529,7 @@ plot_fig_forest = function() {
   tp_for <- state_test_plt_dat %>%
       # bind_rows(tg_est) %>%
       mutate(
-        fplot = ifelse(test_pos > 0.06, "alarm", ifelse(test_pos < 0.03, "good", "eh"))
+        fplot = ifelse(test_pos > 0.06, "alarm", ifelse(test_pos < 0.02, "good", "eh"))
       ) %>%
       add_row(state = "National estimate", test_pos = tpr_nat_t7_avg, lower = tpr_nat_t7_lci, upper = tpr_nat_t7_uci, fplot = "india") %>%
       mutate(
@@ -537,7 +537,7 @@ plot_fig_forest = function() {
         size  = ifelse(shape == "india", .5, .2)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(state, test_pos), "National estimate"), y = test_pos, shape = shape)) +
-      geom_hline(yintercept = 0.03, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = 0.02, color = "gray40", linetype = 2) +
       geom_hline(yintercept = 0.06, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
