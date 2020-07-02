@@ -1,4 +1,4 @@
-plot_fig_x <- function(forecast, start.date = as.Date("2020-03-15"))
+plot_fig_x <- function(forecast, start.date = as.Date("2020-05-01"))
 {
     data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
     filter(State == forecast) %>%
