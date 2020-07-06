@@ -7,18 +7,20 @@ library(here)
 library(devtools)
 library(eSIR)
 
-source("~/cov-ind-19/model/r_scripts/one_off/cleanr_esir.R")
-
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) { 
         data_repo <- "~/cov-ind-19-data/"
+        code_repo <- "~/cov-ind-19/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 } else {
         data_repo <- "~/cov-ind-19-test/"
+        code_repo <- "~/cov-ind-19-iris/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
+
+source(paste0(code_repo, "/model/r_scripts/cleanr_esir.R"))
 
 today     <- as.Date(Sys.getenv("today"))
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")

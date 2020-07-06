@@ -6,8 +6,10 @@ library(tmap)
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
+	code_repo <- "~/cov-ind-19/"
 } else {
 	data_repo <- "~/cov-ind-19-test/"
+	code_repo <- "~/cov-ind-19-iris/"
 }
 
 today <- Sys.getenv("today")
@@ -25,7 +27,7 @@ kalends.ides <- as.Date(paste0(c(paste0("2020-", 1:12), paste0("2020-", 1:12)),
 ))
 
 # shape file for spatial plot
-india_shp   <- st_read("~/cov-ind-19/model/map/Indian_States.shp")
+india_shp   <- st_read(paste0(code_repo, "/model/map/Indian_States.shp"))
 
 
 data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
