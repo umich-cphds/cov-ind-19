@@ -45,7 +45,10 @@ top_matter <- wellPanel(
           p("India National and State / Union Territory data source: ",
             a("covid19india.org", .noWS = "outside", href = "https://www.covid19india.org")),
           p("R modeling package: ", a("eSIR R package", .noWS = "outside",
-            href = "https://github.com/lilywang1988/eSIR"))
+            href = "https://github.com/lilywang1988/eSIR")),
+          h4("How to cite COVIND19.org:"),
+          p("Ray, D., Salvatore, M., Bhattacharyya, R., Wang, L., Du, J., Mohammed, S., … Mukherjee, B. (2020). Predictions, Role of Interventions and Effects of a Historic National Lockdown in India’s Response to the the COVID-19 Pandemic: Data Science Call to Arms. ", em("Harvard Data Science Review", .noWS = "outside"), ". ",
+            a("https://doi.org/10.1162/99608f92.60e08ed5", .noWS = "outside", href = "https://doi.org/10.1162/99608f92.60e08ed5"))
         ),
       )
     )

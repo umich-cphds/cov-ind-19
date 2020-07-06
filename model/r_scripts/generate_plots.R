@@ -95,9 +95,10 @@ generate_forecast_plots <- function(state)
 }
 
 data <- list(India = generate_forecast_plots("India"),
-			 plots = list(),
-			 states = c(),
-             codes = c()
+			       plots = list(),
+			       states = c(),
+             codes = c(),
+			       gt = list()
 )
 
 source("~/cov-ind-19/model/r_scripts/get_states.R")
@@ -109,5 +110,9 @@ for (state in states.to.forecast) {
     data$codes  <- c(data$codes, state)
 	data$plots[[state]] <- generate_forecast_plots(state)
 }
+
+source("~/cov-ind-19/app/sum_table_app.R")
+data$gt <- India_gt_table()
+gtsave(data$gt, filename = path.expand(paste0(data_repo, today, "/COVIND_table.png")))
 
 save(data, file = paste0(data_repo, today, "/data.RData"))

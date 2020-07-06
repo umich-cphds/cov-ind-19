@@ -5,8 +5,8 @@ account: umich-biostatistics
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2016409
-bundleId: 3228036
+bundleId: 3321149
 url: https://umich-biostatistics.shinyapps.io/covid19/
-when: 1591277152.11261
+when: 1593205685.73118
 asMultiple: FALSE
 asStatic: FALSE

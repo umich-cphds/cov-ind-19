@@ -251,8 +251,8 @@ plot_fig_forest = function() {
     "india" = "black"
   )
   
-  cfr_danger <- 0.03
-  cfr_safe   <- 0.01
+  cfr_danger <- 0.06
+  cfr_safe   <- 0.03
   
   cfr_title    <- "Case fatality rate for COVID-19 in India by state/union territory"
   cfr_subtitle <- glue("as of {format(as.Date(today), '%B %e')}")
@@ -339,9 +339,12 @@ plot_fig_forest = function() {
   dbl_nat_t7_lci <- national %>% pull(dbl) %>% tail(7) %>% min()
   dbl_nat_t7_uci <- national %>% pull(dbl) %>% tail(7) %>% max()
   
+  dbl_danger <- 21
+  dbl_safe   <- 28
+  
   dbl_for <- state_t7_avg %>%
       mutate(
-        fplot = ifelse(dbl < 7, "alarm", ifelse(dbl > 14, "good", "eh"))
+        fplot = ifelse(dbl < dbl_danger, "alarm", ifelse(dbl > dbl_safe, "good", "eh"))
       ) %>%
       add_row(name = "National estimate", dbl = dbl_nat_t7_avg, lower = dbl_nat_t7_lci, upper = dbl_nat_t7_uci, fplot = "india") %>%
       mutate(
@@ -349,8 +352,8 @@ plot_fig_forest = function() {
         size  = ifelse(shape == "india", .5, .2)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(name, desc(dbl)), "National estimate"), y = dbl, shape = shape)) +
-      geom_hline(yintercept = 7, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = 14, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = dbl_danger, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = dbl_safe, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
@@ -362,7 +365,7 @@ plot_fig_forest = function() {
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>",
                         "**Source:** covid19india.org<br>",
                         "**Note:** <br>",
-                        " - Colored red if estimate is below 7 and green if above 14.<br>",
+                        " - Colored red if estimate is below {dbl_danger} and green if above {dbl_safe}.<br>",
                         " - Intervals represent the range of doubling times over the last 7 days.")
       ) +
       coord_flip() +
@@ -443,9 +446,12 @@ plot_fig_forest = function() {
   r_t7_lci <- r_nat_data %>% pull(lower) %>% tail(7) %>% mean()
   r_t7_uci <- r_nat_data %>% pull(upper) %>% tail(7) %>% mean()
   
+  r_safe   <- 1
+  r_danger <- 1.5
+  
   r_est_for <- state_t7_avg %>%
       mutate(
-        fplot = ifelse(r > 2, "alarm", ifelse(r < 1, "good", "eh"))
+        fplot = ifelse(r > r_danger, "alarm", ifelse(r < r_safe, "good", "eh"))
       ) %>%
       add_row(name = "National estimate", r = r_t7_avg, lower = r_t7_lci, upper = r_t7_uci, fplot = "india") %>%
       mutate(
@@ -453,8 +459,8 @@ plot_fig_forest = function() {
         size  = ifelse(shape == "india", .5, .2)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(name, r), "National estimate"), y = r, shape = shape)) +
-      geom_hline(yintercept = 1, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = 2, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = r_safe, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = r_danger, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
@@ -463,7 +469,11 @@ plot_fig_forest = function() {
         subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
         x        = "State/Union territory",
         y        = "R",
-        caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>**Note:**<br> - Average estimate and 95% confidence interval for last 7 days are provided in each plot by state.<br> - Colored red if estimate is above 2 and green if below 1.")
+        caption  = glue("**\uA9 COV-IND-19 Study Group**<br>",
+                        "**Source:** covid19india.org<br>",
+                        "**Note:**<br>",
+                        " - Average estimate and 95% confidence interval for last 7 days are provided in each plot by state.<br>",
+                        " - Colored red if estimate is above {r_danger} and green if below {r_safe}.")
       ) +
       coord_flip(ylim = c(0, 3.5)) +
       covind19_base
@@ -526,10 +536,13 @@ plot_fig_forest = function() {
   tpr_nat_t7_lci <- nat_test %>% pull(test_pos) %>% tail(7) %>% min()
   tpr_nat_t7_uci <- nat_test %>% pull(test_pos) %>% tail(7) %>% max()
   
+  tpr_safe   <- 0.02
+  tpr_danger <- 0.06
+  
   tp_for <- state_test_plt_dat %>%
       # bind_rows(tg_est) %>%
       mutate(
-        fplot = ifelse(test_pos > 0.06, "alarm", ifelse(test_pos < 0.03, "good", "eh"))
+        fplot = ifelse(test_pos > tpr_danger, "alarm", ifelse(test_pos < tpr_safe, "good", "eh"))
       ) %>%
       add_row(state = "National estimate", test_pos = tpr_nat_t7_avg, lower = tpr_nat_t7_lci, upper = tpr_nat_t7_uci, fplot = "india") %>%
       mutate(
@@ -537,8 +550,8 @@ plot_fig_forest = function() {
         size  = ifelse(shape == "india", .5, .2)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(state, test_pos), "National estimate"), y = test_pos, shape = shape)) +
-      geom_hline(yintercept = 0.03, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = 0.06, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = tpr_safe, color = "gray40", linetype = 2) +
+      geom_hline(yintercept = tpr_danger, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
@@ -549,7 +562,7 @@ plot_fig_forest = function() {
         y        = "Test-positive rate",
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>",
                         "**Note:**<br>",
-                        " - Colored red if estimate is above 6 and green if below 3.<br>",
+                        " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.<br>",
                         " - Telangana is based on only 5 days of data.")
       ) +
       coord_flip() +
@@ -577,7 +590,7 @@ plot_fig_forest = function() {
         subtitle = NULL,
         caption = glue("**Notes:**<br>", 
                        " - 7-day average estimate with 95% confidence interval shown.<br>",
-                       " - Colored red if estimate is above 0.03 and green if below 0.01.")),
+                       " - Colored red if estimate is above {cfr_danger} and green if below {cfr_safe}.")),
     dbl_for + 
       # remove + 
       theme(axis.title.y = element_blank()) +
@@ -586,7 +599,7 @@ plot_fig_forest = function() {
         subtitle = NULL,
         caption = glue("**Notes:**<br>", 
                        " - 7-day average estimate with range shown.<br>",
-                       " - Colored red if estimate is below 7 and green if above 14.")),
+                       " - Colored red if estimate is below {dbl_danger} and green if above {dbl_safe}.")),
     r_est_for + 
       # remove + 
       theme(axis.title.y = element_blank()) + 
@@ -595,7 +608,7 @@ plot_fig_forest = function() {
         subtitle = NULL,
         caption = glue("**Notes:**<br>", 
                        " - 7-day average estimate with 95% confidence interval shown.<br>",
-                       " - Colored red if estimate is above 2 and green if below 1.")
+                       " - Colored red if estimate is above {r_danger} and green if below {r_safe}.")
       ),
     tp_for +
       # remove +
@@ -604,7 +617,7 @@ plot_fig_forest = function() {
         subtitle = NULL,
         caption = glue("**Notes:**<br>", 
                        " - 7-day average estimate with range shown.<br>",
-                       " - Colored red if estimate is above 0.06 and green if below 0.03.")
+                       " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
       ) +
       theme(axis.title.y = element_blank()),
     ncol   = 2,
