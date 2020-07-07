@@ -152,7 +152,7 @@ today = as.Date(today)
 # pull forecast estimates ----------
   # cautious 
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
 
     cautious_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_cautious_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
@@ -175,7 +175,7 @@ today = as.Date(today)
     
   # moderate
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
     
     moderate_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_moderate_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
