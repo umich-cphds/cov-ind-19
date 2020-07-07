@@ -62,7 +62,8 @@ state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_te
     prop_pop_test = round((total_tested / population_ncp_2019_projection) * 100, 2)
   ) %>%
   ungroup() %>%
-  dplyr::select(-population_ncp_2019_projection)
+  dplyr::select(-population_ncp_2019_projection) %>%
+  filter(date <= (as.Date(today) - 1))
 
 test <- state_tib %>% 
   left_join(state_test, by = c("date", "name" = "state")) %>%
@@ -114,7 +115,8 @@ india <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_
     daily_test_pos = daily_pos / daily_test,
     prop_pop_test  = round((total_tested / population) * 100, 2)
   ) %>%
-  ungroup()
+  ungroup() %>%
+  filter(date <= (as.Date(today) - 1))
 
 
 nat_sf <- india %>%
