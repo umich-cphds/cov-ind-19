@@ -5,8 +5,10 @@ library(ggtext)
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
+	code_repo <- "~/cov-ind-19/"
 } else {
 	data_repo <- "~/cov-ind-19-test/"
+	code_repo <- "~/cov-ind-19-iris/"
 }
 
 today <- Sys.getenv("today")
@@ -22,33 +24,22 @@ generate_forecast_plots <- function(state)
         message("creating ", path)
     }
 
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_1.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_2.R")
-	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_3.R")
-
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_4.R")
-
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5a.R")
-    # source("~/cov-ind-19/model/r_scripts/plots/plot_fig_5b.R")
-
-	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_7.R")
-
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_8.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_9.R")
-
-	source("~/cov-ind-19/model/r_scripts/plots/plot_fig_x.R")
-
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_10.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_11.R")
-    #source("~/cov-ind-19/model/r_scripts/plots/plot_fig_12.R")
-
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_14.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_15.R")
-    
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_tvr.R")
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_forest.R")
-    
-    source("~/cov-ind-19/model/r_scripts/plots/plot_fig_dbl.R")
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_1.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_2.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_3.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_4.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_5a.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_7.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_8.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_9.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_x.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_10.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_11.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_14.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_15.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_tvr.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_forest.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_dbl.R"))
 
 	plots <- list()
 	if (state == "India") {
@@ -101,7 +92,7 @@ data <- list(India = generate_forecast_plots("India"),
 			       gt = list()
 )
 
-source("~/cov-ind-19/model/r_scripts/get_states.R")
+source(paste0(code_repo, "/model/r_scripts/get_states.R"))
 
 states.to.forecast <- x$State
 print(states.to.forecast)
@@ -111,7 +102,7 @@ for (state in states.to.forecast) {
 	data$plots[[state]] <- generate_forecast_plots(state)
 }
 
-source("~/cov-ind-19/app/sum_table_app.R")
+source(paste0(code_repo, "/app/sum_table_app.R"))
 data$gt <- India_gt_table()
 gtsave(data$gt, filename = path.expand(paste0(data_repo, today, "/COVIND_table.png")))
 

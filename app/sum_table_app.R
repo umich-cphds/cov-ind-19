@@ -15,19 +15,9 @@ if (Sys.getenv("production") == "TRUE") {
 }
 
 India_gt_table = function() {
-# Compute daily counts from cumulative sums
+
 daily = function(x) { c(x[1], diff(x)) }
 
-# @MKLEINSA: REPLACE WITH TODAY VARIABLE
-# today <- list.files("~/cov-ind-19-data/") %>%
-#   as.Date() %>%
-#   na.omit() %>%
-#   max()
-
-# @MKLEINSA: REPLACE WITH DATA.RDATA
-#load(paste0(data_repo, glue("{today}/data.RData")))
-
-# extract data from plots
 cfr1  <- data$India$pforest_cfr1$data %>%
   dplyr::select(name, cfr)
 
@@ -64,13 +54,16 @@ use_abbrevs <- state_tib %>% pull(state) %>% unique()
 state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
   clean_names() %>%
   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
-  dplyr::select(date, positive, total_tested, state) %>%
+  dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
   drop_na() %>%
   group_by(state) %>%
   mutate(
-    daily_tests = daily(total_tested)
+    daily_tests = daily(total_tested),
+    prop_pop_test = round((total_tested / population_ncp_2019_projection) * 100, 2)
   ) %>%
-  ungroup()
+  ungroup() %>%
+  dplyr::select(-population_ncp_2019_projection) %>%
+  filter(date <= (as.Date(today) - 1))
 
 test <- state_tib %>% 
   left_join(state_test, by = c("date", "name" = "state")) %>%
@@ -100,7 +93,7 @@ test <- state_tib %>%
 india <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
   clean_names() %>%
   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
-  dplyr::select(date, positive, total_tested, state) %>%
+  dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
   group_by(state) %>%
   mutate(
     daily_tested   = total_tested - dplyr::lag(total_tested),
@@ -114,13 +107,16 @@ india <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_
     positive     = sum(positive),
     total_tested = sum(total_tested),
     daily_test   = sum(daily_tested),
-    daily_pos    = sum(daily_positive)
+    daily_pos    = sum(daily_positive),
+    population   = sum(population_ncp_2019_projection)
   ) %>%
   mutate(
     test_pos       = positive / total_tested,
-    daily_test_pos = daily_pos / daily_test
+    daily_test_pos = daily_pos / daily_test,
+    prop_pop_test  = round((total_tested / population) * 100, 2)
   ) %>%
-  ungroup()
+  ungroup() %>%
+  filter(date <= (as.Date(today) - 1))
 
 
 nat_sf <- india %>%
@@ -134,6 +130,7 @@ nat_sf <- india %>%
     sf_factor = tpr_ratio - 1
   ) %>%
   add_column(total_tested = (india %>% filter(date == max(date)) %>% pull(total_tested)))  %>%
+  add_column(prop_pop_test = (india %>% filter(date == max(date)) %>% pull(prop_pop_test)))  %>%
   mutate(
     sf = case_when(
       sf_factor * total_tested < 0 ~ 0,
@@ -142,16 +139,22 @@ nat_sf <- india %>%
   )
 
 sf <- test %>%
-  dplyr::select(name, sf) %>%
-  add_row(tibble(name = "National estimate", sf = nat_sf %>% pull(sf))) %>%
+  dplyr::select(name, sf, total_tested, prop_pop_test) %>%
+  add_row(tibble(
+    name = "National estimate",
+    sf = nat_sf %>% pull(sf),
+    total_tested = nat_sf %>% pull(total_tested),
+    prop_pop_test = nat_sf %>% pull(prop_pop_test))) %>%
   mutate(
-    sf = format(round(sf), big.mark = ",")
+    sf = trimws(format(round(sf), big.mark = ",")),
+    total_tested = trimws(format(total_tested, big.mark = ","))
   )
+  
 today = as.Date(today)
 # pull forecast estimates ----------
   # cautious 
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
 
     cautious_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_cautious_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
@@ -174,7 +177,7 @@ today = as.Date(today)
     
   # moderate
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('~/cov-ind-19-data/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
     
     moderate_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_moderate_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
@@ -196,7 +199,6 @@ today = as.Date(today)
       dplyr::select(name, moderate)
 
 # table ----------
-
 tib <- cfr1 %>%
   left_join(dbl, by = "name") %>%
   left_join(r_est, by = "name") %>%
@@ -210,6 +212,8 @@ tib <- cfr1 %>%
     `Doubling time (days)` = dbl,
     R                      = r,
     `Test-positive rate`   = test_pos,
+    `Total tested`         = total_tested,
+    `PPT (%)`              = prop_pop_test,
     `Testing shortfall`    = sf,
     `Cautious return`      = cautious,
     `Moderate return`      = moderate
@@ -220,11 +224,10 @@ tib <- cfr1 %>%
       `Cautious return`   = trimws(format(`Cautious return`, big.mark = ",")),
       `Moderate return`   = trimws(format(`Moderate return`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, `Doubling time (days)`, CFR, `Test-positive rate`, `Testing shortfall`, `Cautious return`, `Moderate return`)
+    dplyr::select(Location, R, `Doubling time (days)`, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `Cautious return`, `Moderate return`)
     
 
-tabl = 
-tib %>%
+tabl <- tib %>%
   gt() %>%
   # format table body text
   tab_style(
@@ -264,11 +267,12 @@ tib %>%
     column_labels.border.bottom.width = 1,
     column_labels.border.bottom.color = "#334422",
     table_body.border.bottom.color    = "#0000001A",
-    data_row.padding                  = px(7)
+    data_row.padding                  = px(4)
   ) %>%
   # column widths
   cols_width(
     vars(Location) ~ px(150),
+    vars(R, CFR, `PPT (%)`) ~ px(75),
     everything() ~ px(100)
   ) %>%
   cols_align(
@@ -286,8 +290,9 @@ tib %>%
       "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
       **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
       Predicted cases are for {format(today + 21, '%B %d')} based on data through {format(today, '%B %e')}. 
-      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown.<br>
-      **Abbrev:** CFR, Case-fatality rate"
+      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
+      National Commission on Population 2019 projections used to calculate PPT.<br>
+      **Abbrev:** CFR, Case-fatality rate; PPT, Proportion of population tested"
       ))
   ) %>%
   # add and format column spanners

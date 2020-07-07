@@ -4,8 +4,10 @@ library(janitor)
 # set variables based on testing or production ----------
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
+	code_repo <- "~/cov-ind-19/"
 } else {
 	data_repo <- "~/cov-ind-19-test/"
+	code_repo <- "~/cov-ind-19-iris/"
 }
 
 today <- Sys.getenv("today")
@@ -27,7 +29,7 @@ filter(Date >= start_date) %>%
 clean_names()
 
 # get states ----------
-source("~/cov-ind-19/model/r_scripts/get_states.R")
+source(paste0(code_repo, "/model/r_scripts/get_states.R"))
 forecasts <- c("India", x$State)
 
 # create data
