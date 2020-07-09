@@ -90,47 +90,27 @@ test <- state_tib %>%
     )
   )
 
-india <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
+nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
   clean_names() %>%
   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
   dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
   group_by(state) %>%
-  mutate(
-    daily_tested   = total_tested - dplyr::lag(total_tested),
-    daily_positive = positive - dplyr::lag(positive)
-  ) %>%
+  drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
+  filter(date == max(date)) %>%
   ungroup() %>%
-  drop_na() %>%
-  dplyr::select(-state) %>%
-  group_by(date) %>%
   summarise(
     positive     = sum(positive),
     total_tested = sum(total_tested),
-    daily_test   = sum(daily_tested),
-    daily_pos    = sum(daily_positive),
     population   = sum(population_ncp_2019_projection)
   ) %>%
   mutate(
     test_pos       = positive / total_tested,
-    daily_test_pos = daily_pos / daily_test,
     prop_pop_test  = round((total_tested / population) * 100, 2)
   ) %>%
-  ungroup() %>%
-  filter(date <= (as.Date(today) - 1))
-
-
-nat_sf <- india %>%
-  mutate(test_pos = positive / total_tested) %>%
-  slice(tail(row_number(), 6)) %>%
-  summarize(
-    tpr_obs = mean(test_pos)
-  ) %>%
   mutate(
-    tpr_ratio = tpr_obs / 0.02,
+    tpr_ratio = test_pos / 0.02,
     sf_factor = tpr_ratio - 1
   ) %>%
-  add_column(total_tested = (india %>% filter(date == max(date)) %>% pull(total_tested)))  %>%
-  add_column(prop_pop_test = (india %>% filter(date == max(date)) %>% pull(prop_pop_test)))  %>%
   mutate(
     sf = case_when(
       sf_factor * total_tested < 0 ~ 0,
@@ -142,9 +122,9 @@ sf <- test %>%
   dplyr::select(name, sf, total_tested, prop_pop_test) %>%
   add_row(tibble(
     name = "National estimate",
-    sf = nat_sf %>% pull(sf),
-    total_tested = nat_sf %>% pull(total_tested),
-    prop_pop_test = nat_sf %>% pull(prop_pop_test))) %>%
+    sf = nat_testing %>% pull(sf),
+    total_tested = nat_testing %>% pull(total_tested),
+    prop_pop_test = nat_testing %>% pull(prop_pop_test))) %>%
   mutate(
     sf = trimws(format(round(sf), big.mark = ",")),
     total_tested = trimws(format(total_tested, big.mark = ","))
