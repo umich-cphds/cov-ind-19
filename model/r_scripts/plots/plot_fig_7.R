@@ -76,6 +76,7 @@ plot_fig_7 <- function()
       vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
       group_by(State) %>% #filter(Cases >= 50) %>%
       arrange(Date) %>%
+      filter(Date >= as.Date('2020-05-01')) %>%
       mutate(Day = seq(n()),
              dailyCases = daily(Cases),
              totalcases = max(Cases),
@@ -88,6 +89,7 @@ plot_fig_7 <- function()
       vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
       group_by(State) %>% #filter(Deaths >= 1) %>%
       arrange(Date) %>%
+      filter(Date >= as.Date('2020-05-01')) %>%
       mutate(Day = seq(n()),
              dailyDeaths = daily(Deaths),
              totalDeaths = max(Deaths),
@@ -164,7 +166,7 @@ plot_fig_7 <- function()
       geom_point(data = distinct(data_caseplot %>% select(full, totalcases, State, Datemax)),
                  aes(x = Datemax, y = totalcases, group = full), size = 2) +
       geom_text(data = distinct(data_caseplot %>% select(full, totalcases, State, Datemax)),
-                aes(x = Datemax - 26, y = max(data_caseplot$totalcases) - 500, group = full, label = paste(totalcases, ' total cases', sep = ' '))) +
+                aes(x = Datemax - 33, y = max(data_caseplot$totalcases) - 500, group = full, label = paste(totalcases, ' total cases', sep = ' '))) +
       labs(title = '',
            subtitle = subtitle,
            caption = caption)
@@ -215,7 +217,7 @@ plot_fig_7 <- function()
       geom_point(data = distinct(data_deathplot %>% select(full, totalDeaths, State, Datemax)),
                  aes(x = Datemax, y = totalDeaths, group = full), size = 2) +
       geom_text(data = distinct(data_deathplot %>% select(full, totalDeaths, State, Datemax)),
-                aes(x = Datemax - 26, y = max(data_deathplot$totalDeaths) - 50, group = full, label = paste(totalDeaths, ' total deaths', sep = ' '))) +
+                aes(x = Datemax - 33, y = max(data_deathplot$totalDeaths) - 50, group = full, label = paste(totalDeaths, ' total deaths', sep = ' '))) +
       labs(title = '',
            subtitle = subtitle,
            caption = caption)

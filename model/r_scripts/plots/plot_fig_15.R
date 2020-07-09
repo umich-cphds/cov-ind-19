@@ -74,7 +74,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     tsing =
       tsing %>%
       mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
-      filter(Dates >= as.Date(start.date)) %>%
+      filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, Positive, Total.Tested, State) %>% 
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
@@ -110,7 +110,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     tsing =
       tsing %>%
       mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
-      filter(Dates >= as.Date(start.date)) %>%
+      filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, Positive, Total.Tested, State, abbrev) %>% 
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
