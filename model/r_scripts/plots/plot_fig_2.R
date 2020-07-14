@@ -1,4 +1,4 @@
-plot_fig_2 <- function(start.date = as.Date(today) - 90)
+plot_fig_2 <- function(start.date = '2020-03-01')
 {
     Day.max <- 100
     cases.threshold <- 100
