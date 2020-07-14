@@ -1,12 +1,3 @@
-# Set variables based on testing or production
-if (Sys.getenv("production") == "TRUE") {
-    data_repo <- "~/cov-ind-19-data/"
-    today     <- Sys.getenv("today")
-} else {
-    data_repo <- "~/cov-ind-19-test/"
-    today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
-}
-
 plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
 {
     data <- vroom(paste0(data_repo, today, "/testing.csv")) %>%

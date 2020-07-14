@@ -1,13 +1,4 @@
 library(janitor)
-
-if (Sys.getenv("production") == "TRUE") {
-  data_repo <- "~/cov-ind-19-data/"
-  today     <- Sys.getenv("today")
-} else {
-  data_repo <- "~/cov-ind-19-test/"
-  today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
-}
-
 # calculate dbl_time ----------
 dbl_timr <- function(data, end_date, time) {
   
