@@ -1,5 +1,5 @@
 plot_fig_5a <- function(forecast, start.date = as.Date(today),
-                        end.date = end.date <- as.Date("2020-07-15"))
+                        end.date = end.date <- as.Date("2020-09-15"))
 {
     data <- read_tsv(paste0(data_repo, today, "/1wk/", forecast,
                             "_plot_data.txt")
