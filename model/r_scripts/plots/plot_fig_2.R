@@ -1,4 +1,4 @@
-plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
+plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 {
     Day.max <- 100
     cases.threshold <- 100
@@ -12,7 +12,8 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     arrange(Date) %>%
     mutate(Day = seq(n()) - 1) %>%
     ungroup() %>%
-    filter(Day <= Day.max) %>%
+    filter(Day > 30) %>%
+    #filter(Day <= Day.max) %>%
     mutate(Date = format(Date, format = "%b %e")) %>%
     mutate(Cases_fmt = fmt(Cases)) %>%
     mutate(text = paste0(Country, "<br>", Date, ": ", Cases_fmt,
@@ -24,7 +25,8 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     arrange(Date) %>%
     mutate(Day = seq(n()) - 1) %>%
     ungroup() %>%
-    filter(Day <= Day.max) %>%
+    filter(Day > 30) %>%
+    #filter(Day <= Day.max) %>%
     mutate(Date = format(Date, format = "%b %e")) %>%
     mutate(Deaths_fmt = fmt(Deaths)) %>%
     mutate(text = paste0(Country, "<br>", Date, ": ", Deaths_fmt,
@@ -46,13 +48,13 @@ plot_fig_2 <- function(start.date = as.Date("2020-03-01"))
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                         titlefont = axis.title.font, showticklabels = TRUE,
                         tickangle = 0, showline = T, zeroline = F,
-                        range = list(0, 100)
+                        range = list(30, 100 + 50)
     )
 
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                          titlefont = axis.title.font, showticklabels = TRUE,
                          tickangle = 0, showline = T, zeroline = F,
-                         range = list(0, 100)
+                         range = list(30, 100 + 50)
     )
 
 
