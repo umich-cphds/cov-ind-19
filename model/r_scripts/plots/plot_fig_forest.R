@@ -374,7 +374,7 @@ plot_fig_forest = function() {
   t_end   <- t_start + 4
   
   res <- estimate_R(
-    incid     = r_nat_dat$total_cases,
+    incid     = r_nat_dat$daily_cases,
     method    = "parametric_si",
     config    = make_config(
       mean_si             = 7,
