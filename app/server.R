@@ -37,6 +37,7 @@ source("forecast.R", local = T)
 source("state.R", local = T)
 source("testing.R", local = T)
 source("metrics.R", local = T)
+source("india_snapshot.R", local = TRUE)
 
 print(sessionInfo())
 
@@ -126,6 +127,10 @@ shinyServer(function(input, output)
     
     output$India_gt = render_gt({
         data$gt
+    })
+    
+    output$gt_india_snapshot = render_gt({
+        snapshot()
     })
     
     output$download_gt = downloadHandler(
