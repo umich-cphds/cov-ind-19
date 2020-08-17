@@ -60,5 +60,4 @@ else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
 
-sleep 24h
-sbatch ~/$code_repo/model/slurm_scripts/master_india.slurm
+sbatch --begin=now+24hour ~/$code_repo/model/slurm_scripts/master_india.slurm
