@@ -5,6 +5,7 @@ library(gridExtra)
 library(ggtext)
 library(grid)
 library(extrafont)
+library(gt)
 
 if (Sys.getenv("IRIS") == "TRUE") {
     branch <- "IRIS"
