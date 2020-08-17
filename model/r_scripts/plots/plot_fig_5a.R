@@ -29,8 +29,10 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
     yaxis <- list(title = "Cumulative number of infected cases per 100,000",
     titlefont = axis.title.font, zeroline = T)
 
-    anno.data <- filter(data, as.character(date) %in% c("2020-05-15", "2020-06-15",
-                                           "2020-07-15", "2020-08-15")
+    anno.data <- filter(data, as.character(date) %in% c("2020-08-15", "2020-09-15", 
+                                                        "2020-10-15", "2020-11-15",
+                                                        "2020-12-15", "2021-01-15",
+                                                        "2021-02-15", "2021-03-15")
     ) %>%
     group_by(date) %>% summarise(diff = (max(value) - min(value)),
                                   value = max(value) * 1e5 / 1.34e9
