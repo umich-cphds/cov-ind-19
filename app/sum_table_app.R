@@ -51,13 +51,14 @@ state_tib <- read_tsv(paste0(data_repo, glue("{today}/covid19india_data.csv")), 
 # @MKLEINSA: PROBABLY REMOVE AFTER INCORPORATING USE_ABBREVS
 use_abbrevs <- state_tib %>% pull(state) %>% unique()
 
-state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
+state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1100) %>%
   clean_names() %>%
   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
   dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
-  drop_na() %>%
+  #drop_na() %>%
   group_by(state) %>%
   mutate(
+    population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE),
     daily_tests = daily(total_tested),
     prop_pop_test = round((total_tested / population_ncp_2019_projection) * 100, 2)
   ) %>%
@@ -81,7 +82,7 @@ test <- state_tib %>%
   ungroup() %>%
   left_join(state_test %>% 
               group_by(state) %>% 
-              filter(date == max(date)) %>%
+              filter(date == max(date) - 1) %>%
               ungroup(), by = c("name" = "state")) %>%
   mutate(
     sf = case_when(
@@ -90,18 +91,19 @@ test <- state_tib %>%
     )
   )
 
-nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols()) %>%
+nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1200) %>%
   clean_names() %>%
   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
   dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
   group_by(state) %>%
-  drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
-  filter(date == max(date)) %>%
+  mutate(population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE)) %>%
+ # drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
+  filter(date == max(date) - 1) %>%
   ungroup() %>%
   summarise(
-    positive     = sum(positive),
-    total_tested = sum(total_tested),
-    population   = sum(population_ncp_2019_projection)
+    positive     = sum(positive, na.rm = TRUE),
+    total_tested = sum(total_tested, na.rm = TRUE),
+    population   = sum(population_ncp_2019_projection, na.rm = TRUE)
   ) %>%
   mutate(
     test_pos       = positive / total_tested,
