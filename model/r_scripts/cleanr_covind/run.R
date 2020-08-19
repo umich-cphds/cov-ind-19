@@ -4,7 +4,7 @@ source("../model/r_scripts/cleanr_covind/functions.R")
 set_seed <- 46342
 set.seed(set_seed)
 
-d <- "2020-08-18"
+d <- Sys.getenv("today")
 
 dat <- do_it_all(d = d)
 
