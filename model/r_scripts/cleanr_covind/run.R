@@ -19,6 +19,8 @@ r0_est <- get_r_est(dat)
 
 #write_csv(f_dat, file = paste0(data_repo, today, '/.csv'))
 
+write_csv(dat, paste0(data_repo, today, '/everything.csv'))
+
 write_csv(cfr, paste0(data_repo, today, '/cfr_t7_avg.csv'))
 
 write_csv(r0_est, paste0(data_repo, today, '/r0_t7_avg.csv'))
