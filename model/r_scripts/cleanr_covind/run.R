@@ -1,5 +1,5 @@
-source("../model/r_scripts/cleanr_covind/packages.R")
-source("../model/r_scripts/cleanr_covind/functions.R")
+source(paste0(code_repo, "/model/r_scripts/cleanr_covind/packages.R")
+source(paste0(code_repo, "/model/r_scripts/cleanr_covind/functions.R")
 
 set_seed <- 46342
 set.seed(set_seed)
