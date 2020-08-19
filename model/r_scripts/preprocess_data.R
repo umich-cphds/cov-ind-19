@@ -156,7 +156,7 @@ write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_number
           paste0(data_repo, today, '/statewise_tested_numbers_data.csv'))
 
 
-
+source("../model/r_scripts/cleanr_covind/run.R")
 
 
 
