@@ -145,7 +145,8 @@ sf <- test %>%
       TRUE ~ place
     ),
     shortfall = trimws(format(round(shortfall), big.mark = ",")),
-    total_tested = trimws(format(total_tests, big.mark = ","))
+    total_tested = trimws(format(total_tests, big.mark = ",")),
+    ppt = round(ppt * 100, digits = 2) 
   ) 
     
 
