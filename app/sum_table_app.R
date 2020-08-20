@@ -66,77 +66,94 @@ state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_te
   dplyr::select(-population_ncp_2019_projection) %>%
   filter(date <= (as.Date(today) - 1))
 
-test <- state_tib %>% 
-  left_join(state_test, by = c("date", "name" = "state")) %>%
-  drop_na() %>%
-  group_by(name) %>%
-  mutate(test_pos = positive / total_tested) %>%
-  slice(tail(row_number(), 6)) %>%
-  summarize(
-    tpr_obs = mean(test_pos)
-  ) %>%
-  mutate(
-    tpr_ratio = tpr_obs / 0.02,
-    sf_factor = tpr_ratio - 1
-  ) %>%
-  ungroup() %>%
-  left_join(state_test %>% 
-              group_by(state) %>% 
-              filter(date == max(date) - 1) %>%
-              ungroup(), by = c("name" = "state")) %>%
-  mutate(
-    sf = case_when(
-      sf_factor * total_tested < 0 ~ 0,
-      sf_factor * total_tested >= 0 ~ sf_factor * total_tested
-    )
-  )
+test <- read_csv(paste0(data_repo, glue("{today}/everything.csv")))
 
-nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1200) %>%
-  clean_names() %>%
-  mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
-  dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
-  group_by(state) %>%
-  mutate(population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE)) %>%
- # drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
-  filter(date == max(date) - 1) %>%
-  ungroup() %>%
-  summarise(
-    positive     = sum(positive, na.rm = TRUE),
-    total_tested = sum(total_tested, na.rm = TRUE),
-    population   = sum(population_ncp_2019_projection, na.rm = TRUE)
-  ) %>%
-  mutate(
-    test_pos       = positive / total_tested,
-    prop_pop_test  = round((total_tested / population) * 100, 2)
-  ) %>%
-  mutate(
-    tpr_ratio = test_pos / 0.02,
-    sf_factor = tpr_ratio - 1
-  ) %>%
-  mutate(
-    sf = case_when(
-      sf_factor * total_tested < 0 ~ 0,
-      sf_factor * total_tested >= 0 ~ sf_factor * total_tested
-    )
-  )
+# test <- state_tib %>% 
+#   left_join(state_test, by = c("date", "name" = "state")) %>%
+#   drop_na() %>%
+#   group_by(name) %>%
+#   mutate(test_pos = positive / total_tested) %>%
+#   slice(tail(row_number(), 6)) %>%
+#   summarize(
+#     tpr_obs = mean(test_pos)
+#   ) %>%
+#   mutate(
+#     tpr_ratio = tpr_obs / 0.02,
+#     sf_factor = tpr_ratio - 1
+#   ) %>%
+#   ungroup() %>%
+#   left_join(state_test %>% 
+#               group_by(state) %>% 
+#               filter(date == max(date) - 1) %>%
+#               ungroup(), by = c("name" = "state")) %>%
+#   mutate(
+#     sf = case_when(
+#       sf_factor * total_tested < 0 ~ 0,
+#       sf_factor * total_tested >= 0 ~ sf_factor * total_tested
+#     )
+#   )
+
+# nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1200) %>%
+#   clean_names() %>%
+#   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
+#   dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
+#   group_by(state) %>%
+#   mutate(population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE)) %>%
+#  # drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
+#   filter(date == max(date) - 1) %>%
+#   ungroup() %>%
+#   summarise(
+#     positive     = sum(positive, na.rm = TRUE),
+#     total_tested = sum(total_tested, na.rm = TRUE),
+#     population   = sum(population_ncp_2019_projection, na.rm = TRUE)
+#   ) %>%
+#   mutate(
+#     test_pos       = positive / total_tested,
+#     prop_pop_test  = round((total_tested / population) * 100, 2)
+#   ) %>%
+#   mutate(
+#     tpr_ratio = test_pos / 0.02,
+#     sf_factor = tpr_ratio - 1
+#   ) %>%
+#   mutate(
+#     sf = case_when(
+#       sf_factor * total_tested < 0 ~ 0,
+#       sf_factor * total_tested >= 0 ~ sf_factor * total_tested
+#     )
+#   )
+
+# sf <- test %>%
+#   dplyr::select(place, total_tests, ppt, shortfall) %>%
+#   mutate(
+#     place == "India" ~ "National estimate",
+#     TRUE ~ place
+#     mutate(
+#       shortfall = trimws(format(round(shortfall), big.mark = ",")),
+#       total_tested = trimws(format(total_tests, big.mark = ","))
+#     )
+
+today = as.Date(today)
 
 sf <- test %>%
-  dplyr::select(name, sf, total_tested, prop_pop_test) %>%
-  add_row(tibble(
-    name = "National estimate",
-    sf = nat_testing %>% pull(sf),
-    total_tested = nat_testing %>% pull(total_tested),
-    prop_pop_test = nat_testing %>% pull(prop_pop_test))) %>%
+  dplyr::group_by(place) %>%
+  dplyr::filter(date == max(date)) %>%
+  ungroup() %>%
+  dplyr::select(place, total_tests, ppt, shortfall) %>%
   mutate(
-    sf = trimws(format(round(sf), big.mark = ",")),
-    total_tested = trimws(format(total_tested, big.mark = ","))
-  )
-  
-today = as.Date(today)
+    place = case_when(
+      place == "India" ~ "National estimate",
+      TRUE ~ place
+    ),
+    shortfall = trimws(format(round(shortfall), big.mark = ",")),
+    total_tested = trimws(format(total_tests, big.mark = ",")),
+    ppt = round(ppt * 100, digits = 2) 
+  ) 
+    
+
 # pull forecast estimates ----------
   # cautious 
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
 
     cautious_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_cautious_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
@@ -185,7 +202,7 @@ tib <- cfr1 %>%
   left_join(dbl, by = "name") %>%
   left_join(r_est, by = "name") %>%
   left_join(tp, by = "name") %>%
-  left_join(sf, by = "name") %>%
+  left_join(sf, by = c("name" = "place")) %>%
   left_join(cautious_est, by = "name") %>%
   left_join(moderate_est, by = "name") %>%
   rename(
@@ -195,8 +212,8 @@ tib <- cfr1 %>%
     R                      = r,
     `Test-positive rate`   = test_pos,
     `Total tested`         = total_tested,
-    `PPT (%)`              = prop_pop_test,
-    `Testing shortfall`    = sf,
+    `PPT (%)`              = ppt,
+    `Testing shortfall`    = shortfall,
     `Cautious return`      = cautious,
     `Moderate return`      = moderate
     ) %>%

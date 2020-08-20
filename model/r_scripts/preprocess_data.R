@@ -5,8 +5,10 @@ library(vroom)
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
+	code_repo <- "~/cov-ind-19/"
 } else {
 	data_repo <- "~/cov-ind-19-test/"
+	code_repo <- "~/cov-ind-19-iris/"
 }
 
 today     <- Sys.getenv("today")
@@ -156,7 +158,7 @@ write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_number
           paste0(data_repo, today, '/statewise_tested_numbers_data.csv'))
 
 
-
+source(paste0(code_repo, "/model/r_scripts/cleanr_covind/run.R"))
 
 
 
