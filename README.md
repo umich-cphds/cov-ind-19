@@ -1,7 +1,7 @@
 # COV-IND-19 Study Group
 
 ### Description
-`cov-ind-19` houses code, data, and other products of from the COV-IND-19 Study Group aimed at describing and projecting the COVID-19 outbreak in India along with potential intervenntions.
+`cov-ind-19` houses code, data, and other products of from the COV-IND-19 Study Group aimed at describing and projecting the COVID-19 outbreak in India along with potential interventions.
 
 For those interested in the SEIR model with testing misclassification model code, please visit [Ritwik Bhaduri's GitHub repository here](https://github.com/Ritwik-Bhaduri/SEIR_misclassification-Delhi).
 
