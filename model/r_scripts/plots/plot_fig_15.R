@@ -1,6 +1,8 @@
-plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
+plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
   
   tsing = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
+  
+  everything = read.csv("/everything.csv")
   
   subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
@@ -62,20 +64,19 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
   
   if(state == 'India') {
     
-    tsing =
-      tsing %>%
-      mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
+    everything = 
+      everything %>%
+      filter(abbrev == state) %>%
+      mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
-      select(Dates, Positive, Total.Tested, State) %>% 
+      select(Dates, tpr, total_tests, place) %>% 
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
       group_by(Dates) %>%
-      summarise(total_positive = sum(Positive, na.rm = TRUE),
-                total_tests = sum(Total.Tested, na.rm = TRUE)) %>%
-      mutate(total_positive = cumsum(total_positive),
-             total_tests = cumsum(total_tests)) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', round(total_positive*100/total_tests, digits = 2), '%', sep = ''))
-    
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', 
+                          round(tpr * 100, digits = 2), '%', sep = '')) %>%
+      ungroup()
+      
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
     
@@ -88,7 +89,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
     
-    p = plot_ly(tsing, x = ~Dates, y = ~total_positive/total_tests, text = ~text,
+    p = plot_ly(everything, x = ~Dates, y = ~tpr, text = ~text, type = "scatter",
                   hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
                   showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
     ) %>%
@@ -98,16 +99,18 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     
   } else {
     
-    tsing =
-      tsing %>%
-      mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
+    everything = 
+      everything %>%
+      filter(abbrev == state) %>%
+      mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
-      select(Dates, Positive, Total.Tested, State, abbrev) %>% 
+      select(Dates, tpr, total_tests, place) %>% 
       mutate(Dates = format(Dates, format = '%b %d'),
              Dates = as.Date(Dates, format = '%b %d')) %>% 
-      filter(abbrev == state) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', round(Positive*100/Total.Tested, digits = 2), '%', sep = ''))
-    
+      group_by(Dates) %>%
+      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', 
+                          round(tpr * 100, digits = 2), '%', sep = '')) %>%
+      ungroup()
     
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
@@ -121,7 +124,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-04-01") {
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
     
-    p = plot_ly(tsing, x = ~Dates, y = ~Positive/Total.Tested, text = ~text,
+    p = plot_ly(everything, x = ~Dates, y = ~tpr, text = ~text, type = "scatter",
                 hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
                 showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
     ) %>%
