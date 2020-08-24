@@ -18,23 +18,9 @@ India_gt_table = function() {
 
 daily = function(x) { c(x[1], diff(x)) }
 
-# cfr1  <- data$India$pforest_cfr1$data %>%
-#   dplyr::select(name, cfr)
-
-dbl   <- data$India$pforest_dbl$data %>%
-  dplyr::select(name, dbl)
-
-# r_est <- data$India$pforest_r_est$data %>%
-#   dplyr::select(name, r)
-# 
-# tp    <- data$India$pforest_tp$data %>%
-#   dplyr::rename(name = state) %>%
-#   dplyr::select(name, test_pos)
-
 tp = read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
 cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
 r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
-
 
 # shortfall -----------
 use_abbrevs <- tp %>% pull(abbrev) %>% unique()
@@ -121,7 +107,6 @@ sf <- tp %>%
 
 # table ----------
 tib <- cfr1 %>%
-  #left_join(dbl, by = c("place" = "name")) %>%
   left_join(r_est %>% mutate(place = recode(place, "India" = "National estimate")), by = c("place")) %>%
   left_join(tp %>% extract_latest(cols = c("tpr", "dbl")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
@@ -269,4 +254,3 @@ tabl <- tib %>%
   )
 tabl
 }
-
