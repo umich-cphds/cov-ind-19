@@ -23,7 +23,7 @@ cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
 r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
 
 # shortfall -----------
-use_abbrevs <- tp %>% pull(abbrev) %>% unique()
+use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
 
 # state data ----------
 
