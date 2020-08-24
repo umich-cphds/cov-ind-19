@@ -18,125 +18,20 @@ India_gt_table = function() {
 
 daily = function(x) { c(x[1], diff(x)) }
 
-cfr1  <- data$India$pforest_cfr1$data %>%
-  dplyr::select(name, cfr)
-
-dbl   <- data$India$pforest_dbl$data %>%
-  dplyr::select(name, dbl)
-
-r_est <- data$India$pforest_r_est$data %>%
-  dplyr::select(name, r)
-
-tp    <- data$India$pforest_tp$data %>%
-  dplyr::rename(name = state) %>%
-  dplyr::select(name, test_pos)
+tp = read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
+cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
+r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
 
 # shortfall -----------
-# @MKLEINSA: USE ABBREVS INSTEAD??
-use_states <- r_est %>% filter(name != "National estimate") %>% pull(name)
+use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
 
 # state data ----------
-state_tib <- read_tsv(paste0(data_repo, glue("{today}/covid19india_data.csv")), col_types = cols()) %>%
-  clean_names() %>%
-  filter(name %in% use_states) %>%
-  group_by(name) %>%
-  arrange(date) %>%
-  mutate(
-    day         = seq(n()),
-    daily_cases = daily(cases),
-    total_cases = max(cases),
-    date_max    = max(date)
-  ) %>% 
-  ungroup()
-# @MKLEINSA: PROBABLY REMOVE AFTER INCORPORATING USE_ABBREVS
-use_abbrevs <- state_tib %>% pull(state) %>% unique()
-
-state_test <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1100) %>%
-  clean_names() %>%
-  mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
-  dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
-  #drop_na() %>%
-  group_by(state) %>%
-  mutate(
-    population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE),
-    daily_tests = daily(total_tested),
-    prop_pop_test = round((total_tested / population_ncp_2019_projection) * 100, 2)
-  ) %>%
-  ungroup() %>%
-  dplyr::select(-population_ncp_2019_projection) %>%
-  filter(date <= (as.Date(today) - 1))
-
-test <- read_csv(paste0(data_repo, glue("{today}/everything.csv")))
-
-# test <- state_tib %>% 
-#   left_join(state_test, by = c("date", "name" = "state")) %>%
-#   drop_na() %>%
-#   group_by(name) %>%
-#   mutate(test_pos = positive / total_tested) %>%
-#   slice(tail(row_number(), 6)) %>%
-#   summarize(
-#     tpr_obs = mean(test_pos)
-#   ) %>%
-#   mutate(
-#     tpr_ratio = tpr_obs / 0.02,
-#     sf_factor = tpr_ratio - 1
-#   ) %>%
-#   ungroup() %>%
-#   left_join(state_test %>% 
-#               group_by(state) %>% 
-#               filter(date == max(date) - 1) %>%
-#               ungroup(), by = c("name" = "state")) %>%
-#   mutate(
-#     sf = case_when(
-#       sf_factor * total_tested < 0 ~ 0,
-#       sf_factor * total_tested >= 0 ~ sf_factor * total_tested
-#     )
-#   )
-
-# nat_testing <- read_csv(url("https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv"), col_types = cols(), guess_max = 1200) %>%
-#   clean_names() %>%
-#   mutate(date = as.Date(updated_on, format = '%d/%m/%Y')) %>%
-#   dplyr::select(date, positive, total_tested, state, population_ncp_2019_projection) %>%
-#   group_by(state) %>%
-#   mutate(population_ncp_2019_projection = median(population_ncp_2019_projection, na.rm = TRUE)) %>%
-#  # drop_na(c(positive, total_tested, population_ncp_2019_projection)) %>%
-#   filter(date == max(date) - 1) %>%
-#   ungroup() %>%
-#   summarise(
-#     positive     = sum(positive, na.rm = TRUE),
-#     total_tested = sum(total_tested, na.rm = TRUE),
-#     population   = sum(population_ncp_2019_projection, na.rm = TRUE)
-#   ) %>%
-#   mutate(
-#     test_pos       = positive / total_tested,
-#     prop_pop_test  = round((total_tested / population) * 100, 2)
-#   ) %>%
-#   mutate(
-#     tpr_ratio = test_pos / 0.02,
-#     sf_factor = tpr_ratio - 1
-#   ) %>%
-#   mutate(
-#     sf = case_when(
-#       sf_factor * total_tested < 0 ~ 0,
-#       sf_factor * total_tested >= 0 ~ sf_factor * total_tested
-#     )
-#   )
-
-# sf <- test %>%
-#   dplyr::select(place, total_tests, ppt, shortfall) %>%
-#   mutate(
-#     place == "India" ~ "National estimate",
-#     TRUE ~ place
-#     mutate(
-#       shortfall = trimws(format(round(shortfall), big.mark = ",")),
-#       total_tested = trimws(format(total_tests, big.mark = ","))
-#     )
 
 today = as.Date(today)
 
-sf <- test %>%
+sf <- tp %>%
   dplyr::group_by(place) %>%
-  dplyr::filter(date == max(date)) %>%
+  dplyr::filter(date == max(as.Date(date))) %>%
   ungroup() %>%
   dplyr::select(place, total_tests, ppt, shortfall) %>%
   mutate(
@@ -148,7 +43,6 @@ sf <- test %>%
     total_tested = trimws(format(total_tests, big.mark = ",")),
     ppt = round(ppt * 100, digits = 2) 
   ) 
-    
 
 # pull forecast estimates ----------
   # cautious 
@@ -161,13 +55,13 @@ sf <- test %>%
     eval(parse(text = glue("cautious_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, cautious_india)")))
     cautious_est <- cautious_est %>%
       left_join(
-        state_tib %>%
-          dplyr::select(abbrev = state, name), by = "abbrev") %>%
+        tp %>%
+          dplyr::select(abbrev, place), by = "abbrev") %>%
       distinct() %>%
       mutate(
         name = case_when(
           abbrev == "India" ~ "National estimate",
-          abbrev != "India" ~ name)
+          abbrev != "India" ~ place)
         ) %>%
       mutate(
         cautious = value
@@ -184,33 +78,46 @@ sf <- test %>%
     eval(parse(text = glue("moderate_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, moderate_india)")))
     moderate_est <- moderate_est %>%
       left_join(
-        state_tib %>%
-          dplyr::select(abbrev = state, name), by = "abbrev") %>%
+        tp %>%
+          dplyr::select(abbrev, place), by = "abbrev") %>%
       distinct() %>%
       mutate(
         name = case_when(
           abbrev == "India" ~ "National estimate",
-          abbrev != "India" ~ name)
+          abbrev != "India" ~ place)
       ) %>%
       mutate(
         moderate = value
       ) %>%
       dplyr::select(name, moderate)
+    
+    extract_latest <- function(data, group = place, cols = c("total_tests", "tpr", "dbl", "ppt")) {
+      out <- data %>%
+        group_by({{ group }}) %>%
+        filter(date == max(date)) %>%
+        ungroup() %>%
+        select({{ group }}, date, all_of(cols))
+      if ("India" %in% data[[paste0(substitute(group))]]) {
+        out[[paste0(substitute(group))]] <- recode(out[[paste0(substitute(group))]],
+                                                   "India" = "National estimate")
+      }
+      return(out)
+    }
+    tp %>% extract_latest()
 
 # table ----------
 tib <- cfr1 %>%
-  left_join(dbl, by = "name") %>%
-  left_join(r_est, by = "name") %>%
-  left_join(tp, by = "name") %>%
-  left_join(sf, by = c("name" = "place")) %>%
-  left_join(cautious_est, by = "name") %>%
-  left_join(moderate_est, by = "name") %>%
+  left_join(r_est %>% mutate(place = recode(place, "India" = "National estimate")), by = c("place")) %>%
+  left_join(tp %>% extract_latest(cols = c("tpr", "dbl")), by = c("place")) %>%
+  left_join(sf, by = c("place")) %>%
+  left_join(cautious_est, by = c("place" = "name")) %>%
+  left_join(moderate_est, by = c("place" = "name")) %>%
   rename(
-    Location               = name,
+    Location               = place,
     CFR                    = cfr,
     `Doubling time (days)` = dbl,
     R                      = r,
-    `Test-positive rate`   = test_pos,
+    `Test-positive rate`   = tpr,
     `Total tested`         = total_tested,
     `PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
@@ -329,7 +236,7 @@ tabl <- tib %>%
   ) %>%
   data_color(
     columns = vars(`Doubling time (days)`),
-    colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 100), pretty = F, reverse = TRUE)
+    colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
   ) %>%
   data_color(
     columns = vars(CFR),
@@ -347,4 +254,3 @@ tabl <- tib %>%
   )
 tabl
 }
-
