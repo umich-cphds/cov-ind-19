@@ -31,9 +31,9 @@ dbl   <- data$India$pforest_dbl$data %>%
 #   dplyr::rename(name = state) %>%
 #   dplyr::select(name, test_pos)
 
-tp = read_csv(paste0(data_repo, today, "/everything.csv"))
-cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"))
-r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"))
+tp = read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
+cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
+r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
 
 
 # shortfall -----------
