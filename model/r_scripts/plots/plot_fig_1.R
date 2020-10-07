@@ -1,4 +1,4 @@
-plot_fig_1 <- function(start.date = as.Date("2020-05-01"))
+plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
 {
     data <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = cols()) %>%
     filter(Country == "India") %>%
