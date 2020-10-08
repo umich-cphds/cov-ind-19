@@ -29,6 +29,8 @@ top_matter <- wellPanel(
           h4("References"),
           p("Read our forecasting and lockdown effects study: ", a("Ray et al. 2020", .noWS = "outside", href = "https://hdsr.mitpress.mit.edu/pub/r1qq01kw/release/2")),
           p("Read our nation vs state-level trends paper (medRxiv): ", a("Basu et al. 2020", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2020.05.25.20113043v1")), 
+          p("Comparing 5 COVID-19 models in India: ", a("Purkayastha et al. 2020", .noWS = "outside", href = "https://doi.org/10.1101/2020.09.19.20198010")),
+          p("Extending SEIR model for imperfect testing: ", a("Bhaduri et al. 2020", .noWS = "outside", href = "https://doi.org/10.1101/2020.09.24.20200238"),
           p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"),
             " (this is a direct download link, check your downloads folder)"),
           p(a("View webinar slides", .noWS = "outside", href = "https://sph.umich.edu/precision-health-data-science/research/pdf/COVIND19_UConn_May22.pdf"), " (this is a direct download link, check your downloads folder)"),
