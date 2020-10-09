@@ -39,7 +39,7 @@ top_matter <- wellPanel(
             href = "https://medium.com/@covind_19/historic-lockdown-prediction-models-to-study-lockdown-effects-and-the-role-of-data-in-the-crisis-a0afeeec5a6"), ", and ", a("unlocking the lockdown (April 24)", .noWS = "outside",
             href = "https://medium.com/@covind_19/unlocking-the-40-day-national-lockdown-in-india-there-is-no-magic-key-de4e43177cb4")),
           p("Source code: ", a("COV-IND-19 GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19"))
-        ),
+        )),
         column(5,
           h4("Sources"),
           p("Non-India country-level data source: ", a("JHU CSSE COVID-19 GitHub", .noWS = "outside",
