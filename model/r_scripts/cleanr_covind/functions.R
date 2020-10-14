@@ -75,6 +75,7 @@ get_testing_data <- function(d) {
         janitor::clean_names() %>%
         dplyr::mutate(
             date = as.Date(updated_on, "%d/%m/%Y"),
+            tests_per_million = total_tested / 1332830000 * 1e6,
             ppt  = tests_per_million / 1e6
         ) %>%
         dplyr::select(date, place = state, total_tests = total_tested, ppt) %>%
