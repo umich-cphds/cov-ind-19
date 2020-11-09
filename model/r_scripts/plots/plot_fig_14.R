@@ -1,4 +1,4 @@
-plot_fig_14 <- function(start.date = "2020-04-01") {
+plot_fig_14 <- function(start.date = "2020-05-01") {
   
   tsing_by_state = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
   
@@ -114,7 +114,7 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
     geom_point(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
                aes(x = Datemax, y = Positive/Total.Tested, group = State), size = 2) +
     geom_text(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
-              aes(x = Datemax - 20, y = 0.14, group = State, label = paste(Total.Tested, ' total tested', sep = ' '))) +
+              aes(x = Datemax - 20, y = Positive/Total.Tested + 0.1, group = State, label = paste(Total.Tested, ' tested', sep = ' '))) +
     theme_bw() + 
     xlab('\nDate') + ylab('Positive cases / Total tested\n') +
     theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),
@@ -130,7 +130,7 @@ plot_fig_14 <- function(start.date = "2020-04-01") {
     scale_y_continuous(sec.axis = sec_axis(~ ., labels = NotFancy), labels = NotFancy) +  
     scale_color_manual(values = c('Positive cases / Total tested' = "#36A30B"),
                        name = 'Testing') + 
-    scale_x_date(date_breaks = "2 week", date_labels = "%b %d") + 
+    scale_x_date(date_breaks = "2 month", date_labels = "%b %d") + 
     labs(title = '',
          subtitle = subtitle,
          caption = caption)
