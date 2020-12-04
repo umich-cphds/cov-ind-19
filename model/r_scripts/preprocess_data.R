@@ -83,7 +83,7 @@ json    <- content(request)
 data    <- map_dfr(json[[1]], ~ .x)
 
 data$tt <- NULL
-state.codes <- setdiff(names(data), c("date", "status"))
+state.codes <- setdiff(names(data), c("date", "status", "dateymd"))
 data <- data %>% gather(!!state.codes, key = state, value = count) %>%
 mutate(
     count = as.numeric(count),
