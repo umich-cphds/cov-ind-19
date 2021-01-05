@@ -14,7 +14,7 @@ observed <- tabPanel("National Observed",
       ),
       plotlyOutput("India_p1", height = "600px"),
       hr(),
-      h2("Total number of COVID-19 cases and deaths"),
+      h2("Daily number of COVID-19 cases and deaths"),
       p("The first figure represents COVID-19 case counts where the x-axis
         starts on the day when each country passed 100 cases. The second
         figure represents COVID-19 fatalities where the x-axis starts on the
