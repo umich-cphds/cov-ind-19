@@ -6,6 +6,10 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 
     fmt <- function(x) format(x, big.mark = ",", scientific = F, trim = T)
     data <- vroom(paste0(data_repo, today, "/jhu_data_mod.csv"))
+    
+    min.date = data %>% group_by(Country) %>% filter(Cases >= cases.threshold) %>%
+        arrange(Date) %>% ungroup() %>% mutate(min_date = min(Date)) %>% 
+        pull(min_date) %>% unique()
 
     cases.data <- data %>%
     group_by(Country) %>% filter(Cases >= cases.threshold) %>%
@@ -50,17 +54,19 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
+    
+    x.date.span = as.numeric(as.Date(today) - as.Date(min.date))
 
     cases.xaxis <- list(title = "Days since cumulative cases passed 100",
                         titlefont = axis.title.font, showticklabels = TRUE,
                         tickangle = 0, showline = T, zeroline = F,
-                        range = list(30, 100 + 250)
+                        range = list(30, x.date.span + 14)
     )
 
     deaths.xaxis <- list(title = "Days since cumulative deaths passed 3",
                          titlefont = axis.title.font, showticklabels = TRUE,
                          tickangle = 0, showline = T, zeroline = F,
-                         range = list(30, 100 + 250)
+                         range = list(30, x.date.span + 14)
     )
 
 
