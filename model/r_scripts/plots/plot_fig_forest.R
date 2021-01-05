@@ -95,7 +95,7 @@ plot_fig_forest = function() {
     mutate(place = recode(place, "India" = "National estimate"))
   
   dbl_danger <- 21
-  dbl_safe   <- 28
+  dbl_safe   <- 1000000
   
   dbl_for <- state_t7_avg %>%
       mutate(
@@ -107,8 +107,8 @@ plot_fig_forest = function() {
         fplot = case_when(place == "National estimate" ~ "india", TRUE ~ fplot)
       ) %>%
       ggplot(aes(x = fct_relevel(reorder(place, desc(dbl)), "National estimate"), y = dbl, shape = shape)) +
-      geom_hline(yintercept = dbl_danger, color = "gray40", linetype = 2) +
-      geom_hline(yintercept = dbl_safe, color = "gray40", linetype = 2) +
+      #geom_hline(yintercept = dbl_danger, color = "gray40", linetype = 2) +
+      #geom_hline(yintercept = dbl_safe, color = "gray40", linetype = 2) +
       geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
       scale_color_manual(values = fplot_colors) +
       scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +

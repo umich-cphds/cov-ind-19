@@ -58,11 +58,11 @@ plot_fig_14 <- function(start.date = "2020-05-01") {
   
   tsing_by_state =
     tsing_by_state %>%
-    mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
+    mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>% #
     filter(Dates >= as.Date(start.date)) %>%
-    select(Dates, Positive, Total.Tested, State) %>% 
-    mutate(Dates = format(Dates, format = '%b %d'),
-           Dates = as.Date(Dates, format = '%b %d'))
+    select(Dates, Positive, Total.Tested, State)# %>% 
+    #mutate(Dates = format(Dates, format = '%b %d'),
+    #       Dates = as.Date(Dates, format = '%b %d'))
   
   # by state positive and total tested facet plot
   
