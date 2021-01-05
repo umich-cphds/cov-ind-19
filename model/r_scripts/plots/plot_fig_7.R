@@ -154,7 +154,7 @@ plot_fig_7 <- function()
       geom_point(data = distinct(data_caseplot %>% select(full, totalcases, State, Datemax)),
                  aes(x = Datemax, y = totalcases, group = full), size = 2) +
       geom_text(data = distinct(data_caseplot %>% select(full, totalcases, State, Datemax)),
-                aes(x = Datemax - 33, y = max(data_caseplot$totalcases) - 500, group = full, label = paste(totalcases, ' total cases', sep = ' '))) +
+                aes(x = Datemax - 150, y = max(data_caseplot$totalcases) - 500, group = full, label = paste(totalcases, ' total cases', sep = ' '))) +
       labs(title = '',
            subtitle = subtitle,
            caption = caption)
@@ -205,7 +205,7 @@ plot_fig_7 <- function()
       geom_point(data = distinct(data_deathplot %>% select(full, totalDeaths, State, Datemax)),
                  aes(x = Datemax, y = totalDeaths, group = full), size = 2) +
       geom_text(data = distinct(data_deathplot %>% select(full, totalDeaths, State, Datemax)),
-                aes(x = Datemax - 33, y = max(data_deathplot$totalDeaths) - 50, group = full, label = paste(totalDeaths, ' total deaths', sep = ' '))) +
+                aes(x = Datemax - 150, y = max(data_deathplot$totalDeaths) - 50, group = full, label = paste(totalDeaths, ' total deaths', sep = ' '))) +
       labs(title = '',
            subtitle = subtitle,
            caption = caption)
