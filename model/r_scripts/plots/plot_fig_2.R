@@ -26,6 +26,10 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
                          " incident cases<br>")
     ) %>% 
     ungroup()
+    
+    cases.data <- cases.data %>%
+    group_by(Country) %>%
+    mutate(loess_cases = c(0, predict(loess(formula = Incident_Cases ~ Day, span = 0.15))))
 
     deaths.data <- data %>%
     group_by(Country) %>% filter(Deaths >= deaths.threshold) %>%
@@ -42,6 +46,11 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
                          " incident deaths<br>")
     ) %>% 
     ungroup()
+    
+    deaths.data <- deaths.data %>%
+    group_by(Country) %>%
+    mutate(loess_deaths = c(0, predict(loess(formula = Incident_Deaths ~ Day, span = 0.15))))
+    
 
     cases.title <- paste("COVID-19 cases in India compared",
                          "to other countries")
@@ -87,7 +96,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 
     names(colors) <- c(setdiff(unique(data$Country), "India"), "India")
 
-    case_plot <- plot_ly(cases.data, x = ~ Day, y = ~Incident_Cases, text = ~text,
+    case_plot <- plot_ly(cases.data, x = ~ Day, y = ~loess_cases, text = ~text,
                          color = ~Country, colors = colors,
                          legendgroup = ~Country, hoverinfo = "text",
                          mode = "markers+lines", hoverlabel = list(align = "left"),
@@ -106,7 +115,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
                               font = list(size = 22))
     )
 
-    death_plot <- plot_ly(deaths.data, x = ~ Day, y = ~Incident_Deaths, text = ~text,
+    death_plot <- plot_ly(deaths.data, x = ~ Day, y = ~loess_deaths, text = ~text,
                           color = ~Country, colors = colors,legendgroup = ~Country,
                           hoverinfo = "text", mode = "markers+lines",
                           hoverlabel = list(align = "left"), showlegend = T
