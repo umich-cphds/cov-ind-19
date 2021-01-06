@@ -1,6 +1,14 @@
 plot_fig_14 <- function(start.date = "2020-05-01") {
   
-  tsing_by_state = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
+  everything = read.csv(paste0(data_repo, today, "/everything.csv"))
+  
+  everything = 
+    everything %>%
+    mutate(Dates = as.Date(date)) %>%
+    filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
+    select(Dates, tpr, total_tests, place) %>% 
+    group_by(Dates) %>%
+    ungroup()
   
   subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
@@ -56,33 +64,14 @@ plot_fig_14 <- function(start.date = "2020-05-01") {
   colnames(statenames) <- c('full', 'abbrev')
   statenames$abbrev <- tolower(statenames$abbrev)
   
-  tsing_by_state =
-    tsing_by_state %>%
-    mutate(Dates = as.Date(Updated.On, format = '%d/%m/%Y')) %>%
-    filter(Dates >= as.Date(start.date)) %>%
-    select(Dates, Positive, Total.Tested, State) %>% 
-    mutate(Dates = format(Dates, format = '%b %d'),
-           Dates = as.Date(Dates, format = '%b %d'))
-  
-  # by state positive and total tested facet plot
-  
   NotFancy <- function(l) {
     format(l, scientific = FALSE)
     #parse(text=l)
   }
   
-  # top20test = 
-  #   tsing_by_state %>% 
-  #   group_by(State) %>% 
-  #   summarise(maxtest = max(Total.Tested, na.rm = TRUE)) %>%
-  #   arrange(desc(maxtest)) %>%
-  #   top_n(20) %>%
-  #   pull(State) %>% 
-  #   as.character()
-  
   data_caseplot =
     vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
-    group_by(State) %>% #filter(Cases >= 50) %>%
+    group_by(State) %>% 
     arrange(Date) %>%
     mutate(Day = seq(n()),
            dailyCases = daily(Cases),
@@ -98,23 +87,19 @@ plot_fig_14 <- function(start.date = "2020-05-01") {
   
   top20case = (data_caseplot %>% select(full) %>% unique() %>% pull(full))[1:20] # %>% top_n(20)
   
-  tsing_by_state =
-    tsing_by_state %>%
-    filter(State %in% top20case) %>%
+  everything =
+    everything %>%
+    filter(place != "India") %>%
+    filter(place %in% top20case) %>%
     drop_na()
   
-  # tsing_by_state = 
-  #   tsing_by_state %>% 
-  #   filter(State %in% top20test) %>% 
-  #   drop_na()
-  
-  p14 <- ggplot(data = tsing_by_state, aes(x = Dates, y = Positive/Total.Tested, group = State)) +
-    facet_wrap(~State, ncol = 5) + geom_line(aes(color = 'Positive cases / Total tested'), size = 1.2) + 
+  p14 <- ggplot(data = everything, aes(x = Dates, y = tpr, group = place)) +
+    facet_wrap(~place, ncol = 5) + geom_line(aes(color = 'Positive cases / Total tested'), size = 1.2) + 
     geom_point(shape = 3, size = 0.5) + 
-    geom_point(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
-               aes(x = Datemax, y = Positive/Total.Tested, group = State), size = 2) +
-    geom_text(data = tsing_by_state %>% group_by(State) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
-              aes(x = Datemax - 20, y = Positive/Total.Tested + 0.1, group = State, label = paste(Total.Tested, ' tested', sep = ' '))) +
+    geom_point(data = everything %>% group_by(place) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
+               aes(x = Datemax, y = tpr, group = place), size = 2) +
+    geom_text(data = everything %>% group_by(place) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
+              aes(x = Datemax - 50, y = tpr + 0.1, group = place, label = paste(total_tests, ' tested', sep = ' '))) +
     theme_bw() + 
     xlab('\nDate') + ylab('Positive cases / Total tested\n') +
     theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),

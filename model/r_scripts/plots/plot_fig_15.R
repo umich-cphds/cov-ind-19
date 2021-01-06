@@ -70,8 +70,9 @@ plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
       mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, tpr, total_tests, place) %>% 
-      mutate(Dates = format(Dates, format = '%b %d'),
-             Dates = as.Date(Dates, format = '%b %d')) %>% 
+      #mutate(Dates = format(Dates, format = '%b %d')#,
+             #Dates = as.Date(Dates, format = '%b %d')
+       #      ) %>% 
       group_by(Dates) %>%
       mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', 
                           round(tpr * 100, digits = 2), '%', sep = '')) %>%
@@ -105,8 +106,8 @@ plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
       mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, tpr, total_tests, place) %>% 
-      mutate(Dates = format(Dates, format = '%b %d'),
-             Dates = as.Date(Dates, format = '%b %d')) %>% 
+      # mutate(Dates = format(Dates, format = '%b %d'),
+      #        Dates = as.Date(Dates, format = '%b %d')) %>% 
       group_by(Dates) %>%
       mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', 
                           round(tpr * 100, digits = 2), '%', sep = '')) %>%

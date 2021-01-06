@@ -13,7 +13,7 @@ plot_fig_4 <- function(forecast)
         ci_fmt   = format(upper_ci, big.mark = ",", scientific = F, trim = T)
     ) %>%
     mutate(
-        j = scenario == "Cautious return"
+        j = scenario == "No intervention"
     ) %>%
     #filter(Dates <= end.date) %>%
     mutate(text = case_when(
@@ -23,8 +23,8 @@ plot_fig_4 <- function(forecast)
         )
     )) %>%
     filter(date <= Sys.Date() + 30 & date >= Sys.Date() - 14) %>%
-    filter(scenario %in% c("Observed", "Moderate return", "Cautious return")) %>%
-    mutate(scenario = factor(scenario, levels = c('Observed', 'Moderate return', 'Cautious return')))
+    filter(scenario %in% c("Observed", "No intervention")) %>%
+    mutate(scenario = factor(scenario, levels = c("Observed", "No intervention")))
 
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
@@ -44,8 +44,7 @@ plot_fig_4 <- function(forecast)
     
     colors <- c(
         "Observed" = "#979799",
-        "Moderate return" = "#f2c82e",
-        "Cautious return" = "#173F5F"
+        "No intervention" = "#173F5F"
     )
     
     p <- plot_ly(data, x = ~ date, y = ~ value, text = ~text,

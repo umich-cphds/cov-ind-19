@@ -12,9 +12,11 @@ snapshot = function() {
     nat <- read_csv("https://api.covid19india.org/csv/latest/case_time_series.csv",
                     col_types = cols()) %>%
       clean_names() %>%
-      mutate(
-        date = as.Date(date, "%d %b")
-      )
+      select(-date) %>% 
+      rename(date = date_ymd)
+      # mutate(
+      #   date = as.Date(date, "%d %b")
+      # )
     
     icmr <- read_csv("https://api.covid19india.org/csv/latest/tested_numbers_icmr_data.csv",
                      col_types = cols()) %>%
@@ -33,6 +35,7 @@ snapshot = function() {
     
     yesterday <- today - 1
     week_ago  <- today - 7
+    month_ago <- today - 30
     
     get_stats <- function(d) {
       
@@ -45,7 +48,8 @@ snapshot = function() {
       tibble(
         "Day" = ifelse(d == today, "Today",
                        ifelse(d == yesterday, "Yesterday",
-                              ifelse(d == week_ago, "One week ago", NA))),
+                              ifelse(d == week_ago, "One week ago", 
+                                     ifelse(d == month_ago, "One month ago", NA)))),
         "Date"   = format(d, "%m/%d"),
         "Deaths" = format(tmp_deaths, big.mark = ","),
         "Cases"  = format(tmp_cases, big.mark = ","),
@@ -58,11 +62,13 @@ snapshot = function() {
     today_stats     <- get_stats(today)
     yesterday_stats <- get_stats(yesterday)
     week_ago_stats  <- get_stats(week_ago)
+    month_ago_stats <- get_stats(month_ago)
     
     bind_rows(
       today_stats,
       yesterday_stats,
-      week_ago_stats
+      week_ago_stats,
+      month_ago_stats
     )
     
   }

@@ -84,30 +84,42 @@ data    <- map_dfr(json[[1]], ~ .x)
 
 data$tt <- NULL
 state.codes <- setdiff(names(data), c("date", "status", "dateymd"))
-data <- data %>% gather(!!state.codes, key = state, value = count) %>%
-mutate(
+data <- data %>%
+  pivot_longer(
+    names_to = "state",
+    values_to = "count",
+    cols = !!state.codes
+    ) %>%
+  select(-date) %>%
+  select(
+    date = dateymd, status, state, count
+  ) %>%
+  mutate(
     count = as.numeric(count),
-    date = as.Date(date, format = "%d-%b-%y")
-) %>%
-spread(status, count, fill = 0) %>%
-rename(
+    date = as.Date(date, format = "%Y-%m-%d")
+  ) %>%
+  pivot_wider(
+    names_from = "status",
+    values_from = "count"
+  ) %>%
+  rename(
     Cases = Confirmed,
     Deaths = Deceased,
     Date = date,
     State = state
-) %>%
-mutate(
-	Name = recode(str_to_upper(State), !!!x)
-) %>%
-arrange(State, Date) %>%
-group_by(State) %>%
-mutate(
+  ) %>%
+  mutate(
+    Name = recode(str_to_upper(State), !!!x)
+  ) %>%
+  arrange(State, Date) %>%
+  group_by(State) %>%
+  mutate(
     Cases = accumulate(Cases, `+`),
     Deaths = accumulate(Deaths, `+`),
     Recovered = accumulate(Recovered, `+`)
-) %>%
-ungroup() %>%
-filter(Date >= "2020-03-15" & Date < today) %>%
+  ) %>%
+  ungroup() %>%
+  filter(Date >= "2020-03-15" & Date < today) %>%
 vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
 
 # grab India related data
@@ -117,19 +129,20 @@ data    <- map_dfr(json[[1]], ~ .x)
 data_testing    <- map_dfr(json[['tested']], ~ .x)
 
 data <- data %>%
-select(
+  select(
     Cases = totalconfirmed,
     Deaths = totaldeceased,
     Recovered = totalrecovered,
-    Date = date
-) %>%
-mutate(
-    Date = as.Date(paste0(Date, "2020"), format = "%d %B %Y"),
-    Cases = as.numeric(Cases),
-    Deaths = as.numeric(Deaths),
+    Date = dateymd
+  ) %>%
+  mutate(
+    Date      = as.Date(Date, format = "%Y-%m-%d"),
+    Cases     = as.numeric(Cases),
+    Deaths    = as.numeric(Deaths),
     Recovered = as.numeric(Recovered),
     Country = "India"
-) %>% filter (Date < today)
+  ) %>%
+  filter (Date < today)
 
 
 rbind(filter(jhu.data, Country != "India"), data) %>%

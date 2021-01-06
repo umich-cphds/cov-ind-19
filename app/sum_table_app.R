@@ -32,6 +32,7 @@ today = as.Date(today)
 sf <- tp %>%
   dplyr::group_by(place) %>%
   dplyr::filter(date == max(as.Date(date))) %>%
+  distinct(date, .keep_all = TRUE) %>%
   ungroup() %>%
   dplyr::select(place, total_tests, ppt, shortfall) %>%
   mutate(
@@ -45,15 +46,15 @@ sf <- tp %>%
   ) 
 
 # pull forecast estimates ----------
-  # cautious 
+  # no_int
     for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_cautious_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
     }
 
-    cautious_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_cautious_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
+    no_int_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
     
-    eval(parse(text = glue("cautious_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, cautious_india)")))
-    cautious_est <- cautious_est %>%
+    eval(parse(text = glue("no_int_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, no_int_india)")))
+    no_int_est <- no_int_est %>%
       left_join(
         tp %>%
           dplyr::select(abbrev, place), by = "abbrev") %>%
@@ -64,37 +65,16 @@ sf <- tp %>%
           abbrev != "India" ~ place)
         ) %>%
       mutate(
-        cautious = value
+        no_int = value
       ) %>%
-      dplyr::select(name, cautious)
-    
-  # moderate
-    for (i in seq_along(use_abbrevs)) {
-      eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_moderate_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
-    }
-    
-    moderate_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_moderate_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
-    
-    eval(parse(text = glue("moderate_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, moderate_india)")))
-    moderate_est <- moderate_est %>%
-      left_join(
-        tp %>%
-          dplyr::select(abbrev, place), by = "abbrev") %>%
-      distinct() %>%
-      mutate(
-        name = case_when(
-          abbrev == "India" ~ "National estimate",
-          abbrev != "India" ~ place)
-      ) %>%
-      mutate(
-        moderate = value
-      ) %>%
-      dplyr::select(name, moderate)
+      dplyr::select(name, no_int)
+   
     
     extract_latest <- function(data, group = place, cols = c("total_tests", "tpr", "dbl", "ppt")) {
       out <- data %>%
         group_by({{ group }}) %>%
         filter(date == max(date)) %>%
+        distinct(date, .keep_all = TRUE) %>%
         ungroup() %>%
         select({{ group }}, date, all_of(cols))
       if ("India" %in% data[[paste0(substitute(group))]]) {
@@ -107,30 +87,28 @@ sf <- tp %>%
 
 # table ----------
 tib <- cfr1 %>%
+  distinct(place, .keep_all = TRUE) %>%
   left_join(r_est %>% mutate(place = recode(place, "India" = "National estimate")), by = c("place")) %>%
-  left_join(tp %>% extract_latest(cols = c("tpr", "dbl")), by = c("place")) %>%
+  left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
-  left_join(cautious_est, by = c("place" = "name")) %>%
-  left_join(moderate_est, by = c("place" = "name")) %>%
+  left_join(no_int_est, by = c("place" = "name")) %>%
   rename(
     Location               = place,
     CFR                    = cfr,
-    `Doubling time (days)` = dbl,
+    #`Doubling time (days)` = dbl,
     R                      = r,
     `Test-positive rate`   = tpr,
     `Total tested`         = total_tested,
     `PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
-    `Cautious return`      = cautious,
-    `Moderate return`      = moderate
+    `No intervention`      = no_int
     ) %>%
-    arrange(desc(`Cautious return`)) %>%
+    arrange(desc(`No intervention`)) %>%
     mutate(
       `Testing shortfall` = trimws(`Testing shortfall`),
-      `Cautious return`   = trimws(format(`Cautious return`, big.mark = ",")),
-      `Moderate return`   = trimws(format(`Moderate return`, big.mark = ","))
+      `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, `Doubling time (days)`, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `Cautious return`, `Moderate return`)
+    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `No intervention`)
     
 
 tabl <- tib %>%
@@ -163,10 +141,10 @@ tabl <- tib %>%
     columns  = vars(R),
     decimals = 2
   ) %>%
-  fmt_number(
-    columns  = vars(`Doubling time (days)`),
-    decimals = 1
-  ) %>%
+  # fmt_number(
+  #   columns  = vars(`Doubling time (days)`),
+  #   decimals = 1
+  # ) %>%
   # random formatting
   tab_options(
     column_labels.border.top.style    = "none",
@@ -204,11 +182,11 @@ tabl <- tib %>%
   # add and format column spanners
   tab_spanner(
     label   = glue("Predicted cases ({format(today + 21, '%m/%d')})"),
-    columns = vars(`Cautious return`, `Moderate return`)
+    columns = vars(`No intervention`)
   ) %>%
   tab_spanner(
     label   = "Metrics",
-    columns = vars(R, `Doubling time (days)`, CFR, `Test-positive rate`)
+    columns = vars(R, CFR, `Test-positive rate`)
   ) %>%
   tab_style(
     style = cell_text(
@@ -234,10 +212,10 @@ tabl <- tib %>%
     columns = vars(R),
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1,1.5,100), pretty = F)
   ) %>%
-  data_color(
-    columns = vars(`Doubling time (days)`),
-    colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
-  ) %>%
+  # data_color(
+  #   columns = vars(`Doubling time (days)`),
+  #   colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
+  # ) %>%
   data_color(
     columns = vars(CFR),
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.03, 0.06, 1), pretty = F)
