@@ -99,7 +99,7 @@ plot_fig_14 <- function(start.date = "2020-05-01") {
     geom_point(data = everything %>% group_by(place) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
                aes(x = Datemax, y = tpr, group = place), size = 2) +
     geom_text(data = everything %>% group_by(place) %>% mutate(Datemax = max(Dates)) %>% filter(Dates == Datemax) %>% distinct(Datemax, .keep_all = TRUE),
-              aes(x = Datemax - 20, y = tpr + 0.1, group = place, label = paste(total_tests, ' tested',total_tests, sep = ' '))) +
+              aes(x = Datemax - 50, y = tpr + 0.1, group = place, label = paste(total_tests, ' tested', sep = ' '))) +
     theme_bw() + 
     xlab('\nDate') + ylab('Positive cases / Total tested\n') +
     theme(strip.text.x = element_text(size=12, face="bold", hjust = 0, color = '#36A30B'),
