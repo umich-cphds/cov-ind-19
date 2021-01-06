@@ -12,9 +12,11 @@ snapshot = function() {
     nat <- read_csv("https://api.covid19india.org/csv/latest/case_time_series.csv",
                     col_types = cols()) %>%
       clean_names() %>%
-      mutate(
-        date = as.Date(date, "%d %b")
-      )
+      select(-date) %>% 
+      rename(date = date_ymd)
+      # mutate(
+      #   date = as.Date(date, "%d %b")
+      # )
     
     icmr <- read_csv("https://api.covid19india.org/csv/latest/tested_numbers_icmr_data.csv",
                      col_types = cols()) %>%
