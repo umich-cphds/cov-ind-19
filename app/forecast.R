@@ -16,7 +16,7 @@ forecast <- tabPanel("National Forecast",
       the predicted cumulative short-term case counts under the assumption that there is no intervention. "
       HTML(paste0("All models assume a basic reproduction number of 2 under
         no intervention.")),
-      HTML(paste0("You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval for the lockdown scenario (3), which is closest to the current intervention.",
+      HTML(paste0("You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval.",
         "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."
     ),
     h2("Short-term forecast"),
