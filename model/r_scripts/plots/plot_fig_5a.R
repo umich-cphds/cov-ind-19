@@ -5,7 +5,7 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
                             "_plot_data.txt")
     ) %>%
     filter(date >= start.date & date <= end.date,
-           scenario == "Cautious return" | scenario == "Moderate return"
+           scenario == "No intervention"
     ) %>%
     mutate(date.fmt = paste0(format(date, "%b %d")),
            val.fmt = format(round(value), big.mark = ",", scientific = FALSE,
