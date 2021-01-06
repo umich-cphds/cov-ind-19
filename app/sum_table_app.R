@@ -108,14 +108,14 @@ sf <- tp %>%
 # table ----------
 tib <- cfr1 %>%
   left_join(r_est %>% mutate(place = recode(place, "India" = "National estimate")), by = c("place")) %>%
-  left_join(tp %>% extract_latest(cols = c("tpr", "dbl")), by = c("place")) %>%
+  left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
   left_join(cautious_est, by = c("place" = "name")) %>%
   left_join(moderate_est, by = c("place" = "name")) %>%
   rename(
     Location               = place,
     CFR                    = cfr,
-    `Doubling time (days)` = dbl,
+    #`Doubling time (days)` = dbl,
     R                      = r,
     `Test-positive rate`   = tpr,
     `Total tested`         = total_tested,
@@ -130,7 +130,7 @@ tib <- cfr1 %>%
       `Cautious return`   = trimws(format(`Cautious return`, big.mark = ",")),
       `Moderate return`   = trimws(format(`Moderate return`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, `Doubling time (days)`, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `Cautious return`, `Moderate return`)
+    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `Cautious return`, `Moderate return`)
     
 
 tabl <- tib %>%
@@ -163,10 +163,10 @@ tabl <- tib %>%
     columns  = vars(R),
     decimals = 2
   ) %>%
-  fmt_number(
-    columns  = vars(`Doubling time (days)`),
-    decimals = 1
-  ) %>%
+  # fmt_number(
+  #   columns  = vars(`Doubling time (days)`),
+  #   decimals = 1
+  # ) %>%
   # random formatting
   tab_options(
     column_labels.border.top.style    = "none",
@@ -208,7 +208,7 @@ tabl <- tib %>%
   ) %>%
   tab_spanner(
     label   = "Metrics",
-    columns = vars(R, `Doubling time (days)`, CFR, `Test-positive rate`)
+    columns = vars(R, CFR, `Test-positive rate`)
   ) %>%
   tab_style(
     style = cell_text(
@@ -234,10 +234,10 @@ tabl <- tib %>%
     columns = vars(R),
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1,1.5,100), pretty = F)
   ) %>%
-  data_color(
-    columns = vars(`Doubling time (days)`),
-    colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
-  ) %>%
+  # data_color(
+  #   columns = vars(`Doubling time (days)`),
+  #   colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
+  # ) %>%
   data_color(
     columns = vars(CFR),
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.03, 0.06, 1), pretty = F)
