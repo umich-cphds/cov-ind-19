@@ -13,11 +13,10 @@ forecast <- tabPanel("National Forecast",
       transmission probabilities capturing interventions like social
       distancing and lockdown. This in turn reduces the basic reproduction
       number over the period.", "The bar plot below shows 
-      the predicted cumulative short-term case counts under the assumption that there is no intervention. "
-      HTML(paste0("All models assume a basic reproduction number of 2 under
-        no intervention.")),
+      the predicted cumulative short-term case counts under the assumption that there is no intervention.
+      All models assume a basic reproduction number of 2 under no intervention."),
       HTML(paste0("You can hover of the bars for dates and counts. Also, please note the dotted line represents the upper confidence interval.",
-        "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions."
+        "Our codes are available on ", a("GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19") ," and so users can change the nature of interventions.")
     ),
     h2("Short-term forecast"),
     h3("Figure 4 (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
@@ -29,7 +28,6 @@ forecast <- tabPanel("National Forecast",
     plotlyOutput("India_p5a", height = "600px"),
     #h3("Figure 5b"),
     #plotlyOutput("India_p5b", height = "600px")
-    ),
     hr(),
     #h3('Figure 12a'),
     #h4('Long-term projected daily number of cases by state in India until September 15'),
@@ -48,6 +46,6 @@ forecast <- tabPanel("National Forecast",
     #h4("Each point represents the estimated time for cases to double based on relative growth observed in the trailing 7 days."),
     #plotlyOutput("India_pdbl", height = '600px'),
     #hr()
-  ),
+  )),
   column(width = 1)
-))
+)
