@@ -32,6 +32,7 @@ today = as.Date(today)
 sf <- tp %>%
   dplyr::group_by(place) %>%
   dplyr::filter(date == max(as.Date(date))) %>%
+  distinct(date, .keep_all = TRUE) %>%
   ungroup() %>%
   dplyr::select(place, total_tests, ppt, shortfall) %>%
   mutate(
@@ -95,6 +96,7 @@ sf <- tp %>%
       out <- data %>%
         group_by({{ group }}) %>%
         filter(date == max(date)) %>%
+        distinct(date, .keep_all = TRUE) %>%
         ungroup() %>%
         select({{ group }}, date, all_of(cols))
       if ("India" %in% data[[paste0(substitute(group))]]) {
@@ -107,6 +109,7 @@ sf <- tp %>%
 
 # table ----------
 tib <- cfr1 %>%
+  distinct(place, .keep_all = TRUE) %>%
   left_join(r_est %>% mutate(place = recode(place, "India" = "National estimate")), by = c("place")) %>%
   left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
