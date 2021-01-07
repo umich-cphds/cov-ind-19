@@ -365,9 +365,9 @@ get_r_est <- function(dat) {
         dplyr::group_by(place) %>%
         dplyr::slice((n()-6):n()) %>%
         dplyr::summarize(
-            r       = mean(r_est),
-            lower   = mean(r_lower),
-            upper   = mean(r_upper),
+            r       = mean(r_est, na.rm = TRUE),
+            lower   = mean(r_lower, na.rm = TRUE),
+            upper   = mean(r_upper, na.rm = TRUE),
             .groups = "drop_last"
         ) %>%
         dplyr::ungroup()
