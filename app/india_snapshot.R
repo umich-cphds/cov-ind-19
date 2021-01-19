@@ -30,7 +30,7 @@ snapshot = function() {
       try(if (!is.Date(t)) stop("t needs to be a date (YYYY-MM-DD)"))
       today <- as.Date(t)
     } else {
-      today     <- min(max(nat$date), max(icmr$date))
+      today     <- min(max(nat$date, na.rm = TRUE), max(icmr$date, na.rm = TRUE))
     }
     
     yesterday <- today - 1
