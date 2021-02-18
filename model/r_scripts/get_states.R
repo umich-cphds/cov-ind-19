@@ -17,3 +17,5 @@ group_by(State) %>%
 filter(Date == max(Date) & State != "un") %>%
 ungroup() %>%
 top_n(20, Cases)
+
+cat(x$State, "\n")
