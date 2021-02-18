@@ -2,7 +2,7 @@ plot_fig_5b <- function(forecast, start.date = as.Date(today),
                         end.date = end.date <- as.Date("2020-09-15"))
 {
     data <- vroom(paste0(data_repo, today, "/1wk/", forecast,
-                            "_figure_5_inc_data.csv")
+                            "_figure_5_inc_data.csv"), col_types = cols()
     ) %>%
     mutate(Dates = as.Date(Dates)) %>%
     filter(Dates >= start.date & Dates <= end.date & variable != "mod_3") %>%

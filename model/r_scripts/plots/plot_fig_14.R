@@ -70,7 +70,7 @@ plot_fig_14 <- function(start.date = "2020-05-01") {
   }
   
   data_caseplot =
-    vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+    vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
     group_by(State) %>% 
     arrange(Date) %>%
     mutate(Day = seq(n()),

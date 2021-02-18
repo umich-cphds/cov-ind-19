@@ -1,6 +1,6 @@
 plot_fig_x <- function(forecast, start.date = as.Date("2020-05-01"))
 {
-    data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+    data <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
     filter(State == forecast) %>%
     mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
         y <- x - lag(x)
