@@ -1,5 +1,7 @@
+suppressPackageStartupMessages({
 library(janitor)
 library(EpiEstim)
+})
 
 plot_fig_tvr <- function(forecast)
 {

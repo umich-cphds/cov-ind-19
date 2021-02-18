@@ -1,5 +1,7 @@
+suppressPackageStartupMessages({
 library(tidyverse)
 library(vroom)
+})
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -10,10 +12,8 @@ if ( Sys.getenv("production") == "TRUE" ) {
 
 today <- Sys.getenv("today")
 
-x <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+x <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
 group_by(State) %>%
 filter(Date == max(Date) & State != "un") %>%
 ungroup() %>%
 top_n(20, Cases)
-
-cat(x$State, "\n")

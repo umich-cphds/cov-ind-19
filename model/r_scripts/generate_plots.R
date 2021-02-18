@@ -1,7 +1,8 @@
+suppressPackageStartupMessages({
 library(tidyverse)
 library(plotly)
 library(ggtext)
-
+})
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
 	data_repo <- "~/cov-ind-19-data/"
@@ -49,8 +50,7 @@ generate_forecast_plots <- function(state)
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
 
-        plots[["p5a"]] = plot_fig_5a("India")
-        # plots[["p5b"]] = plot_fig_5b("India")
+                plots[["p5a"]] = plot_fig_5a("India")
 
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
@@ -62,11 +62,8 @@ generate_forecast_plots <- function(state)
 		plots[["p9"]] = plot_fig_9()
 		plots[["p10"]] = plot_fig_10()
 		plots[["p11"]] = plot_fig_11()
-		#plots[["p12a"]] = plot_fig_12()$p12a
-		#plots[["p12b"]] = plot_fig_12()$p12b
 
 		plots[["p14"]] = plot_fig_14()$p14
-		#plots[["p15"]] = plot_fig_15()
 		pforest = plot_fig_forest()
 		plots[["pforest_cfr1"]] = pforest$cfr1_for
 		plots[["pforest_dbl"]] = pforest$dbl_for
@@ -77,6 +74,7 @@ generate_forecast_plots <- function(state)
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
+
 	plots[["p4"]] = plot_fig_4(state)
 	plots[["p15"]] = plot_fig_15(state)
 	plots[['ptvr']] = plot_fig_tvr(state)
@@ -88,14 +86,12 @@ generate_forecast_plots <- function(state)
 data <- list(India = generate_forecast_plots("India"),
 			       plots = list(),
 			       states = c(),
-             codes = c(),
+			       codes = c(),
 			       gt = list()
 )
-
 source(paste0(code_repo, "/model/r_scripts/get_states.R"))
 
 states.to.forecast <- x$State
-print(states.to.forecast)
 for (state in states.to.forecast) {
 	data$states <- c(data$states, state.data$Name[match(state, state.data$State)])
     data$codes  <- c(data$codes, state)

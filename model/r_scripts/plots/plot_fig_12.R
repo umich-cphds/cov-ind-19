@@ -58,7 +58,7 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
   daily = function(x) { c(x[1], diff(x)) }
   
   data_caseplot =
-    vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+    vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
     group_by(State) %>% #filter(Cases >= 50) %>%
     arrange(Date) %>%
     mutate(Day = seq(n()),
