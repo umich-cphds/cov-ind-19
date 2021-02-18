@@ -1,10 +1,12 @@
 # libraries ----------
+suppressPackageStartupMessages({
 library(tidyverse)
 library(gt)
 library(glue)
 library(lubridate)
 library(janitor)
 library(scales)
+})
 
 if (Sys.getenv("production") == "TRUE") {
   data_repo <- "~/cov-ind-19-data/"

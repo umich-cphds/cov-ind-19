@@ -11,44 +11,7 @@ plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
   yaxis <- list(title = "Cumulative counts", titlefont = axis.title.font,
                 tickfont = tickfont, zeroline = T)
 
-  coltype = cols(
-    iso_code = col_character(),
-    continent = col_character(),
-    location = col_character(),
-    date = col_date(),
-    total_cases = col_double(),
-    new_cases = col_double(),
-    total_deaths = col_double(),
-    new_deaths = col_double(),
-    total_cases_per_million = col_double(),
-    new_cases_per_million = col_double(),
-    total_deaths_per_million = col_double(),
-    new_deaths_per_million = col_double(),
-    total_tests = col_double(),
-    new_tests = col_double(),
-    total_tests_per_thousand = col_double(),
-    new_tests_per_thousand = col_double(),
-    new_tests_smoothed = col_double(),
-    new_tests_smoothed_per_thousand = col_double(),
-    tests_units = col_character(),
-    stringency_index = col_double(),
-    population = col_double(),
-    population_density = col_double(),
-    median_age = col_double(),
-    aged_65_older = col_double(),
-    aged_70_older = col_double(),
-    gdp_per_capita = col_double(),
-    extreme_poverty = col_double(),
-    cardiovasc_death_rate = col_double(),
-    diabetes_prevalence = col_double(),
-    female_smokers = col_double(),
-    male_smokers = col_double(),
-    handwashing_facilities = col_double(),
-    hospital_beds_per_thousand = col_double(),
-    life_expectancy = col_double()
-  )
-
-  data <- read_csv(paste0(data_repo, today, "/global_testing.csv"), col_types = coltype) %>%
+  data <- read_csv(paste0(data_repo, today, "/global_testing.csv"), col_types=cols(), guess_max=100000) %>%
     select(location, date, total_cases, total_tests) %>%
     group_by(location) %>%
     filter(!is.na(total_cases) & !is.na(total_tests)) %>%

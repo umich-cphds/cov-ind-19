@@ -2,7 +2,7 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
                         end.date = end.date <- Sys.Date() + 30)
 {
     data <- read_tsv(paste0(data_repo, today, "/1wk/", forecast,
-                            "_plot_data.txt")
+                            "_plot_data.txt"), col_types = cols()
     ) %>%
     filter(date >= start.date & date <= end.date,
            scenario == "No intervention"
@@ -50,8 +50,8 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
 
     lines <- list()
     for (i in seq(nrow(anno.data))) {
-        line$x0 <- anno.data$Dates[i]
-        line$x1 <- anno.data$Dates[i]
+        line$x0 <- anno.data$date[i]
+        line$x1 <- anno.data$date[i]
         line$y1 <- anno.data$y[i] - 10
         lines[[i]] <- line
     }

@@ -1,6 +1,6 @@
 plot_fig_8 <- function(start.date = as.Date("2020-04-01"))
 {
-    data <- vroom(paste0(data_repo, today, "/testing.csv")) %>%
+    data <- vroom(paste0(data_repo, today, "/testing.csv"), col_types = cols()) %>%
     select(-Country) %>%
 
     # Since we are reporting day by day, take the highest reported values if

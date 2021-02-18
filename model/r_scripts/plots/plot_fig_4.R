@@ -1,5 +1,4 @@
-library(tidyverse)
-library(plotly)
+suppressPackageStartupMessages(library(plotly))
 
 plot_fig_4 <- function(forecast)
 {
