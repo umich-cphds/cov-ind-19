@@ -1,5 +1,5 @@
 # libraries -----------
-library(tidyverse)
+suppressPackageStartupMessages({
 library(here)
 library(ggtext)
 library(extrafont)
@@ -11,6 +11,7 @@ library(scales)
 library(gridExtra)
 library(grid)
 library(vroom)
+})
 
 plot_fig_forest = function() {
   
