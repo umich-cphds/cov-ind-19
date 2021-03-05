@@ -91,7 +91,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     india_color <- "#138808"
     # viridis::plasma(length(unique(data$Country)) - 1)
     # rep(else_color, length(unique(data$Country)) - 1)
-    colors <- c(viridis::plasma(length(unique(data$Country)) - 1, begin = 0.2, end = 1),
+    colors <- c(viridis::plasma(length(unique(data$Country)) - 1, begin = 0, end = 0.8),
                 india_color)
 
     names(colors) <- c(setdiff(unique(data$Country), "India"), "India")
