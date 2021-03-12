@@ -24,6 +24,32 @@ tp = read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
 cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
 r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
 
+india_state_pop = '"state" "population"
+"1" "Uttar Pradesh" 199812341
+"2" "Maharashtra" 112374333
+"3" "Bihar" 104099452
+"4" "West Bengal" 91276115
+"5" "Madhya Pradesh" 72626809
+"6" "Tamil Nadu" 72147030
+"7" "Rajasthan" 68548437
+"8" "Karnataka" 61095297
+"9" "Gujarat" 60439692
+"10" "Andhra Pradesh" 49577103
+"11" "Odisha" 41974219
+"12" "Telangana" 35003674
+"13" "Kerala" 33406061
+"14" "Jharkhand" 32988134
+"15" "Assam" 31205576
+"16" "Punjab" 27743338
+"17" "Chhattisgarh" 25545198
+"18" "Haryana" 25351462
+"19" "Delhi" 16787941
+"20" "Jammu and Kashmir" 12267032
+"21" "National estimate" 1210569573'
+
+india_state_pop = read.table(text = india_state_pop, col.names = c("state", "population"),
+                             stringsAsFactors = FALSE)
+
 # shortfall -----------
 use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
 
@@ -46,6 +72,31 @@ sf <- tp %>%
     total_tested = trimws(format(total_tests, big.mark = ",")),
     ppt = round(ppt * 100, digits = 2) 
   ) 
+
+sf = sf %>% left_join(india_state_pop, by = c("place" = "state"))
+
+vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
+  pivot_longer(
+    names_to = "date",
+    values_to = "vaccines",
+    -State
+  ) %>%
+  mutate(
+    date = as.Date(date, format = "%d/%m/%Y")
+  ) %>%
+  dplyr::rename(
+    state = State
+  ) %>%
+  group_by(state) %>%
+  arrange(date) %>%
+  mutate(
+    daily_vaccines = vaccines - dplyr::lag(vaccines)
+  ) %>%
+  ungroup() %>% 
+  filter(date == max(date)) %>%
+  mutate(state = ifelse(state == "Total", "National estimate", state))
+
+sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
 
 # pull forecast estimates ----------
   # no_int
@@ -94,6 +145,7 @@ tib <- cfr1 %>%
   left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
   left_join(no_int_est, by = c("place" = "name")) %>%
+  mutate(perc_vaccine = 100 * vaccines / population) %>% 
   rename(
     Location               = place,
     CFR                    = cfr,
@@ -103,14 +155,15 @@ tib <- cfr1 %>%
     `Total tested`         = total_tested,
     `PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
-    `No intervention`      = no_int
+    `No intervention`      = no_int,
+    `Percent vaccinated`   = perc_vaccine
     ) %>%
     arrange(desc(`No intervention`)) %>%
     mutate(
       `Testing shortfall` = trimws(`Testing shortfall`),
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `No intervention`)
+    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `No intervention`, `Percent vaccinated`)
     
 
 tabl <- tib %>%
@@ -143,6 +196,11 @@ tabl <- tib %>%
     columns  = vars(R),
     decimals = 2
   ) %>%
+  fmt_number(
+    columns  = vars(`Percent vaccinated`),
+    decimals = 2
+  ) %>%
+  
   # fmt_number(
   #   columns  = vars(`Doubling time (days)`),
   #   decimals = 1
