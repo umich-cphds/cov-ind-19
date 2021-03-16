@@ -41,7 +41,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     group_by(Country) %>%
     mutate(Date = format(Date, format = "%b %e"),
            Incident_Deaths = Deaths - dplyr::lag(Deaths)) %>%
-    mutate(Deaths_fmt = fmt(Deaths)) %>%
+    mutate(Deaths_fmt = fmt(Incident_Deaths)) %>%
     mutate(text = paste0(Country, "<br>", Date, ": ", Deaths_fmt,
                          " incident deaths<br>")
     ) %>% 
