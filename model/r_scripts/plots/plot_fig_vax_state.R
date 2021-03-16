@@ -34,8 +34,9 @@ plot_fig_vax_state = function() {
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
   caption <- 'Source: https://www.covid19india.org'
   
+  vax_dat = vax_dat %>% dplyr::filter(state %in% top_20, state != "Total")
+  
   pvax = vax_dat %>%
-    filter(state %in% top_20) %>%
     drop_na() %>%
     ggplot(aes(x = date, y = vaccines, group = state)) +
     facet_wrap(~state) +
