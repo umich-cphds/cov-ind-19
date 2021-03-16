@@ -7,19 +7,19 @@ observed <- tabPanel("National Observed",
       gt_output("gt_india_snapshot"),
       h4(textOutput("latest")),
       h2(""),
-      h2("Total number of COVID-19 vaccines in India"),
-      p("This figure provides the total number of COVID-19 vaccines (green)
-        in India since February 15, 2021. You can
-        hover your cursor over the bar to see the exact numerical counts."
-      ),
-      plotlyOutput("India_pvax", height = "600px"),
-      hr(),
       h2("Daily number of new COVID-19 cases, fatalities and recovered in India"),
       p("This figure provides the number of COVID-19 new cases (yellow),
         fatalities (red), and recovered cases (green) in India. You can
         hover your cursor over the bar to see the exact numerical counts."
       ),
       plotlyOutput("India_p1", height = "600px"),
+      hr(),
+      h2("Total number of COVID-19 vaccines in India"),
+      p("This figure provides the total number of COVID-19 vaccines (green)
+        in India since February 15, 2021. You can
+        hover your cursor over the bar to see the exact numerical counts."
+      ),
+      plotlyOutput("India_pvax", height = "600px"),
       hr(),
       h2("Daily number of COVID-19 cases and deaths"),
       p("The first figure represents COVID-19 case counts where the x-axis
