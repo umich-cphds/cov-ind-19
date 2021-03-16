@@ -41,11 +41,13 @@ generate_forecast_plots <- function(state)
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_tvr.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_forest.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_dbl.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_vax.R"))
 
 	plots <- list()
 	if (state == "India") {
 		p <- plot_fig_3()
 		plots[["p1"]] = plot_fig_1()
+		plots[["pvax"]] = plot_fig_vax()
 		plots[["p2"]] = plot_fig_2()
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
