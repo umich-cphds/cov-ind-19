@@ -145,7 +145,9 @@ tib <- cfr1 %>%
   left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
   left_join(no_int_est, by = c("place" = "name")) %>%
-  mutate(perc_vaccine = 100 * vaccines / population) %>% 
+  mutate(perc_vaccine   = 100 * vaccines / population,
+         total_vacc     = format(vaccines, big.mark = ","),
+         daily_vaccines = format(daily_vaccines, big.mark = ",")) %>% 
   rename(
     Location               = place,
     CFR                    = cfr,
@@ -156,14 +158,17 @@ tib <- cfr1 %>%
     `PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
     `No intervention`      = no_int,
-    `Percent vaccinated`   = perc_vaccine
+    `Percent vaccinated`   = perc_vaccine,
+    `Total vaccinated`     = total_vacc,
+    `Daily vaccinated`     = daily_vaccines
     ) %>%
     arrange(desc(`No intervention`)) %>%
     mutate(
       `Testing shortfall` = trimws(`Testing shortfall`),
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, `Testing shortfall`, `No intervention`, `Percent vaccinated`)
+    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, 
+                  `No intervention`, `Total vaccinated`, `Percent vaccinated`)
     
 
 tabl <- tib %>%
