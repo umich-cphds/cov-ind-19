@@ -46,6 +46,9 @@ observed <- tabPanel("National Observed",
       plotOutput("India_p7d", height = "600px"),
       downloadLink('downloadFacet_deaths', 'Download'),
       hr(),
+      h2("Cumulative COVID-19 vaccines by state/union territory"),
+      plotOutput("India_pvax_state", height = "600px"),
+      hr()
       #h2("Doubling graphs"),
       #p("The following figures visualize the case and death data to depict
       #  how long it takes each country to double its case or death count."),
