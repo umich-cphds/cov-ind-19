@@ -32,7 +32,9 @@ plot_fig_5a <- function(forecast, start.date = as.Date(today),
     anno.data <- filter(data, as.character(date) %in% c("2020-08-15", "2020-09-15", 
                                                         "2020-10-15", "2020-11-15",
                                                         "2020-12-15", "2021-01-15",
-                                                        "2021-02-15", "2021-03-15")
+                                                        "2021-02-15", "2021-03-15",
+							"2021-04-15", "2021-05-15",
+							"2021-06-15", "2021-07-15")
     ) %>%
     group_by(date) %>% summarise(diff = (max(value) - min(value)),
                                   value = max(value) * 1e5 / 1.34e9
