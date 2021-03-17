@@ -5,6 +5,7 @@ library("glue")
 library("janitor")
 library("lubridate")
 library("gt")
+library("vroom")
 
 snapshot = function() {
   # functions -----------
