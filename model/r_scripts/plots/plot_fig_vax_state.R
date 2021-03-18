@@ -18,7 +18,8 @@ plot_fig_vax_state = function() {
     mutate(
       daily_vaccines = vaccines - dplyr::lag(vaccines)
     ) %>%
-    ungroup()
+    ungroup() %>% 
+    filter(date >= as.Date("2021-02-15"))
   
   top_20 <- vax_dat %>%
     filter(!state %in% c("Total", "Miscellaneous")) %>%

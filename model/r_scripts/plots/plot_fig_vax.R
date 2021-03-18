@@ -47,7 +47,7 @@ plot_fig_vax = function() {
     rename(Day = date, Vaccines = vaccines) %>% 
     mutate(text = paste0("India", "<br>", Day, ": ", format(Vaccines, big.mark = ","),
                          " total vaccines<br>")) %>% 
-    filter(Day >= as.Date("2021-01-15"))
+    filter(Day >= as.Date("2021-02-15"))
   
   india_color <- "#138808"
   names(india_color) <- "India"
