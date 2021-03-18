@@ -14,8 +14,8 @@ observed <- tabPanel("National Observed",
       ),
       plotlyOutput("India_p1", height = "600px"),
       hr(),
-      h2("Total number of COVID-19 vaccines in India"),
-      p("This figure provides the total number of COVID-19 vaccines (green)
+      h2("Daily number of COVID-19 vaccines in India"),
+      p("This figure provides the daily number of COVID-19 vaccines (green)
         in India since February 15, 2021. You can
         hover your cursor over the bar to see the exact numerical counts."
       ),
@@ -46,7 +46,7 @@ observed <- tabPanel("National Observed",
       plotOutput("India_p7d", height = "600px"),
       downloadLink('downloadFacet_deaths', 'Download'),
       hr(),
-      h2("Cumulative COVID-19 vaccines by state/union territory"),
+      h2("Daily COVID-19 vaccines by state/union territory"),
       plotOutput("India_pvax_state", height = "600px"),
       hr()
       #h2("Doubling graphs"),

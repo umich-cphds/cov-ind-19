@@ -45,14 +45,15 @@ plot_fig_vax = function() {
   
   vax_india = vax_dat %>% filter(state == "Total") %>% 
     rename(Day = date, Vaccines = vaccines) %>% 
-    mutate(text = paste0("India", "<br>", Day, ": ", format(Vaccines, big.mark = ","),
-                         " total vaccines<br>")) %>% 
+    mutate(daily_vacc = Vaccines - dplyr::lag(Vaccines),
+           text = paste0("India", "<br>", Day, ": ", format(daily_vacc, big.mark = ","),
+                         " daily vaccines<br>")) %>% 
     filter(Day >= as.Date("2021-02-15"))
   
   india_color <- "#138808"
   names(india_color) <- "India"
   
-  vax.title <- "Cumulative COVID-19 vaccines delivered in India"
+  vax.title <- "Daily COVID-19 vaccines delivered in India"
   
   axis.title.font <- list(size = 16)
   
@@ -63,7 +64,7 @@ plot_fig_vax = function() {
   vax.yaxis <- list(title = "Number of vaccines", titlefont =
                       axis.title.font, zeroline = F, showline = F)
   
-  case_plot <- plot_ly(vax_india, x = ~ Day, y = ~ Vaccines, text = ~ text, color = I("#138808"),
+  case_plot <- plot_ly(vax_india, x = ~ Day, y = ~ daily_vacc, text = ~ text, color = I("#138808"),
                        hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
                        showlegend = F, line = list(width = 3)
   ) %>%

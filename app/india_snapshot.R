@@ -68,7 +68,7 @@ snapshot = function() {
       tmp_cases  <- tmp_nat %>% pull(daily_confirmed)
       tmp_tests  <- icmr %>% filter(date == d) %>% pull(sample_reported_today)
       
-      tmp_vax = vax_dat %>% filter(date == d) %>% pull(vaccines)
+      tmp_vax = vax_dat %>% filter(date == d) %>% pull(daily_vaccines)
       
       tibble(
         "Day"      = ifelse(d == today, "Today",

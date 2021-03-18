@@ -39,13 +39,13 @@ plot_fig_vax_state = function() {
   
   pvax = vax_dat %>%
     drop_na() %>%
-    ggplot(aes(x = date, y = vaccines, group = state)) +
+    ggplot(aes(x = date, y = daily_vaccines, group = state)) +
     facet_wrap(~state) +
     geom_line(color = "#138808", size = 1.2) +
     geom_point(data = vax_dat %>% filter(date == max(date))) + 
     scale_y_continuous(labels = comma) +
     labs(
-      title = "Cumulative COVID-19 vaccines delivered by state",
+      title = "Daily COVID-19 vaccines delivered by state",
       x     = "Date",
       y     = "Number of vaccines",
       caption = "**Source:** covid19india.org<br>**\uA9 COVIND-19 Study Group**"
