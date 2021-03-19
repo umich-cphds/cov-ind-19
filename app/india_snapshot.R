@@ -27,26 +27,12 @@ snapshot = function() {
       ) %>%
       select(date, total_samples_tested, sample_reported_today)
     
-    vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
-      pivot_longer(
-        names_to = "date",
-        values_to = "vaccines",
-        -State
-      ) %>%
-      mutate(
-        date = as.Date(date, format = "%d/%m/%Y")
-      ) %>%
-      dplyr::rename(
-        state = State
-      ) %>%
-      group_by(state) %>%
+    vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
+      pivot_longer(names_to = "date", values_to = "count", -State) %>%
+      mutate(date = as.Date(date, "%e/%m/%Y")) %>%
       arrange(date) %>%
-      mutate(
-        daily_vaccines = vaccines - dplyr::lag(vaccines)
-      ) %>%
-      ungroup() %>% 
-      filter(state == "Total")#%>% 
-      #mutate(state = ifelse(state == "Total", "National estimate", state))
+      filter(State == "Total") %>%
+      mutate(lag = count - dplyr::lag(count))
     
     if (!is.null(t)) {
       try(if (!is.Date(t)) stop("t needs to be a date (YYYY-MM-DD)"))
@@ -68,7 +54,7 @@ snapshot = function() {
       tmp_cases  <- tmp_nat %>% pull(daily_confirmed)
       tmp_tests  <- icmr %>% filter(date == d) %>% pull(sample_reported_today)
       
-      tmp_vax = vax_dat %>% filter(date == d) %>% pull(daily_vaccines)
+      tmp_vax = vax_dat %>% filter(date == d) %>% pull(lag)
       
       tibble(
         "Day"      = ifelse(d == today, "Today",
