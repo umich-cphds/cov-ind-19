@@ -33,22 +33,21 @@ plot_fig_vax = function() {
     filter(State == "Total") %>%
     mutate(lag = count - dplyr::lag(count))
   
-  vax_dat %>%
-    filter(state == "Total") %>%
-    ggplot(aes(x = date, y = vaccines)) +
-    geom_line() +
-    labs(
-      title = "Cumulative COVID-19 vaccines delivered in India",
-      x     = "Date",
-      y     = "Number of vaccines",
-      caption = "**Source:** covid19india.org<br>**\uA9 COVIND-19 Study Group**"
-    ) +
-    scale_y_continuous(labels = comma) +
-    theme_minimal()+
-    theme(
-      plot.title   = element_text(face = "bold", hjust = 0.5),
-      plot.caption = element_markdown(hjust = 0)
-    )
+  # vax_dat %>%
+  #   ggplot(aes(x = date, y = vaccines)) +
+  #   geom_line() +
+  #   labs(
+  #     title = "Cumulative COVID-19 vaccines delivered in India",
+  #     x     = "Date",
+  #     y     = "Number of vaccines",
+  #     caption = "**Source:** covid19india.org<br>**\uA9 COVIND-19 Study Group**"
+  #   ) +
+  #   scale_y_continuous(labels = comma) +
+  #   theme_minimal()+
+  #   theme(
+  #     plot.title   = element_text(face = "bold", hjust = 0.5),
+  #     plot.caption = element_markdown(hjust = 0)
+  #   )
   
   vax_india = vax_dat %>% 
     rename(Day = date) %>% 
