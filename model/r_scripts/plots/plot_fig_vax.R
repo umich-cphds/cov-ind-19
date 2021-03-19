@@ -7,24 +7,31 @@ library(scales)
 })
 
 plot_fig_vax = function() {
-  vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
-    pivot_longer(
-      names_to = "date",
-      values_to = "vaccines",
-      -State
-    ) %>%
-    mutate(
-      date = as.Date(date, format = "%d/%m/%Y")
-    ) %>%
-    dplyr::rename(
-      state = State
-    ) %>%
-    group_by(state) %>%
+  # vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
+  #   pivot_longer(
+  #     names_to = "date",
+  #     values_to = "vaccines",
+  #     -State
+  #   ) %>%
+  #   mutate(
+  #     date = as.Date(date, format = "%d/%m/%Y")
+  #   ) %>%
+  #   dplyr::rename(
+  #     state = State
+  #   ) %>%
+  #   group_by(state) %>%
+  #   arrange(date) %>%
+  #   mutate(
+  #     daily_vaccines = vaccines - dplyr::lag(vaccines)
+  #   ) %>%
+  #   ungroup()
+  
+  vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
+    pivot_longer(names_to = "date", values_to = "count", -State) %>%
+    mutate(date = as.Date(date, "%e/%m/%Y")) %>%
     arrange(date) %>%
-    mutate(
-      daily_vaccines = vaccines - dplyr::lag(vaccines)
-    ) %>%
-    ungroup()
+    filter(State == "Total") %>%
+    mutate(lag = count - dplyr::lag(count))
   
   vax_dat %>%
     filter(state == "Total") %>%
@@ -43,10 +50,9 @@ plot_fig_vax = function() {
       plot.caption = element_markdown(hjust = 0)
     )
   
-  vax_india = vax_dat %>% filter(state == "Total") %>% 
-    rename(Day = date, Vaccines = vaccines) %>% 
-    mutate(daily_vacc = Vaccines - dplyr::lag(Vaccines),
-           text = paste0("India", "<br>", Day, ": ", format(daily_vacc, big.mark = ","),
+  vax_india = vax_dat %>% 
+    rename(Day = date) %>% 
+    mutate(text = paste0("India", "<br>", Day, ": ", format(lag, big.mark = ","),
                          " daily vaccines<br>")) %>% 
     filter(Day >= as.Date("2021-02-15"))
   
@@ -64,8 +70,8 @@ plot_fig_vax = function() {
   vax.yaxis <- list(title = "Number of vaccines", titlefont =
                       axis.title.font, zeroline = F, showline = F)
   
-  case_plot <- plot_ly(vax_india, x = ~ Day, y = ~ daily_vacc, text = ~ text, color = I("#138808"),
-                       hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
+  case_plot <- plot_ly(vax_india, x = ~ Day, y = ~ lag, text = ~ text, color = I("#138808"),
+                       hoverinfo = "text", type = "bar", hoverlabel = list(align = "left"),
                        showlegend = F, line = list(width = 3)
   ) %>%
     layout(xaxis = vax.xaxis, yaxis = vax.yaxis,
