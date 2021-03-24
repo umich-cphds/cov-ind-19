@@ -159,7 +159,7 @@ tib <- cfr1 %>%
     `Testing shortfall`    = shortfall,
     `No intervention`      = no_int,
     `Percent vaccinated`   = perc_vaccine,
-    `Total vaccinated`     = total_vacc,
+    `Total doses`     = total_vacc,
     `Daily vaccinated`     = daily_vaccines
     ) %>%
     arrange(desc(`No intervention`)) %>%
@@ -168,7 +168,7 @@ tib <- cfr1 %>%
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
     dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, 
-                  `No intervention`, `Total vaccinated`, `Percent vaccinated`)
+                  `No intervention`, `Total doses`, `Percent vaccinated`)
     
 
 tabl <- tib %>%
