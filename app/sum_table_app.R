@@ -140,21 +140,6 @@ sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
     
 # new
 
-library(tidyverse)
-library(gt)
-library(glue)
-library(lubridate)
-library(janitor)
-library(scales)
-
-if(Sys.getenv("production") == "TRUE") {
-    data_repo <- "~/cov-ind-19-data/"
-    today     <- Sys.getenv("today")
-} else {
-  data_repo <- "~/cov-ind-19-test/"
-  today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
-}
-
 tp <- read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
 
 use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
