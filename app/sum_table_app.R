@@ -137,6 +137,41 @@ sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
       return(out)
     }
     tp %>% extract_latest()
+    
+# new
+
+tp <- read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
+
+use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
+today = as.Date(today)
+for (i in seq_along(use_abbrevs)) {
+  eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% add_column(abbrev = use_abbrevs[i])")))
+}
+
+no_int_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% add_column(abbrev = "India")
+eval(parse(text = glue("no_int_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, no_int_india)")))
+
+no_int_est <- no_int_est %>%
+  left_join(
+    tp %>%
+      dplyr::select(abbrev, place), by = "abbrev") %>%
+  distinct() %>%
+  mutate(
+    name = case_when(
+      abbrev == "India" ~ "National estimate",
+      abbrev != "India" ~ place)
+  ) %>%
+  rename(
+    no_int = value
+  ) %>%
+  #dplyr::select(name, no_int) %>% 
+  group_by(name) %>% 
+  arrange(date) %>% 
+  mutate(no_int_daily = no_int - dplyr::lag(no_int)) %>%
+  filter(date == today + 21)
+
+no_int_est
+# end new
 
 # table ----------
 tib <- cfr1 %>%
@@ -158,6 +193,7 @@ tib <- cfr1 %>%
     `PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
     `No intervention`      = no_int,
+    `Daily new cases` = no_int_daily,
     `Percent with at least one dose`   = perc_vaccine,
     `Total doses`     = total_vacc,
     `Daily vaccinated`     = daily_vaccines
@@ -168,7 +204,8 @@ tib <- cfr1 %>%
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
     dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, 
-                  `No intervention`, `Total doses`, `Percent with at least one dose`)
+                  `No intervention`, `Daily new cases`, `Total doses`, 
+                  `Percent with at least one dose`)
     
 
 tabl <- tib %>%
@@ -247,7 +284,7 @@ tabl <- tib %>%
   # add and format column spanners
   tab_spanner(
     label   = glue("Predicted cases ({format(today + 21, '%m/%d')})"),
-    columns = vars(`No intervention`)
+    columns = vars(`No intervention`, `Daily new cases`)
   ) %>%
   tab_spanner(
     label   = "Metrics",
