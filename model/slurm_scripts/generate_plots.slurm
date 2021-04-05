@@ -8,7 +8,7 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
-module load Rgeospatial/3.6.1-2019-09-29
+module load Rtidyverse/4.0.3
 module load jags
 
 export http_proxy=http://proxy.arc-ts.umich.edu:3128/
