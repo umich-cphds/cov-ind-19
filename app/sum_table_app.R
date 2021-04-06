@@ -167,11 +167,32 @@ no_int_est <- no_int_est %>%
   #dplyr::select(name, no_int) %>% 
   group_by(name) %>% 
   arrange(date) %>% 
-  mutate(no_int_daily = no_int - dplyr::lag(no_int)) %>%
+  mutate(no_int_daily = format(no_int - dplyr::lag(no_int), big.mark = ",")) %>%
   filter(date == today + 21)
 
 no_int_est
 # end new
+
+library(data.table)
+library(tidyverse)
+library(janitor)
+
+india_state_pop[india_state_pop$state == "National estimate",1] = "India"
+vax_data <- fread("http://api.covid19india.org/csv/latest/cowin_vaccine_data_statewise.csv") %>%
+  clean_names() %>%
+  mutate(updated_on = as.Date(updated_on, format = "%d/%m/%Y")) %>%
+  select(date = updated_on, state,
+         second_dose = second_dose_administered,
+         total_vax = total_individuals_vaccinated) %>%
+  drop_na() %>%
+  filter(date == max(date)) %>%
+  left_join(india_state_pop, c("state")) %>% 
+  mutate(
+    pct_at_least_one = round((total_vax/population)*100, 2),
+    pct_second = round((second_dose/population)*100, 2)
+  ) %>% 
+  select(-population)
+vax_data[vax_data$state == "India",2] = "National estimate"
 
 # table ----------
 tib <- cfr1 %>%
@@ -180,6 +201,7 @@ tib <- cfr1 %>%
   left_join(tp %>% extract_latest(cols = c("tpr")), by = c("place")) %>%
   left_join(sf, by = c("place")) %>%
   left_join(no_int_est, by = c("place" = "name")) %>%
+  left_join(vax_data, by = c("place" = "state")) %>% 
   mutate(perc_vaccine   = 100 * vaccines / population,
          total_vacc     = format(vaccines, big.mark = ","),
          daily_vaccines = format(daily_vaccines, big.mark = ",")) %>% 
@@ -196,7 +218,9 @@ tib <- cfr1 %>%
     `Daily new cases` = no_int_daily,
     `Percent with at least one dose`   = perc_vaccine,
     `Total doses`     = total_vacc,
-    `Daily vaccinated`     = daily_vaccines
+    `Daily vaccinated`     = daily_vaccines,
+    `% pop. with two shots` = pct_second,
+    `% pop. with at least one shot` = pct_at_least_one
     ) %>%
     arrange(desc(`No intervention`)) %>%
     mutate(
@@ -205,7 +229,7 @@ tib <- cfr1 %>%
     ) %>%
     dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, 
                   `No intervention`, `Daily new cases`, `Total doses`, 
-                  `Percent with at least one dose`)
+                  `% pop. with two shots`, `% pop. with at least one shot`)
     
 
 tabl <- tib %>%
@@ -236,10 +260,6 @@ tabl <- tib %>%
   ) %>%
   fmt_number(
     columns  = vars(R),
-    decimals = 2
-  ) %>%
-  fmt_number(
-    columns  = vars(`Percent with at least one dose`),
     decimals = 2
   ) %>%
   
