@@ -6,6 +6,7 @@ library(glue)
 library(lubridate)
 library(janitor)
 library(scales)
+library(data.table)
 })
 
 if (Sys.getenv("production") == "TRUE") {
@@ -88,12 +89,13 @@ vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccin
     state = State
   ) %>%
   group_by(state) %>%
+  drop_na(state) %>%
   arrange(date) %>%
   mutate(
     daily_vaccines = vaccines - dplyr::lag(vaccines)
   ) %>%
   ungroup() %>% 
-  filter(date == max(date)) %>%
+  filter(date == max(date, na.rm = TRUE)) %>%
   mutate(state = ifelse(state == "Total", "National estimate", state))
 
 sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
@@ -173,10 +175,6 @@ no_int_est <- no_int_est %>%
 no_int_est
 # end new
 
-library(data.table)
-library(tidyverse)
-library(janitor)
-
 india_state_pop[india_state_pop$state == "National estimate",1] = "India"
 vax_data <- fread("http://api.covid19india.org/csv/latest/cowin_vaccine_data_statewise.csv") %>%
   clean_names() %>%
@@ -212,7 +210,7 @@ tib <- cfr1 %>%
     R                      = r,
     `Test-positive rate`   = tpr,
     `Total tested`         = total_tested,
-    `PPT (%)`              = ppt,
+    #`PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
     `No intervention`      = no_int,
     `Daily new cases` = no_int_daily,
@@ -227,7 +225,7 @@ tib <- cfr1 %>%
       `Testing shortfall` = trimws(`Testing shortfall`),
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, `PPT (%)`, 
+    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, 
                   `No intervention`, `Daily new cases`, `Total doses`, 
                   `% pop. with two shots`, `% pop. with at least one shot`)
     
@@ -278,7 +276,7 @@ tabl <- tib %>%
   # column widths
   cols_width(
     vars(Location) ~ px(150),
-    vars(R, CFR, `PPT (%)`) ~ px(75),
+    vars(R, CFR) ~ px(75),
     everything() ~ px(100)
   ) %>%
   cols_align(
@@ -297,8 +295,8 @@ tabl <- tib %>%
       **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
       Predicted cases are for {format(today + 21, '%B %d')} based on data through {format(today, '%B %e')}. 
       Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
-      National Commission on Population 2019 projections used to calculate PPT.<br>
-      **Abbrev:** CFR, Case-fatality rate; PPT, Proportion of population tested"
+      <br>
+      **Abbrev:** CFR, Case-fatality rate."
       ))
   ) %>%
   # add and format column spanners
