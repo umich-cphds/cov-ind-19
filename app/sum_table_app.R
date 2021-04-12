@@ -60,10 +60,12 @@ today = as.Date(today)
 
 sf <- tp %>%
   dplyr::group_by(place) %>%
+  dplyr::filter(date > max(as.Date(date)) - 7) %>%
+  mutate(dailyTPR7d = mean(daily_cases/daily_tests)) %>%
   dplyr::filter(date == max(as.Date(date))) %>%
   distinct(date, .keep_all = TRUE) %>%
   ungroup() %>%
-  dplyr::select(place, total_tests, ppt, shortfall) %>%
+  dplyr::select(place, total_tests, ppt, shortfall, dailyTPR7d) %>%
   mutate(
     place = case_when(
       place == "India" ~ "National estimate",
@@ -208,7 +210,7 @@ tib <- cfr1 %>%
     CFR                    = cfr,
     #`Doubling time (days)` = dbl,
     R                      = r,
-    `Test-positive rate`   = tpr,
+    `7-day average daily TPR`   = dailyTPR7d,
     `Total tested`         = total_tested,
     #`PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
@@ -225,7 +227,7 @@ tib <- cfr1 %>%
       `Testing shortfall` = trimws(`Testing shortfall`),
       `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
     ) %>%
-    dplyr::select(Location, R, CFR, `Test-positive rate`, `Total tested`, 
+    dplyr::select(Location, R, CFR, `7-day average daily TPR`, `Total tested`, 
                   `No intervention`, `Daily new cases`, `Total doses`, 
                   `% pop. with two shots`, `% pop. with at least one shot`)
     
@@ -253,7 +255,7 @@ tabl <- tib %>%
   ) %>%
   # format numbers
   fmt_number(
-    columns  = vars(CFR, `Test-positive rate`),
+    columns  = vars(CFR, `7-day average daily TPR`),
     decimals = 3
   ) %>%
   fmt_number(
@@ -306,7 +308,7 @@ tabl <- tib %>%
   ) %>%
   tab_spanner(
     label   = "Metrics",
-    columns = vars(R, CFR, `Test-positive rate`)
+    columns = vars(R, CFR, `7-day average daily TPR`)
   ) %>%
   tab_style(
     style = cell_text(
@@ -341,7 +343,7 @@ tabl <- tib %>%
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.03, 0.06, 1), pretty = F)
   ) %>%
   data_color(
-    columns = vars(`Test-positive rate`),
+    columns = vars(`7-day average daily TPR`),
     colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.02, 0.06, 1), pretty = F, na.color = "#e8e8e8")
   ) %>%
   # highlight national estimate
