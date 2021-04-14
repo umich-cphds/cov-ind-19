@@ -347,7 +347,7 @@ India_gt_table = function() {
         font      = "helvetica",
         transform = "uppercase"
       ),
-      locations = cells_column_spanners(spanners = c("Point in time metrics", glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")))
+      locations = cells_column_spanners(spanners = c("Point in time metrics", "Cumulative metrics", glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")))
     ) %>%
     # adjust title font
     tab_style(
