@@ -61,11 +61,13 @@ today = as.Date(today)
 sf <- tp %>%
   dplyr::group_by(place) %>%
   dplyr::filter(date > max(as.Date(date)) - 7) %>%
-  mutate(dailyTPR7d = mean(daily_cases/daily_tests)) %>%
+  mutate(dailyTPR7d = mean(daily_cases/daily_tests),
+         dailyCFR7d = mean(daily_deaths/daily_cases)) %>%
   dplyr::filter(date == max(as.Date(date))) %>%
   distinct(date, .keep_all = TRUE) %>%
   ungroup() %>%
-  dplyr::select(place, total_tests, ppt, shortfall, dailyTPR7d) %>%
+  dplyr::select(place, total_tests, ppt, shortfall, dailyTPR7d, dailyCFR7d, daily_cases, 
+                daily_deaths, daily_tests, cases, deaths) %>%
   mutate(
     place = case_when(
       place == "India" ~ "National estimate",
@@ -183,7 +185,9 @@ vax_data <- fread("http://api.covid19india.org/csv/latest/cowin_vaccine_data_sta
   mutate(updated_on = as.Date(updated_on, format = "%d/%m/%Y")) %>%
   select(date = updated_on, state,
          second_dose = second_dose_administered,
-         total_vax = total_individuals_vaccinated) %>%
+         total_vax = total_individuals_vaccinated,
+         total_vax_doses = total_doses_administered) %>%
+  mutate(daily_vax_dose = total_vax_doses - dplyr::lag(total_vax_doses)) %>%
   drop_na() %>%
   filter(date == max(date)) %>%
   left_join(india_state_pop, c("state")) %>% 
@@ -204,31 +208,54 @@ tib <- cfr1 %>%
   left_join(vax_data, by = c("place" = "state")) %>% 
   mutate(perc_vaccine   = 100 * vaccines / population,
          total_vacc     = format(vaccines, big.mark = ","),
-         daily_vaccines = format(daily_vaccines, big.mark = ",")) %>% 
+         daily_vaccines = format(daily_vaccines, big.mark = ","),
+         daily_cases = format(daily_cases, big.mark = ","),
+         daily_deaths = format(daily_deaths, big.mark = ","),
+         daily_tests = format(daily_tests, big.mark = ","),
+         daily_vax_dose = format(daily_vax_dose, big.mark = ","),
+         cases = format(cases, big.mark = ","),
+         deaths = format(deaths, big.mark = ",")) %>% 
   rename(
+    `# daily new cases`    = daily_cases,
+    `# daily new deaths`   = daily_deaths,
+    `7-day average daily TPR`   = dailyTPR7d,
+    `7-day average daily CFR`   = dailyCFR7d,
+    
+    R                      = r,
+    `daily tests`          = daily_tests,
+    `daily vaccine doses`  = daily_vax_dose,
     Location               = place,
     CFR                    = cfr,
     #`Doubling time (days)` = dbl,
-    R                      = r,
-    `7-day average daily TPR`   = dailyTPR7d,
+    `total cases`          = cases,
+    `total deaths`         = deaths,
+    `TPR`                  = tpr,
+    
+    
     `Total tested`         = total_tested,
     #`PPT (%)`              = ppt,
     `Testing shortfall`    = shortfall,
-    `No intervention`      = no_int,
-    `Daily new cases` = no_int_daily,
+    #`No intervention`      = no_int,
+    `Daily new cases`       = no_int_daily,
+    `Predicted total cases` = no_int,
     `Percent with at least one dose`   = perc_vaccine,
     `Total doses`     = total_vacc,
-    `Daily vaccinated`     = daily_vaccines,
+    #`Daily vaccinated`     = daily_vaccines,
     `% pop. with two shots` = pct_second,
     `% pop. with at least one shot` = pct_at_least_one
     ) %>%
-    arrange(desc(`No intervention`)) %>%
+    arrange(desc(`Predicted total cases`)) %>%
     mutate(
       `Testing shortfall` = trimws(`Testing shortfall`),
-      `No intervention`   = trimws(format(`No intervention`, big.mark = ","))
+      `Predicted total cases`   = trimws(format(`Predicted total cases`, big.mark = ",")),
+      `7-day average daily CFR` = round(`7-day average daily CFR`, digits = 3)
     ) %>%
-    dplyr::select(Location, R, CFR, `7-day average daily TPR`, `Total tested`, 
-                  `No intervention`, `Daily new cases`, `Total doses`, 
+    dplyr::select(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+                  `7-day average daily CFR`,
+                  Location, R, `daily tests`, `daily vaccine doses`, 
+                  CFR, `Total tested`, `total cases`, `total deaths`, 
+                  `Daily new cases`, `Total doses`, `TPR`, 
+                  `Predicted total cases`,
                   `% pop. with two shots`, `% pop. with at least one shot`)
     
 
@@ -353,4 +380,136 @@ tabl <- tib %>%
       rows = Location == "National estimate")
   )
 tabl
+
+# new table
+tabl <- tib %>%
+  gt() %>%
+  # format table body text
+  tab_style(
+    style     = cell_text(size = px(14), font = "helvetica"),
+    locations = cells_body()
+  ) %>%
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(vars(Location))
+  ) %>%
+  # format column names
+  tab_style(
+    style = cell_text(
+      size      = px(12),
+      color     = "#999",
+      font      = "helvetica",
+      transform = "uppercase"
+    ),
+    locations = cells_column_labels(everything())
+  ) %>%
+  # format numbers
+  fmt_number(
+    columns  = vars(CFR, `7-day average daily TPR`, TPR),
+    decimals = 3
+  ) %>%
+  fmt_number(
+    columns  = vars(R),
+    decimals = 2
+  ) %>%
+  # random formatting
+  tab_options(
+    column_labels.border.top.style    = "none",
+    column_labels.border.bottom.width = 1,
+    column_labels.border.bottom.color = "#334422",
+    table_body.border.bottom.color    = "#0000001A",
+    data_row.padding                  = px(4)
+  ) %>%
+  # column widths
+  cols_width(
+    vars(Location) ~ px(150),
+    vars(R, CFR) ~ px(75),
+    everything() ~ px(100)
+  ) %>%
+  cols_align(
+    align   = "center",
+    columns = everything()
+  ) %>%
+  # title
+  tab_header(
+    title    = md("**Assessing COVID-19 in India**"),
+    subtitle = glue("as of {format(today, '%B %e')}")
+  ) %>%
+  # caption
+  tab_source_note(
+    source_note = md(glue(
+      "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
+      **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
+      Predicted cases are for {format(today + 21, '%B %d')} based on data through {format(today, '%B %e')}. 
+      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
+      <br>
+      **Abbrev:** CFR, Case-fatality rate."
+    ))
+  ) %>% 
+  # add and format column spanners
+  tab_spanner(
+    label   = glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)"),
+    columns = vars(`Daily new cases`, `Predicted total cases`)
+  ) %>%
+  tab_spanner(
+    label   = "Point in time metrics",
+    columns = vars(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+                   `7-day average daily CFR`, R, `daily tests`, `daily vaccine doses`)
+  ) %>%
+  tab_spanner(
+    label   = "Cumulative metrics",
+    columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
+                   `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`)
+  ) %>% 
+  cols_move_to_start(vars(Location)) %>%
+  tab_style(
+    style = cell_text(
+    size      = px(14),
+    color     = "#999",
+    font      = "helvetica",
+    transform = "uppercase"
+    ),
+    locations = cells_column_spanners(spanners = c("Point in time metrics", glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")))
+  ) %>%
+  # adjust title font
+  tab_style(
+    style     = list(cell_text(font = "helvetica", size = px(24))),
+    locations = list(cells_title(groups = "title"))
+  ) %>%
+  # adjust subtitle font
+  tab_style(
+    style     = list(cell_text(font = "helvetica", size = px(18))),
+    locations = list(cells_title(groups = "subtitle"))
+  ) %>%
+  # color cells based on values
+  data_color(
+    columns = vars(R),
+    colors = col_bin(c( "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1.5,1000), pretty = F)
+  ) %>%
+  # data_color(
+  #   columns = vars(`Doubling time (days)`),
+  #   colors = col_bin(c("#d8f5d5", "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 21, 28, 1000), pretty = F, reverse = TRUE)
+  # ) %>%
+  # data_color(
+  #   columns = vars(TPR),
+  #   colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F)
+  # ) %>%
+  data_color(
+    columns = vars(`7-day average daily TPR`),
+    colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F, na.color = "#e8e8e8")
+  ) %>%
+  # highlight national estimate
+  tab_style(
+    style = cell_fill(color = "#fcf8d4"),
+    locations = cells_body(
+      rows = Location == "National estimate")
+  ) %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
+          `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`))
+  )
+
+tabl
+
 }
