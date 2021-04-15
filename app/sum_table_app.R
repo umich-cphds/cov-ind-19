@@ -7,6 +7,8 @@ suppressPackageStartupMessages({
   library(janitor)
   library(scales)
   library(data.table)
+  require(magrittr)
+  library(vroom)
 })
 
 if (Sys.getenv("production") == "TRUE") {
@@ -198,6 +200,33 @@ India_gt_table = function() {
     select(-population)
   vax_data[vax_data$state == "India",2] = "National estimate"
   
+  quick_correct <- function(x, a = 0.95) {
+    
+    tmp_x <- x %>%
+      mutate(
+        `Predicted total cases` = as.numeric(gsub(",", "", trimws(`Predicted total cases`))),
+        `Daily new cases` = as.numeric(gsub(",", "", trimws(`Daily new cases`)))
+      )
+    tmp_nat   <- tmp_x %>% filter(Location == "National estimate")
+    tmp_state <- tmp_x %>% filter(Location != "National estimate")
+    tmp_nat_daily <- tmp_nat %>% pull(`Daily new cases`)
+    tmp_nat_total <- tmp_nat %>% pull(`Predicted total cases`)
+    tmp_state %<>%
+      mutate(
+        `Predicted total cases` = round(a * (`Predicted total cases` / sum(`Predicted total cases`)) * tmp_nat_total),
+        `Daily new cases`       = round(a * (`Daily new cases` / sum(`Daily new cases`)) * tmp_nat_daily)
+      )
+    tmp_nat %<>%
+      mutate(
+        Location = "India"
+      )
+    bind_rows(tmp_nat, tmp_state) %>%
+      mutate(
+        `Predicted total cases` = format(`Predicted total cases`, big.mark = ","),
+        `Daily new cases`       = format(`Daily new cases`, big.mark = ",")
+      )
+  }
+  
   # table ----------
   tib <- cfr1 %>%
     distinct(place, .keep_all = TRUE) %>%
@@ -256,7 +285,8 @@ India_gt_table = function() {
                   CFR, `Total tested`, `total cases`, `total deaths`, 
                   `Daily new cases`, `Total doses`, `TPR`, 
                   `Predicted total cases`,
-                  `% pop. with two shots`, `% pop. with at least one shot`)
+                  `% pop. with two shots`, `% pop. with at least one shot`) %>%
+    quick_correct()
   
   
   # new table
@@ -319,6 +349,7 @@ India_gt_table = function() {
         "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
       **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
       Predicted cases are for {format(today + 21, '%B %d')} based on data through {format(today, '%B %e')}. 
+      Predicted case counts have significant uncertainty and should be interpreted with caution.
       Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
       <br>
       **Abbrev:** CFR, Case-fatality rate."
@@ -380,7 +411,7 @@ India_gt_table = function() {
     tab_style(
       style = cell_fill(color = "#fcf8d4"),
       locations = cells_body(
-        rows = Location == "National estimate")
+        rows = Location == "India")
     ) %>% 
     tab_style(
       style = cell_text(weight = "bold"),
