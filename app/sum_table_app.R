@@ -350,8 +350,6 @@ India_gt_table = function() {
       source_note = md(glue(
         "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
       **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
-      Predicted cases are for {format(today + 21, '%B %d')} based on data through {format(today, '%B %e')}. 
-      Predicted case counts have significant uncertainty and should be interpreted with caution.
       Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
       <br>
       **Abbrev:** CFR, Case-fatality rate."
