@@ -1,3 +1,4 @@
+
 # libraries ----------
 suppressPackageStartupMessages({
   library(tidyverse)
@@ -265,7 +266,7 @@ India_gt_table = function() {
       #`PPT (%)`              = ppt,
       `Testing shortfall`    = shortfall,
       #`No intervention`      = no_int,
-      #`Daily new cases`       = no_int_daily,
+      `Daily new cases`       = no_int_daily,
       `Predicted total cases` = no_int,
       `Percent with at least one dose`   = perc_vaccine,
       `Total doses`     = total_vacc,
@@ -283,15 +284,15 @@ India_gt_table = function() {
                   `7-day average daily CFR`,
                   Location, R, `daily tests`, `daily vaccine doses`, 
                   CFR, `Total tested`, `total cases`, `total deaths`, 
+                  `Daily new cases`, 
                   `Total doses`, `TPR`, 
-                  `Daily new cases`, `Predicted total cases`,
+                  `Predicted total cases`,
                   `% pop. with two shots`, `% pop. with at least one shot`) %>%
     quick_correct()
   
-  
+  tib = tib %>% select(-`Daily new cases`, -`Predicted total cases`)
   # new table
   tabl <- tib %>%
-    dplyr::select(-c(`Daily new cases`, `Predicted total cases`)) %>%
     gt() %>%
     # format table body text
     tab_style(
@@ -357,10 +358,10 @@ India_gt_table = function() {
       ))
     ) %>% 
     # add and format column spanners
-    #tab_spanner(
-    #  label   = glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)"),
-    #  columns = vars(`Daily new cases`, `Predicted total cases`)
-    #) %>%
+    # tab_spanner(
+    #   label   = glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)"),
+    #   columns = vars(`Daily new cases`, `Predicted total cases`)
+    # ) %>%
     tab_spanner(
       label   = "Point in time metrics",
       columns = vars(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
@@ -379,9 +380,7 @@ India_gt_table = function() {
         font      = "helvetica",
         transform = "uppercase"
       ),
-      locations = cells_column_spanners(spanners = c("Point in time metrics",
-                                                     #glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)",
-                                                     "Cumulative metrics")))
+      locations = cells_column_spanners(spanners = c("Point in time metrics", "Cumulative metrics")) #, glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")
     ) %>%
     # adjust title font
     tab_style(
@@ -425,4 +424,3 @@ India_gt_table = function() {
   tabl
   
 }
-
