@@ -201,32 +201,32 @@ India_gt_table = function() {
     select(-population)
   vax_data[vax_data$state == "India",2] = "National estimate"
   
-  quick_correct <- function(x, a = 0.95) {
-    
-    tmp_x <- x %>%
-      mutate(
-        `Predicted total cases` = as.numeric(gsub(",", "", trimws(`Predicted total cases`))),
-        `Daily new cases` = as.numeric(gsub(",", "", trimws(`Daily new cases`)))
-      )
-    tmp_nat   <- tmp_x %>% filter(Location == "National estimate")
-    tmp_state <- tmp_x %>% filter(Location != "National estimate")
-    tmp_nat_daily <- tmp_nat %>% pull(`Daily new cases`)
-    tmp_nat_total <- tmp_nat %>% pull(`Predicted total cases`)
-    tmp_state %<>%
-      mutate(
-        `Predicted total cases` = round(a * (`Predicted total cases` / sum(`Predicted total cases`)) * tmp_nat_total),
-        `Daily new cases`       = round(a * (`Daily new cases` / sum(`Daily new cases`)) * tmp_nat_daily)
-      )
-    tmp_nat %<>%
-      mutate(
-        Location = "India"
-      )
-    bind_rows(tmp_nat, tmp_state) %>%
-      mutate(
-        `Predicted total cases` = format(`Predicted total cases`, big.mark = ","),
-        `Daily new cases`       = format(`Daily new cases`, big.mark = ",")
-      )
-  }
+  # quick_correct <- function(x, a = 0.95) {
+  #   
+  #   tmp_x <- x %>%
+  #     mutate(
+  #       `Predicted total cases` = as.numeric(gsub(",", "", trimws(`Predicted total cases`))),
+  #       `Daily new cases` = as.numeric(gsub(",", "", trimws(`Daily new cases`)))
+  #     )
+  #   tmp_nat   <- tmp_x %>% filter(Location == "National estimate")
+  #   tmp_state <- tmp_x %>% filter(Location != "National estimate")
+  #   tmp_nat_daily <- tmp_nat %>% pull(`Daily new cases`)
+  #   tmp_nat_total <- tmp_nat %>% pull(`Predicted total cases`)
+  #   tmp_state %<>%
+  #     mutate(
+  #       `Predicted total cases` = round(a * (`Predicted total cases` / sum(`Predicted total cases`)) * tmp_nat_total),
+  #       `Daily new cases`       = round(a * (`Daily new cases` / sum(`Daily new cases`)) * tmp_nat_daily)
+  #     )
+  #   tmp_nat %<>%
+  #     mutate(
+  #       Location = "India"
+  #     )
+  #   bind_rows(tmp_nat, tmp_state) %>%
+  #     mutate(
+  #       `Predicted total cases` = format(`Predicted total cases`, big.mark = ","),
+  #       `Daily new cases`       = format(`Daily new cases`, big.mark = ",")
+  #     )
+  # }
   
   # table ----------
   tib <- cfr1 %>%
@@ -287,10 +287,10 @@ India_gt_table = function() {
                   `Daily new cases`, 
                   `Total doses`, `TPR`, 
                   `Predicted total cases`,
-                  `% pop. with two shots`, `% pop. with at least one shot`) %>%
-    quick_correct()
+                  `% pop. with two shots`, `% pop. with at least one shot`)
   
-  tib = tib %>% select(-`Daily new cases`, -`Predicted total cases`)
+  tib = tib %>% select(-`Daily new cases`, -`Total tested`) %>% 
+    mutate(Location = case_when(Location == "National estimate" ~ "India", TRUE ~ Location)) 
   # new table
   tabl <- tib %>%
     gt() %>%
@@ -367,8 +367,9 @@ India_gt_table = function() {
     ) %>%
     tab_spanner(
       label   = "Cumulative metrics",
-      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
-                     `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`)
+      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, 
+                     `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`,
+                     `Predicted total cases`)
     ) %>% 
     cols_move_to_start(vars(Location)) %>%
     tab_style(
@@ -414,10 +415,31 @@ India_gt_table = function() {
         rows = Location == "India")
     ) %>% 
     tab_style(
-      style = cell_text(weight = "bold"),
-      locations = cells_body(columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
-                                            `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`))
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = vars(`total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = vars(`total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_spanners(vars("Cumulative metrics"))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = vars(`Predicted total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = vars(`Predicted total cases`))
     )
+    #%>% 
+    # tab_style(
+    #   style = cell_text(weight = "bold"),
+    #   locations = cells_body(columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
+    #                                         `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`))
+    # )
   
   # new table
   point_in_time <- tib %>%
@@ -616,7 +638,7 @@ India_gt_table = function() {
     # ) %>%
     tab_spanner(
       label   = "Cumulative metrics",
-      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
+      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Predicted total cases`,
                      `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`)
     ) %>% 
     cols_move_to_start(vars(Location)) %>%
@@ -638,7 +660,7 @@ India_gt_table = function() {
     tab_style(
       style     = list(cell_text(font = "helvetica", size = px(18))),
       locations = list(cells_title(groups = "subtitle"))
-    ) %>%
+    ) %>% 
     # color cells based on values
     # data_color(
     #   columns = vars(R),
@@ -659,14 +681,16 @@ India_gt_table = function() {
     # highlight national estimate
     tab_style(
       style = cell_fill(color = "#fcf8d4"),
-      locations = cells_body(
-        rows = Location == "India"))
-    # ) %>% 
-    # tab_style(
-    #   style = cell_text(weight = "bold"),
-    #   locations = cells_body(columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Total tested`, 
-    #                                         `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`))
-    # )
+      locations = cells_body(rows = Location == "India")
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = vars(`Predicted total cases`))
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = vars(`Predicted total cases`))
+    )
   
   list(full = tabl,
        point_in_time = point_in_time,
