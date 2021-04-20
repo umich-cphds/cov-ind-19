@@ -134,12 +134,22 @@ shinyServer(function(input, output)
         snapshot()
     })
     
-    output$download_gt = downloadHandler(
-        filename = function() {'COVIND_table.png'},
+    output$download_gt_point = downloadHandler(
+        filename = function() {'COVIND_table_point_in_time.png'},
         content = function(con) {
-            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table.png'),
-                          'COVIND_table.png', mode = 'wb')
-            file.copy(from = 'COVIND_table.png',
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_point_in_time.png'),
+                          'COVIND_table_point_in_time.png', mode = 'wb')
+            file.copy(from = 'COVIND_table_point_in_time.png',
+                      to = con)
+        }
+    )
+    
+    output$download_gt_cumulative = downloadHandler(
+        filename = function() {'COVIND_table_cumulative.png'},
+        content = function(con) {
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_cumulative.png'),
+                          'COVIND_table_cumulative.png', mode = 'wb')
+            file.copy(from = 'COVIND_table_cumulative.png',
                       to = con)
         }
     )
