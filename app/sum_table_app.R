@@ -443,7 +443,7 @@ India_gt_table = function() {
   
   # new table
   point_in_time <- tib %>%
-    select(-`total cases`, -`total deaths`, -`TPR`, -CFR, -`Total tested`, 
+    select(-`total cases`, -`total deaths`, -`TPR`, -CFR, 
            -`Total doses`, -`% pop. with two shots`, -`% pop. with at least one shot`) %>%
     gt() %>%
     # format table body text
