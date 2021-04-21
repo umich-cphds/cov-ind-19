@@ -23,7 +23,7 @@ snapshot = function() {
                      col_types = cols()) %>%
       clean_names() %>%
       mutate(
-        date = as.Date(update_time_stamp, "%d/%m/%Y") - 1
+        date = as.Date(tested_as_of, "%d/%m/%Y") - 1
       ) %>%
       select(date, total_samples_tested, sample_reported_today)
     
