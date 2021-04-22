@@ -4,6 +4,7 @@ library(vroom)
 library(tidyverse)
 library(ggtext)
 library(scales)
+library(tidyr)
 })
 
 plot_fig_vax = function() {
@@ -31,7 +32,9 @@ plot_fig_vax = function() {
     mutate(date = as.Date(date, "%e/%m/%Y")) %>%
     arrange(date) %>%
     filter(State == "Total") %>%
-    mutate(lag = count - dplyr::lag(count))
+    mutate(count = replace(count, count == 0, NA),
+           lag = count - dplyr::lag(count)
+    ) %>% fill()
   
   # vax_dat %>%
   #   ggplot(aes(x = date, y = vaccines)) +
@@ -48,7 +51,7 @@ plot_fig_vax = function() {
   #     plot.title   = element_text(face = "bold", hjust = 0.5),
   #     plot.caption = element_markdown(hjust = 0)
   #   )
-  
+  # lag = ifelse(lag < 0, 0, lag),
   vax_india = vax_dat %>% 
     rename(Day = date) %>% 
     mutate(text = paste0("India", "<br>", Day, ": ", format(lag, big.mark = ","),
