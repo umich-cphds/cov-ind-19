@@ -1,3 +1,8 @@
+
+suppressPackageStartupMessages({
+  library(zoo)
+})
+
 plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
   
   tsing = read.csv(paste0(data_repo, today, "/statewise_tested_numbers_data.csv"), header = TRUE)
@@ -69,15 +74,15 @@ plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
       filter(abbrev == state) %>%
       mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
-      select(Dates, tpr, total_tests, place) %>% 
-      #mutate(Dates = format(Dates, format = '%b %d')#,
-             #Dates = as.Date(Dates, format = '%b %d')
-       #      ) %>% 
-      group_by(Dates) %>%
-      mutate(text = paste('Date: ', format(Dates, format = '%b %d'), '\nPercent positive: ', 
-                          round(tpr * 100, digits = 2), '%', sep = '')) %>%
-      ungroup()
-      
+      select(Dates, daily_cases, daily_tests, place) %>% 
+      #group_by(Dates) %>%
+      mutate(
+        daily_tpr = daily_cases / daily_tests,
+        text = paste('Date: ', format(Dates, format = '%b %d'), '\nDaily percent positive: ', 
+            round(daily_tpr * 100, digits = 2), '%', sep = ''))
+    
+    everything$dailyTPR7d = c(rep(NA, 6), rollmean(everything$daily_tpr, k = 7))
+    
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
     
@@ -90,7 +95,7 @@ plot_fig_15<- function(state = 'India', start.date = "2020-07-01") {
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
     
-    p = plot_ly(everything, x = ~Dates, y = ~tpr, text = ~text, type = "scatter",
+    p = plot_ly(everything, x = ~Dates, y = ~dailyTPR7d, text = ~text, type = "scatter",
                   hoverinfo = "text", mode = "markers+lines", hoverlabel = list(align = "left"),
                   showlegend = F, line = list(width = 3, color = '#36A30B'), marker = list(color = '#36A30B')
     ) %>%
