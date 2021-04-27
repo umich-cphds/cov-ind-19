@@ -28,13 +28,12 @@ snapshot = function() {
       select(date, total_samples_tested, sample_reported_today)
     
     vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
-      select(`Updated On`, `Total Doses Administered`, State) %>% 
-      rename(`date` = `Updated On`) %>% 
-      #pivot_longer(names_to = "date", values_to = "count") %>%
+      filter(State == "Total") %>%
+      select(-State) %>% 
+      pivot_longer(cols = everything(), names_to = "date", values_to = "count") %>%
       mutate(date = as.Date(date, "%e/%m/%Y")) %>%
       arrange(date) %>%
-      filter(State == "Total") %>%
-      mutate(lag = `Total Doses Administered` - dplyr::lag(`Total Doses Administered`))
+      mutate(lag = count - dplyr::lag(count))
     
     if (!is.null(t)) {
       try(if (!is.Date(t)) stop("t needs to be a date (YYYY-MM-DD)"))
