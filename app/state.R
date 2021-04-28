@@ -29,12 +29,14 @@ generate_state_tab <- function(state, code)
     ),
         h3("Figure 4 (please note that the y-axis is in log base-10 scale; hover over the bars for count estimates and upper credible limits)"),
         plotlyOutput(paste0(code, "_p4"), height = "600px"),
-        # h3("Figure 15 Proportion of positive tests"),
-        # plotlyOutput(paste0(code, "_p15"), height = "600px"),
+        hr(),
         h3('Time-varying R'),
         h4("Effective basic reproduction number"),
         plotlyOutput(paste0(code, "_ptvr"), height = "600px"),
-      hr()
+      hr(),
+    h2("Temporal testing pattern in India"),
+    plotlyOutput(paste0(code, "_p15"), height = "600px"),
+    hr()
       #h3("Doubling time"),
       #h4("Each point represents the estimated time for cases to double based on relative growth observed in the trailing 7 days."),
       #plotlyOutput(paste0(code, "_pdbl"), height = '600px'),
