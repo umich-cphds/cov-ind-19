@@ -41,11 +41,13 @@ forecast <- tabPanel("National Forecast",
     h3("Time-varying R"),
     h4("Effective basic reproduction number"),
     plotlyOutput("India_ptvr", height = '600px'),
-    hr()
+    hr(),
     #h3("Doubling time"),
     #h4("Each point represents the estimated time for cases to double based on relative growth observed in the trailing 7 days."),
     #plotlyOutput("India_pdbl", height = '600px'),
     #hr()
+    h2("Temporal testing pattern in India"),
+    plotlyOutput("India_p15", height = "500px"),
   )),
   column(width = 1)
 )
