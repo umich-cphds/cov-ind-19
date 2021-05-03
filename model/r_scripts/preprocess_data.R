@@ -71,7 +71,8 @@ states.map <- c("Andhra Pradesh" =  "AP", "Arunachal Pradesh" =  "AR",
 	"Chandigarh" =  "CH", "Dadra and Nagar Haveli" =  "DH",
 	"Daman and Diu" = "DD", "Delhi" =  "DL", "Lakshadweep" =  "LD",
 	"Pondicherry" =  "PY", "Telangana" =  "TG", "Dadra and Nagar Haveli" =  "DN",
-	"Chhattisgarh" =  "CT", "Ladakh" =  "LA", "Uttarakhand" =  "UT"
+	"Chhattisgarh" =  "CT", "Ladakh" =  "LA", "Uttarakhand" =  "UT",
+	"India" = "TT"
 )
 
 x <- names(states.map)
