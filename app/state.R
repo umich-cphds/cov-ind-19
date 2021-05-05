@@ -34,7 +34,7 @@ generate_state_tab <- function(state, code)
         h4("Effective basic reproduction number"),
         plotlyOutput(paste0(code, "_ptvr"), height = "600px"),
       hr(),
-    h2("Temporal testing pattern in India"),
+    h2("Temporal testing pattern"),
     plotlyOutput(paste0(code, "_p15"), height = "600px"),
     hr()
       #h3("Doubling time"),
