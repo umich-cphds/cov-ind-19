@@ -154,7 +154,7 @@ data_testing <- data_testing %>%
 select(
     Cases = totalpositivecases,
     Tests = totalsamplestested,
-    Date  = updatetimestamp
+    Date  = testedasof
 ) %>%
 mutate(
     Date    = as.Date(word(Date, 1), format = "%d/%m/%Y"),
