@@ -53,7 +53,7 @@ India_gt_table = function() {
                                stringsAsFactors = FALSE)
   
   # shortfall -----------
-  use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
+  use_abbrevs <- tp %>% filter(abbrev != "la") %>% pull(abbrev) %>% unique() %>% tolower()
   
   # state data ----------
   
@@ -147,7 +147,7 @@ India_gt_table = function() {
   
   tp <- read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
   
-  use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
+  #use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
   today = as.Date(today)
   for (i in seq_along(use_abbrevs)) {
     eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% add_column(abbrev = use_abbrevs[i])")))
