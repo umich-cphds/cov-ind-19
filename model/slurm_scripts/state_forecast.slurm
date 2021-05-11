@@ -4,7 +4,7 @@
 #SBATCH --time=1-0
 #SBATCH --job-name=state_forecast
 #SBATCH --mem-per-cpu=12G
-#SBATCH --array=1-5
+#SBATCH --array=1
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
