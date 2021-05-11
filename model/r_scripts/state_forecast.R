@@ -87,39 +87,39 @@ l <- length(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + d
 
 # models ---------
 
-if (arrayid == 1) {
-  change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
-                          as.Date(as.Date(soc_dist_start) + delay + l, origin = "1970-01-01")), "%m/%d/%Y")
-  pi0         <- c(1,
-                   rev(seq(pi_sdtb, 1, (1 - pi_sdtb) / l))[-1],
-                   pi_sdtb)
-  mod         <- elefante(dates = change_time, pis = pi0)
-  
-  casename <- paste0(state_sub, "_social_dist")      
-        
-  model_2 <- tvt.eSIR(
-    Y,
-    R,
-    begin_str      = format(start_date, "%m/%d/%Y"),
-    death_in_R     = 0.2,
-    T_fin          = 200,
-    pi0            = mod$pis,
-    change_time    = mod$dates,
-    R0             = R_0,
-    dic            = TRUE,
-    casename       = casename,
-    save_files     = save_files,
-    save_mcmc      = save_mcmc,
-    save_plot_data = save_plot_data,
-    M              = Ms,
-    nburnin        = nburnins
-  )
-        
-  clean_out <- model_2 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Soc. Dist. + Travel Ban")       
-           
-}
+# if (arrayid == 1) {
+#   change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+#                           as.Date(as.Date(soc_dist_start) + delay + l, origin = "1970-01-01")), "%m/%d/%Y")
+#   pi0         <- c(1,
+#                    rev(seq(pi_sdtb, 1, (1 - pi_sdtb) / l))[-1],
+#                    pi_sdtb)
+#   mod         <- elefante(dates = change_time, pis = pi0)
+#   
+#   casename <- paste0(state_sub, "_social_dist")      
+#         
+#   model_2 <- tvt.eSIR(
+#     Y,
+#     R,
+#     begin_str      = format(start_date, "%m/%d/%Y"),
+#     death_in_R     = 0.2,
+#     T_fin          = 200,
+#     pi0            = mod$pis,
+#     change_time    = mod$dates,
+#     R0             = R_0,
+#     dic            = TRUE,
+#     casename       = casename,
+#     save_files     = save_files,
+#     save_mcmc      = save_mcmc,
+#     save_plot_data = save_plot_data,
+#     M              = Ms,
+#     nburnin        = nburnins
+#   )
+#         
+#   clean_out <- model_2 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Soc. Dist. + Travel Ban")       
+#            
+# }
 
-if (arrayid == 2) {
+if (arrayid == 1) {
   
   casename <- paste0(state_sub, "_no_int")      
         
@@ -143,113 +143,113 @@ if (arrayid == 2) {
                     
 }
 
-if (arrayid == 3) {
-  print(paste0("Running model_4 (lockdown with moderate return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown,"-day lockdown"))
-  change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
-  pi0         <- c(1,
-                   rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
-                   rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
-                   seq(pi_lockdown, pi_moderate, (pi_moderate - pi_lockdown) / speed_return),
-                   pi_moderate)
-  mod         <- elefante(dates = change_time, pis = pi0)
-  
-  casename <- paste0(state_sub, "_moderate")      
-        
-  model_4 <- tvt.eSIR(
-    Y,
-    R,
-    begin_str      = format(start_date, "%m/%d/%Y"),
-    death_in_R     = 0.2,
-    T_fin          = 200,
-    pi0            = mod$pis,
-    change_time    = mod$dates,
-    R0             = R_0,
-    dic            = TRUE,
-    casename       = casename,
-    save_files     = save_files,
-    save_mcmc      = save_mcmc,
-    save_plot_data = save_plot_data,
-    M              = Ms,
-    nburnin        = nburnins
-  )
-        
-  clean_out <- model_4 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Moderate return")       
-             
-}
-
-if (arrayid == 4) {
-  print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", speed_lockdown/7," week delay and ", length_of_lockdown, "-day lockdown"))
-  change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
-  pi0         <- c(1,
-                   rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
-                   rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
-                   seq(pi_lockdown, pi_normal, (pi_normal - pi_lockdown) / speed_return),
-                   pi_normal)
-  mod         <- elefante(dates = change_time, pis = pi0)
-  
-  casename <- paste0(state_sub, "_normal")      
-        
-  model_5 <- tvt.eSIR(
-    Y,
-    R,
-    begin_str      = format(start_date, "%m/%d/%Y"),
-    death_in_R     = 0.2,
-    T_fin          = 200,
-    pi0            = mod$pis,
-    change_time    = mod$dates,
-    R0             = R_0,
-    dic            = TRUE,
-    casename       = casename,
-    save_files     = save_files,
-    save_mcmc      = save_mcmc,
-    save_plot_data = save_plot_data,
-    M              = Ms,
-    nburnin        = nburnins
-  )
-        
-  clean_out <- model_5 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Normal (pre-intervention)")
-        
-}
-
-if (arrayid == 5) {
-  print(paste0("Running model_6 (lockdown with cautious return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
-  change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
-                          as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
-  pi0         <- c(1,
-                   rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
-                   rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
-                   seq(pi_lockdown, pi_cautious, (pi_cautious - pi_lockdown) / speed_return),
-                   pi_cautious)
-  mod         <- elefante(dates = change_time, pis = pi0)
-  
-  casename <- paste0(state_sub, "_cautious")      
-        
-  model_6 <- tvt.eSIR(
-    Y,
-    R,
-    begin_str      = format(start_date, "%m/%d/%Y"),
-    death_in_R     = 0.2,
-    T_fin          = 200,
-    pi0            = mod$pis,
-    change_time    = mod$dates,
-    R0             = R_0,
-    dic            = TRUE,
-    casename       = casename,
-    save_files     = save_files,
-    save_mcmc      = save_mcmc,
-    save_plot_data = save_plot_data,
-    M              = Ms,
-    nburnin        = nburnins
-  )
-        
-  clean_out <- model_6 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Cautious return")      
-        
-}
+# if (arrayid == 3) {
+#   print(paste0("Running model_4 (lockdown with moderate return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown,"-day lockdown"))
+#   change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
+#   pi0         <- c(1,
+#                    rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
+#                    rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
+#                    seq(pi_lockdown, pi_moderate, (pi_moderate - pi_lockdown) / speed_return),
+#                    pi_moderate)
+#   mod         <- elefante(dates = change_time, pis = pi0)
+#   
+#   casename <- paste0(state_sub, "_moderate")      
+#         
+#   model_4 <- tvt.eSIR(
+#     Y,
+#     R,
+#     begin_str      = format(start_date, "%m/%d/%Y"),
+#     death_in_R     = 0.2,
+#     T_fin          = 200,
+#     pi0            = mod$pis,
+#     change_time    = mod$dates,
+#     R0             = R_0,
+#     dic            = TRUE,
+#     casename       = casename,
+#     save_files     = save_files,
+#     save_mcmc      = save_mcmc,
+#     save_plot_data = save_plot_data,
+#     M              = Ms,
+#     nburnin        = nburnins
+#   )
+#         
+#   clean_out <- model_4 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Moderate return")       
+#              
+# }
+# 
+# if (arrayid == 4) {
+#   print(paste0("Running model_5 (lockdown with normal [pre-intervention] return) with ", speed_lockdown/7," week delay and ", length_of_lockdown, "-day lockdown"))
+#   change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
+#   pi0         <- c(1,
+#                    rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
+#                    rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
+#                    seq(pi_lockdown, pi_normal, (pi_normal - pi_lockdown) / speed_return),
+#                    pi_normal)
+#   mod         <- elefante(dates = change_time, pis = pi0)
+#   
+#   casename <- paste0(state_sub, "_normal")      
+#         
+#   model_5 <- tvt.eSIR(
+#     Y,
+#     R,
+#     begin_str      = format(start_date, "%m/%d/%Y"),
+#     death_in_R     = 0.2,
+#     T_fin          = 200,
+#     pi0            = mod$pis,
+#     change_time    = mod$dates,
+#     R0             = R_0,
+#     dic            = TRUE,
+#     casename       = casename,
+#     save_files     = save_files,
+#     save_mcmc      = save_mcmc,
+#     save_plot_data = save_plot_data,
+#     M              = Ms,
+#     nburnin        = nburnins
+#   )
+#         
+#   clean_out <- model_5 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Normal (pre-intervention)")
+#         
+# }
+# 
+# if (arrayid == 5) {
+#   print(paste0("Running model_6 (lockdown with cautious return) with ", speed_lockdown/7, " week delay and ", length_of_lockdown, "-day lockdown"))
+#   change_time <- format(c(as.Date((as.Date(soc_dist_start) + delay):(as.Date(soc_dist_end) + delay), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay):(as.Date(lockdown_start) + delay + speed_lockdown), origin = "1970-01-01"),
+#                           as.Date((as.Date(lockdown_start) + delay + length_of_lockdown):(as.Date(lockdown_start) + delay + length_of_lockdown + speed_return), origin = "1970-01-01")), "%m/%d/%Y")
+#   pi0         <- c(1,
+#                    rev(seq(pi_sdtb, 1, (1-pi_sdtb) / l))[-1],
+#                    rev(seq(pi_lockdown, pi_sdtb, (pi_sdtb-pi_lockdown) / speed_lockdown))[-1],
+#                    seq(pi_lockdown, pi_cautious, (pi_cautious - pi_lockdown) / speed_return),
+#                    pi_cautious)
+#   mod         <- elefante(dates = change_time, pis = pi0)
+#   
+#   casename <- paste0(state_sub, "_cautious")      
+#         
+#   model_6 <- tvt.eSIR(
+#     Y,
+#     R,
+#     begin_str      = format(start_date, "%m/%d/%Y"),
+#     death_in_R     = 0.2,
+#     T_fin          = 200,
+#     pi0            = mod$pis,
+#     change_time    = mod$dates,
+#     R0             = R_0,
+#     dic            = TRUE,
+#     casename       = casename,
+#     save_files     = save_files,
+#     save_mcmc      = save_mcmc,
+#     save_plot_data = save_plot_data,
+#     M              = Ms,
+#     nburnin        = nburnins
+#   )
+#         
+#   clean_out <- model_6 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "Cautious return")      
+#         
+# }
 
 write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
 write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))
