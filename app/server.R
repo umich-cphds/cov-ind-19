@@ -39,6 +39,7 @@ source("state.R", local = T)
 source("testing.R", local = T)
 source("metrics.R", local = T)
 source("india_snapshot.R", local = TRUE)
+source("forecast_load.R", local = TRUE)
 
 print(sessionInfo())
 
@@ -71,15 +72,45 @@ shinyServer(function(input, output)
 
     states <- data$states
     codes <- data$codes
-    output$out <- renderUI({
-
-        tabs <- map2(states, codes, generate_state_tab)
-
-        eval(expr(navbarPage("COVID-19 Outbreak in India",
-          observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
-          metrics)))
-
+    
+    tabs <- map2(states, codes, generate_state_tab)
+    
+    #navpage = 
+    
+    #navpage = reactiveVal()
+    
+    observeEvent(input$app_navbar, {
+        if(input$app_navbar == "National Observed") {
+            output$out <- renderUI({
+                eval(expr(navbarPage("COVID-19 Outbreak in India", id = "app_navbar",
+                                     observed, forecast, selected = "forecast")))
+            })
+        }
+        else if(input$app_navbar == "National Forecast") {
+            output$out <- renderUI({
+                eval(expr(navbarPage("COVID-19 Outbreak in India", id = "app_navbar",
+                                     observed, forecast, selected = "forecast")))
+                # if(!is.null(input$app_navbar) & input$app_navbar == "National Forecast") {
+                #     print("hi")
+                # }
+                #, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
+                #metrics
+            })
+        }
     })
+    
+    # output$out <- renderUI({
+    #     if(is.null(input$app_navbar)) {
+    #         eval(expr(navbarPage("COVID-19 Outbreak in India", id = "app_navbar",
+    #                              observed, forecast_load)))
+    #     }
+    #     
+    #     # if(!is.null(input$app_navbar) & input$app_navbar == "National Forecast") {
+    #     #     print("hi")
+    #     # }
+    #     #, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
+    #     #metrics
+    # })
 
     output$downloadFacet_cases = downloadHandler(
         filename = function() {'cases_by_state_in_India.png'},
@@ -126,12 +157,12 @@ shinyServer(function(input, output)
         }
     )
     
-    output$India_gt = render_gt({
-        data$gt
-    })
-    
     output$gt_india_snapshot = render_gt({
         snapshot()
+    })
+    
+    output$India_gt = render_gt({
+        data$gt
     })
     
     output$download_gt_point = downloadHandler(
