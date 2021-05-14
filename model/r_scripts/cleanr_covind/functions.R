@@ -38,7 +38,7 @@ get_count_data <- function(d, abbrevs = NULL) {
             dplyr::filter(cases == max(cases)) %>%
             dplyr::ungroup() %>%
             dplyr::arrange(desc(cases)) %>%
-            #utils::head(20) %>%
+            utils::head(20) %>%
             filter(abbrev != "dd") %>%
             dplyr::pull(place)
     }
