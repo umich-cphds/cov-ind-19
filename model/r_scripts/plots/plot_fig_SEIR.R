@@ -1,4 +1,3 @@
-
 suppressPackageStartupMessages({
   library(tidyverse)
   library(vroom)
@@ -10,7 +9,8 @@ suppressPackageStartupMessages({
 plot_fig_SEIR = function(state = "India") {
   
   #today = Sys.getenv("today")
-  repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/covind_seirfansy_data/main/", today)
+  #repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/covind_seirfansy_data/main/", today)
+  repo_seir = paste0("~/covind_seirfansy_data/", today)
   
   # abrev <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
   #   group_by(State) %>%
@@ -20,7 +20,7 @@ plot_fig_SEIR = function(state = "India") {
   # abrev = abrev$State
   
   if (state == "India") {
-    tmp <- read_tsv(url(paste0(repo_seir, "/prediction_", "tt", ".txt")), col_types = cols()) %>%
+    tmp <- read_tsv(paste0(repo_seir, "/prediction_", "tt", ".txt"), col_types = cols()) %>%
       select(
         state, date, section, pred, value = mean
       ) %>%
@@ -43,7 +43,7 @@ plot_fig_SEIR = function(state = "India") {
       filter(date <= min(date) + 30) %>% 
       pivot_longer(cols = c(case_daily_reported, death_daily_reported))
   } else {
-    tmp <- read_tsv(url(paste0(repo_seir, "/prediction_", state, ".txt")), col_types = cols()) %>%
+    tmp <- read_tsv(paste0(repo_seir, "/prediction_", state, ".txt"), col_types = cols()) %>%
         select(
           state, date, section, pred, value = mean
         ) %>%
