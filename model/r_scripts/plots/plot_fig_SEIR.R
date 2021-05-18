@@ -10,7 +10,7 @@ plot_fig_SEIR = function(state = "India") {
   
   today = Sys.getenv("today")
   data_repo <- Sys.getenv("data_repo")
-  repo_seir = paste0(date_repo, today, "/seirfansy")
+  repo_seir = paste0(data_repo, "/", today, "/seirfansy")
   
   # abrev <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
   #   group_by(State) %>%
