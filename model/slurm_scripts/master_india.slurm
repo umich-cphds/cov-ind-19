@@ -41,20 +41,27 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	sleep 2m #This is to give preprocess data a chance to run before get_states.R which requires the data from preprocess data
 	cd $code_repo/model/slurm_scripts
 	states=$(Rscript $code_repo/model/r_scripts/get_states.R)
-	#states="$states tt"
 	state_jobs=""
 	for i in $states; do
 		export state=$i
 		state1=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_forecast.slurm | awk '{print $NF}')
+		if [[ $state_jobs != "" ]]; then
+			state_jobs=$state_jobs:$state1
+		else
+			state_jobs=$state1
+		fi
+	done
+	states="$states tt"
+	for i in $states; do
+		export state=$i
                 state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
-			state_jobs=$state_jobs:$state1:$state2
+			state_jobs=$state_jobs:$state2
 		else
-			state_jobs=$state1:$state2
+			state_jobs=$state2
 		fi
 	done
 	#end of submit_states
-	echo $state_jobs
 	generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
 	generateplotsseirfansy=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/plot_state_seirfansy.slurm | awk '{print $NF}')
