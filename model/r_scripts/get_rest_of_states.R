@@ -17,6 +17,6 @@ group_by(State) %>%
 filter(Date == max(Date) & State != "un" & State != "la" & State != "dd") %>%
 ungroup()
 
-x_rest = setdiff(x_all, x_20)
+x = setdiff(x_all, x_20)
 
-cat(x_20$State, "\n")
+cat(x$State, "\n")

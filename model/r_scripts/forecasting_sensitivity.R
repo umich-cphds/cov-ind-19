@@ -9,13 +9,12 @@ library(data.table)
 library(devtools)
 library(eSIR)
 
+data_repo <- Sys.getenv("data_repo")
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
-        data_repo <- "~/cov-ind-19-data/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 } else {
-        data_repo <- "~/cov-ind-19-test/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
@@ -25,7 +24,7 @@ arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 
 # !! directory ----------
-wd <- paste0(data_repo, today, "/sensitivity/")
+wd <- paste0(data_repo, "/", today, "/sensitivity/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)

@@ -2,7 +2,7 @@
 get_count_data <- function(d, abbrevs = NULL) {
     
     # national-level count data
-    nat_dat <- readr::read_tsv(paste0(data_repo, today, '/jhu_data_mod.csv'), col_types = cols()) %>%
+    nat_dat <- readr::read_tsv(paste0(data_repo, "/", today, '/jhu_data_mod.csv'), col_types = cols()) %>%
         janitor::clean_names() %>%
         dplyr::filter(country == "India") %>%
         dplyr::rename(place = country) %>%
@@ -15,7 +15,7 @@ get_count_data <- function(d, abbrevs = NULL) {
         tibble::add_column(abbrev = "India")
     
     # state-level count data
-    state_dat <- readr::read_tsv(paste0(data_repo, today, '/covid19india_data.csv'),
+    state_dat <- readr::read_tsv(paste0(data_repo, "/", today, '/covid19india_data.csv'),
                                  col_types = cols()) %>%
         janitor::clean_names() %>%
         dplyr::rename(
@@ -57,7 +57,7 @@ get_testing_data <- function(d) {
         dplyr::rename(place = state)
     
     # national-level testing data
-    nat_test <- readr::read_csv(paste0(data_repo, today, '/testing.csv'),
+    nat_test <- readr::read_csv(paste0(data_repo, "/", today, '/testing.csv'),
                                 col_types = cols()) %>%
         janitor::clean_names() %>%
         dplyr::select(date, place = country, total_tests = tests) %>%
@@ -71,7 +71,7 @@ get_testing_data <- function(d) {
         )
     
     # state-level testing data
-    state_test <- readr::read_csv(paste0(data_repo, today, '/statewise_tested_numbers_data.csv'),
+    state_test <- readr::read_csv(paste0(data_repo, "/", today, '/statewise_tested_numbers_data.csv'),
                                   col_types = cols()) %>%
         janitor::clean_names() %>%
         dplyr::mutate(

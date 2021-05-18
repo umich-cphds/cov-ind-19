@@ -185,4 +185,4 @@ death_dat %>%
     legend.position    = "none",
     plot.caption       = element_markdown(hjust = 0)
   )
-ggsave(paste0(data_repo, today, "/seirfansy/prediction_deathgrid.pdf"), width = 12, height = 8, device = cairo_pdf)  # change output path
+ggsave(paste0(data_repo, "/", today, "/seirfansy/prediction_deathgrid.pdf"), width = 12, height = 8, device = cairo_pdf)  # change output path

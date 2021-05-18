@@ -6,7 +6,7 @@ data_repo <- Sys.getenv("data_repo")
 
 today     <- Sys.getenv("today")
 start.date = as.Date("2020-03-01")
-data <- vroom(paste0(data_repo, today, "/jhu_data.csv")) %>%
+data <- vroom(paste0(data_repo, "/", today, "/jhu_data.csv")) %>%
   group_by(Country) %>% filter(Case >= 100) %>%
   arrange(Date) %>%
   mutate(Day = seq(n()))

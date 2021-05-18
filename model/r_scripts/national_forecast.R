@@ -47,7 +47,7 @@ lockdown_end       <- "2020-05-03"
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 
 # directory ----------
-wd <- paste0(data_repo, today, "/1wk/")
+wd <- paste0(data_repo, "/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
@@ -55,7 +55,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= min_date)
 
 NI_complete <- dat$Cases

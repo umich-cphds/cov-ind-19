@@ -38,10 +38,11 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	spatialmap=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	national=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/national_forecast.slurm | awk '{print $NF}')
 	#submit_states
-	sleep 2m #This is to give preprocess data a chance to run before get_states.R which requires the data from preprocess data
+	sleep 2m #This is to give preprocess data a chance to run before get_top_20_states.R  which requires the data from preprocess data
 	cd $code_repo/model/slurm_scripts
-	states=$(Rscript $code_repo/model/r_scripts/get_states.R)
+	states=$(Rscript $code_repo/model/r_scripts/get_top_20_states.R )
 	state_jobs=""
+	# run the top 20 states
 	for i in $states; do
 		export state=$i
 		state1=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_forecast.slurm | awk '{print $NF}')
@@ -51,14 +52,28 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 			state_jobs=$state1
 		fi
 	done
-	states="$states tt"
-	for i in $states; do
+	#run the rest of the states
+	bottom_states=$(Rscript $code_repo/model/r_scripts/get_rest_of_states.R )
+	export bottom=TRUE
+	for i in $bottom_states; do
 		export state=$i
-                state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
+		state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_forecast.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
 			state_jobs=$state_jobs:$state2
 		else
 			state_jobs=$state2
+		fi
+	done
+	states="$states tt"
+	#Run seirfansy states which includes tt for India
+	export bottom=FALSE
+	for i in $states; do
+		export state=$i
+                state3=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
+		if [[ $state_jobs != "" ]]; then
+			state_jobs=$state_jobs:$state3
+		else
+			state_jobs=$state3
 		fi
 	done
 	#end of submit_states
