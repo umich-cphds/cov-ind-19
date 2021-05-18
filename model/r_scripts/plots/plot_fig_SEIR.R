@@ -8,9 +8,9 @@ suppressPackageStartupMessages({
 
 plot_fig_SEIR = function(state = "India") {
   
-  #today = Sys.getenv("today")
-  #repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/covind_seirfansy_data/main/", today)
-  repo_seir = paste0("~/covind_seirfansy_data/", today)
+  today = Sys.getenv("today")
+  data_repo <- Sys.getenv("data_repo")
+  repo_seir = paste0(date_repo, today, "/seirfansy")
   
   # abrev <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
   #   group_by(State) %>%
