@@ -64,16 +64,26 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 			state_jobs=$state2
 		fi
 	done
-	states="$states tt"
-	#Run seirfansy states which includes tt for India
-	export bottom=FALSE
-	for i in $states; do
+	#Run seirfansy for bottom states
+	for i in $bottom_states; do
 		export state=$i
                 state3=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
 		if [[ $state_jobs != "" ]]; then
 			state_jobs=$state_jobs:$state3
 		else
 			state_jobs=$state3
+		fi
+	done
+	states="$states tt"
+	#Run seirfansy states which includes tt for India
+	export bottom=FALSE
+	for i in $states; do
+		export state=$i
+                state4=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
+		if [[ $state_jobs != "" ]]; then
+			state_jobs=$state_jobs:$state4
+		else
+			state_jobs=$state4
 		fi
 	done
 	#end of submit_states
