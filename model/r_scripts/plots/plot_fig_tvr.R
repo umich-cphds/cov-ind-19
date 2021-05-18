@@ -13,7 +13,7 @@ plot_fig_tvr <- function(forecast)
   # data ----------
   if (forecast == "India") {
     start_date = as.Date('03/15/2020', format = "%m/%d/%y")
-    data <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = cols()) %>%
+    data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
       clean_names() %>%
       filter(country == "India") %>%
       mutate(date = as.Date(date, "%m/%d/%y")) %>%
@@ -25,7 +25,7 @@ plot_fig_tvr <- function(forecast)
       drop_na(cases)
   } else {
     start_date = as.Date('03/24/2020', format = "%m/%d/%y")
-  data <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+  data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
     clean_names() %>%
     filter(state == forecast) %>%
     filter(cases != 0) %>% #& date >= start_date

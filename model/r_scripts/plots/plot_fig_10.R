@@ -1,7 +1,7 @@
 plot_fig_10 <- function(start.date = as.Date("2020-05-01"))
 {
   
-  data <- read_csv(paste0(data_repo, today, "/global_testing.csv"), col_types = cols(), guess_max = 50000) %>%
+  data <- read_csv(paste0(data_repo, "/", today, "/global_testing.csv"), col_types = cols(), guess_max = 50000) %>%
     select(location, date, total_cases, total_tests) %>%
     group_by(location) %>%
     filter(!is.na(total_cases) & !is.na(total_tests)) %>%

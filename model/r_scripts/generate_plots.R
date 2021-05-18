@@ -6,12 +6,13 @@ library(ggtext)
 
 today <- Sys.getenv("today")
 code_repo <- Sys.getenv("code_repo")
+data_repo <- Sys.getenv("data_repo")
 
-state.data <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols())
+state.data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols())
 generate_forecast_plots <- function(state)
 {
     start.date <- as.Date("2020-03-01")
-    path       <- paste0(data_repo, today, "/", state)
+    path       <- paste0(data_repo, "/", today, "/", state)
 
     if (!dir.exists(path)){
         dir.create(path, recursive = T)
@@ -99,8 +100,8 @@ for (state in states.to.forecast) {
 
 source(paste0(code_repo, "/app/sum_table_app.R"))
 data$gt <- India_gt_table()
-gtsave(data$gt$point_in_time, filename = path.expand(paste0(data_repo, today, "/COVIND_table_point_in_time.png")))
-gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, today, "/COVIND_table_cumulative.png")))
+gtsave(data$gt$point_in_time, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_point_in_time.png")))
+gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_cumulative.png")))
 data$gt = data$gt$full
 
-save(data, file = paste0(data_repo, today, "/data.RData"))
+save(data, file = paste0(data_repo, "/", today, "/data.RData"))

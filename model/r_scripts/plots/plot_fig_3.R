@@ -2,7 +2,7 @@ plot_fig_3 <- function(start.date = as.Date("2020-03-01"))
 {
     Day.max <- 100
 
-    data <- vroom(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = cols())
+    data <- vroom(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols())
     cases.data <- data %>%
     group_by(Country) %>% filter(Cases >= 100) %>%
     arrange(Date) %>%

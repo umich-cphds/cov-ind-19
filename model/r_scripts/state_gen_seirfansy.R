@@ -2,10 +2,10 @@ data_repo <- Sys.getenv("data_repo")
 code_repo <- Sys.getenv("code_repo")
 today <- as.Date(Sys.getenv("today"))
 
-setwd(paste0("~/", code_repo, "/model/r_scripts/"))
+setwd(paste0(code_repo, "/model/r_scripts/"))
 source("libraries.R")
 
-f <- list.files(paste0("~/", code_repo, "/model/r_scripts/functions"))
+f <- list.files(paste0(code_repo, "/model/r_scripts/functions"))
 sapply(paste0("functions/", f), source)
 
 # Set variables based on testing or production

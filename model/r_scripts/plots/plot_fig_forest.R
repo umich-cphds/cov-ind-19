@@ -31,9 +31,9 @@ plot_fig_forest = function() {
       panel.grid.minor.y = element_blank()
     )
   
-  cfr1 = read_csv(paste0(data_repo, today, '/cfr_t7_avg.csv'), col_types = cols())
-  everything = read_csv(paste0(data_repo, today, '/everything.csv'), col_types = cols())
-  r0 = read_csv(paste0(data_repo, today, '/r0_t7_avg.csv'), col_types = cols())
+  cfr1 = read_csv(paste0(data_repo, "/", today, '/cfr_t7_avg.csv'), col_types = cols())
+  everything = read_csv(paste0(data_repo, "/", today, '/everything.csv'), col_types = cols())
+  r0 = read_csv(paste0(data_repo, "/", today, '/r0_t7_avg.csv'), col_types = cols())
   
   fplot_colors <- c(
     "alarm" = "#eb4034",

@@ -2,7 +2,7 @@ suppressPackageStartupMessages(library(plotly))
 
 plot_fig_4 <- function(forecast)
 {
-    data <- read_tsv(paste0(data_repo, today, "/1wk/", forecast,
+    data <- read_tsv(paste0(data_repo, "/", today, "/1wk/", forecast,
                             "_plot_data.txt"), col_types = cols()
     ) %>%
     mutate(
