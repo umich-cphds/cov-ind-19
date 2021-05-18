@@ -1,16 +1,9 @@
 library(tidyverse)
 library(janitor)
 
-# set variables based on testing or production ----------
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-	code_repo <- "~/cov-ind-19/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-	code_repo <- "~/cov-ind-19-iris/"
-}
-
 today <- Sys.getenv("today")
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
 path  <- paste0(data_repo, today, "/")
 if (!dir.exists(path)) {
     dir.create(path, recursive = TRUE)

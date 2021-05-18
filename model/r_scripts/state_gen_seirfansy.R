@@ -13,14 +13,10 @@ if ( Sys.getenv("production") == "TRUE" ) {
 	n_iter    <- 1e5
 	burn_in   <- 1e5
 	opt_num   <- 200
-        data_repo <- "~/cov-ind-19-data/"
-        code_repo <- "~/cov-ind-19/"
 } else {
 	n_iter    <- 1e3 #default 1e5
 	burn_in   <- 1e2 #default 1e5
 	opt_num   <- 1   #default 200
-        data_repo <- "~/cov-ind-19-test/"
-        code_repo <- "~/cov-ind-19-iris/"
 }
 
 # specs -----------

@@ -3,16 +3,10 @@ library(tidyverse)
 library(sf)
 library(tmap)
 
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-	code_repo <- "~/cov-ind-19/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-	code_repo <- "~/cov-ind-19-iris/"
-}
-
+code_repo <- Sys.getenv("code_repo")
+data_repo <- Sys.getenv("data_repo")
 today <- Sys.getenv("today")
+
 plot.height <- 9
 plot.width  <- 7
 plot.delay  <- 200

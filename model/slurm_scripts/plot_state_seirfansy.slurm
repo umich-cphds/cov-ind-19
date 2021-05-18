@@ -10,8 +10,6 @@
 
 module load Rtidyverse/4.0.3
 
-export data_repo="$HOME/covind_seirfansy_data/"
-
 export http_proxy=http://proxy.arc-ts.umich.edu:3128/
 export FTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export ftp_proxy=http://proxy.arc-ts.umich.edu:3128/
@@ -19,4 +17,4 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-Rscript --vanilla ~/$code_repo/model/r_scripts/plot_state_seirfansy.R
+Rscript --vanilla $code_repo/model/r_scripts/plot_state_seirfansy.R

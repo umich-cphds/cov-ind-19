@@ -7,16 +7,13 @@ library(here)
 library(eSIR)
 library(devtools)
 
-
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
-        data_repo <- "~/cov-ind-19-data/"
-        code_repo <- "~/cov-ind-19/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 } else {
-        data_repo <- "~/cov-ind-19-test/"
-        code_repo <- "~/cov-ind-19-iris/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }

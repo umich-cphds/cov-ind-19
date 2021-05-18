@@ -17,4 +17,4 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-Rscript --vanilla ~/$code_repo/model/r_scripts/state_gen_seirfansy.R
+Rscript --vanilla $code_repo/model/r_scripts/state_gen_seirfansy.R

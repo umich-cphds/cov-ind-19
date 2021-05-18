@@ -6,20 +6,14 @@ library(glue)
 library(ggtext)
 })
 
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-        data_repo <- "~/cov-ind-19-data/"
-        code_repo <- "~/cov-ind-19/"
-} else {
-        data_repo <- "~/cov-ind-19-test/"
-        code_repo <- "~/cov-ind-19-iris/"
-}
 today <- Sys.getenv("today")
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
 
 setwd(paste0(code_repo, "model/r_scripts/"))
 source("libraries.R")
 
-f <- list.files(paste0(code_repo, "model/r_scripts/functions"))
+f <- list.files(paste0("~/", code_repo, "/model/r_scripts/functions"))
 sapply(paste0("functions/", f), source)
 
 n_date <- 61

@@ -3,16 +3,9 @@ library(tidyverse)
 library(plotly)
 library(ggtext)
 })
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-	code_repo <- "~/cov-ind-19/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-	code_repo <- "~/cov-ind-19-iris/"
-}
 
 today <- Sys.getenv("today")
+code_repo <- Sys.getenv("code_repo")
 
 state.data <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols())
 generate_forecast_plots <- function(state)

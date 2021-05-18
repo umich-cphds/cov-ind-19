@@ -2,15 +2,8 @@ library(httr)
 library(tidyverse)
 library(vroom)
 
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-	code_repo <- "~/cov-ind-19/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-	code_repo <- "~/cov-ind-19-iris/"
-}
-
+code_repo <- Sys.getenv("code_repo")
+data_repo <- Sys.getenv("data_repo")
 today     <- Sys.getenv("today")
 if (!dir.exists(paste0(data_repo, today))) {
     message("Creating" , paste0(data_repo, today))
@@ -171,8 +164,4 @@ write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/
 write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv'),
           paste0(data_repo, today, '/statewise_tested_numbers_data.csv'))
 
-
 source(paste0(code_repo, "/model/r_scripts/cleanr_covind/run.R"))
-
-
-
