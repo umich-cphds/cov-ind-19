@@ -64,8 +64,8 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	#end of submit_states
 	generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
-	generateplotsseirfansy=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/plot_state_seirfansy.slurm | awk '{print $NF}')
-	sbatch --dependency=afterok:$generateplots:$generateplotsseirfansy:$spatialmap $code_repo/model/slurm_scripts/gitpush.slurm
+#	generateplotsseirfansy=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/plot_state_seirfansy.slurm | awk '{print $NF}')
+	sbatch --dependency=afterok:$generateplots:$spatialmap $code_repo/model/slurm_scripts/gitpush.slurm
 else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi

@@ -19,7 +19,7 @@ sapply(paste0("functions/", f), source)
 n_date <- 61
 
 
-x <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+x <- vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
   group_by(State) %>%
   filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State != "hp" & State != "py" ) %>%
   ungroup() %>%
@@ -30,7 +30,7 @@ state_codes <- x$State
 
 for (i in seq_along(state_codes)) {
   message(glue("***beep boop*** {state_codes[i]}"))
-  tmp_prediction <- read_tsv(paste0(data_repo, today, "/seirfansy/prediction_", # change to data repo
+  tmp_prediction <- read_tsv(paste0(data_repo, "/", today, "/seirfansy/prediction_", # change to data repo
                                     tolower(state_codes[i]), ".txt"),
                              col_types = cols()) %>%
     dplyr::filter(pred == 1) %>%                                           # drop in future
@@ -123,7 +123,7 @@ death_plt <- death_dat %>%
 gA <- ggplotGrob(case_plt + theme(legend.position = "none"))
 gB <- ggplotGrob(death_plt)
 
-cairo_pdf(filename = paste0(data_repo, today, "/seirfansy/prediction_stackplot.pdf"), # change output path
+cairo_pdf(filename = paste0(data_repo, "/", today, "/seirfansy/prediction_stackplot.pdf"), # change output path
           width = 8, height = 10)
 grid::grid.newpage()
 grid::grid.draw(rbind(gA, gB))
@@ -156,7 +156,7 @@ case_dat %>%
     legend.position    = "none",
     plot.caption       = element_markdown(hjust = 0)
   )
-ggsave(paste0(data_repo, today, "/seirfansy/prediction_casegrid.pdf"), width = 10, height = 8, device = cairo_pdf)  # change output path
+ggsave(paste0(data_repo, "/", today, "/seirfansy/prediction_casegrid.pdf"), width = 10, height = 8, device = cairo_pdf)  # change output path
 
 death_dat %>%
   ggplot(aes(x = date, y = value, group = state)) +
