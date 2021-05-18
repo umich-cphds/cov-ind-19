@@ -11,7 +11,11 @@ plot_fig_SEIR = function(state = "India") {
   
   #today = Sys.getenv("today")
   #paste0(data_repo, "seirfansy/", today)
-  repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/IRIS/", today, "/seirfansy")
+  if(Sys.getenv("IRIS") == "TRUE") {
+    repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/IRIS/", today, "/seirfansy")
+  } else {
+    repo_seir = paste0("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/", today, "/seirfansy")
+  }
   #paste0(data_repo, "seirfansy/", today)#paste0("https://raw.githubusercontent.com/umich-cphds/covind_seirfansy_data/main/", today)
   
   # abrev <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
