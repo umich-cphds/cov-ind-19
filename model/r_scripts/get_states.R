@@ -3,16 +3,11 @@ library(tidyverse)
 library(vroom)
 })
 
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-}
+data_repo <- Sys.getenv("data_repo")
 
 today <- Sys.getenv("today")
 
-x <- vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+x <- vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
 group_by(State) %>%
 filter(Date == max(Date) & State != "un" & State != "la" & State != "dd") %>%
 ungroup() %>%
