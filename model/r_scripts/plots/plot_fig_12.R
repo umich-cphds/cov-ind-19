@@ -1,7 +1,7 @@
 plot_fig_12 <- function(start.date = "2020-06-01") {
 
-  fac_inc_data = read.table(paste0(data_repo, today, "/incident_state_data.tsv"), sep = '\t', header = TRUE)
-  fac_cumul_data = read.table(paste0(data_repo, today, "/cumulative_state_data.tsv"), sep = '\t', header = TRUE)
+  fac_inc_data = read.table(paste0(data_repo, "/", today, "/incident_state_data.tsv"), sep = '\t', header = TRUE)
+  fac_cumul_data = read.table(paste0(data_repo, "/", today, "/cumulative_state_data.tsv"), sep = '\t', header = TRUE)
 
   subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
@@ -58,7 +58,7 @@ plot_fig_12 <- function(start.date = "2020-06-01") {
   daily = function(x) { c(x[1], diff(x)) }
   
   data_caseplot =
-    vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+    vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
     group_by(State) %>% #filter(Cases >= 50) %>%
     arrange(Date) %>%
     mutate(Day = seq(n()),

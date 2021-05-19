@@ -5,7 +5,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     deaths.threshold <- 3
 
     fmt <- function(x) format(x, big.mark = ",", scientific = F, trim = T)
-    data <- vroom(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = cols())
+    data <- vroom(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols())
     
     min.date = data %>% group_by(Country) %>% filter(Cases >= cases.threshold) %>%
         arrange(Date) %>% ungroup() %>% mutate(min_date = min(Date)) %>% 

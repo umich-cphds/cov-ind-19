@@ -18,4 +18,4 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-Rscript --vanilla ~/$code_repo/model/r_scripts/generate_plots.R
+Rscript --vanilla $code_repo/model/r_scripts/generate_plots.R

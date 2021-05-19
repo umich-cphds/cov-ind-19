@@ -7,22 +7,20 @@ library(here)
 library(devtools)
 library(eSIR)
 
+today     <- as.Date(Sys.getenv("today"))
+data_repo     <- Sys.getenv("data_repo")
+code_repo     <- Sys.getenv("code_repo")
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) { 
-        data_repo <- "~/cov-ind-19-data/"
-        code_repo <- "~/cov-ind-19/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 } else {
-        data_repo <- "~/cov-ind-19-test/"
-        code_repo <- "~/cov-ind-19-iris/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
 
 source(paste0(code_repo, "/model/r_scripts/cleanr_esir.R"))
 
-today     <- as.Date(Sys.getenv("today"))
 arrayid=Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 min_date <- today - 45
@@ -49,7 +47,7 @@ lockdown_end       <- "2020-05-03"
 length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 
 # directory ----------
-wd <- paste0(data_repo, today, "/1wk/")
+wd <- paste0(data_repo, "/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
@@ -57,7 +55,7 @@ if (!dir.exists(wd)) {
 setwd(wd)
 
 # data ----------
-dat <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv")) %>%
+dat <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv")) %>%
   filter(Country == "India" &  Date >= min_date)
 
 NI_complete <- dat$Cases

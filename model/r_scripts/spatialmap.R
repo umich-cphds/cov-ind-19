@@ -3,16 +3,10 @@ library(tidyverse)
 library(sf)
 library(tmap)
 
-# Set variables based on testing or production
-if ( Sys.getenv("production") == "TRUE" ) {
-	data_repo <- "~/cov-ind-19-data/"
-	code_repo <- "~/cov-ind-19/"
-} else {
-	data_repo <- "~/cov-ind-19-test/"
-	code_repo <- "~/cov-ind-19-iris/"
-}
-
+code_repo <- Sys.getenv("code_repo")
+data_repo <- Sys.getenv("data_repo")
 today <- Sys.getenv("today")
+
 plot.height <- 9
 plot.width  <- 7
 plot.delay  <- 200
@@ -30,7 +24,7 @@ kalends.ides <- as.Date(paste0(c(paste0("2020-", 1:12), paste0("2020-", 1:12)),
 india_shp   <- st_read(paste0(code_repo, "/model/map/Indian_States.shp"))
 
 
-data <- vroom(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+data <- vroom(paste0(data_repo, "/", today, "/covid19india_data.csv")) %>%
 arrange(Name, Date) %>%
 mutate(State = case_when(
     Name == "Ladakh" ~ "Jammu & Kashmir",
@@ -58,7 +52,7 @@ anim_day <- tm_shape(final_data) +
             tm_legend(scale = 1, legend.title.size = 2, legend.text.size = 1) +
             tm_borders()
 
-path <- path.expand(paste0(data_repo, today))
+path <- path.expand(paste0(data_repo, "/", today))
 if (!dir.exists(path))
     dir.create(path, recursive = TRUE)
 

@@ -11,7 +11,7 @@ plot_fig_11 <- function(start.date = as.Date("2020-04-01"))
   yaxis <- list(title = "Cumulative counts", titlefont = axis.title.font,
                 tickfont = tickfont, zeroline = T)
 
-  data <- read_csv(paste0(data_repo, today, "/global_testing.csv"), col_types=cols(), guess_max=100000) %>%
+  data <- read_csv(paste0(data_repo, "/", today, "/global_testing.csv"), col_types=cols(), guess_max=100000) %>%
     select(location, date, total_cases, total_tests) %>%
     group_by(location) %>%
     filter(!is.na(total_cases) & !is.na(total_tests)) %>%

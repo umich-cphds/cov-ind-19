@@ -7,16 +7,13 @@ library(here)
 library(eSIR)
 library(devtools)
 
-
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
-        data_repo <- "~/cov-ind-19-data/"
-        code_repo <- "~/cov-ind-19/"
         Ms        <- 5e5    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e5    # 2e5 recommended (2e3 for testing - but not stable)
 } else {
-        data_repo <- "~/cov-ind-19-test/"
-        code_repo <- "~/cov-ind-19-iris/"
         Ms        <- 5e3    # 5e5 recommended (5e3 for testing - but not stable)
         nburnins  <- 2e3    # 2e5 recommended (2e3 for testing - but not stable)
 }
@@ -53,7 +50,7 @@ length_of_lockdown <- length(as.Date(lockdown_start):as.Date(lockdown_end))
 state_sub <- state
 
 # data ----------
-dat <- read_tsv(paste0(data_repo, today, "/covid19india_data.csv")) %>%
+dat <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv")) %>%
   filter(State == state_sub & Date >= min_date)
 
 # populations from http://www.census2011.co.in/states.php
@@ -69,7 +66,7 @@ pops <-  c("up" = 199.8e6, "mh" = 112.4e6, "br" = 104.1e6, "wb" = 91.3e6, "ap" =
 start_date <-  min(dat$Date)
 
 # directory ----------
-wd <- paste0(data_repo, today, "/1wk/")
+wd <- paste0(data_repo, "/", today, "/1wk/")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
@@ -251,5 +248,14 @@ if (arrayid == 1) {
 #         
 # }
 
+#Create a separate directory for states which are not in the top 20. The data is needed for some things, but shouldn't go in the main data area.
+if ( Sys.getenv("bottom") == "TRUE" ) {
+	wd <- paste0(data_repo, "/", today, "/1wk/bottom_states/")
+	if (!dir.exists(wd)) {
+	  dir.create(wd, recursive = TRUE)
+	  message("Creating ", wd)
+	}
+	setwd(wd)
+}
 write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
 write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))

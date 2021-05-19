@@ -1,6 +1,6 @@
 plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
 {
-    data <- read_tsv(paste0(data_repo, today, "/jhu_data_mod.csv"), col_types = cols()) %>%
+    data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
     filter(Country == "India") %>%
     mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
         y <- x - lag(x)
@@ -52,7 +52,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    vroom_write(data, path = paste0(data_repo, today, "/plot1.csv"),
+    vroom_write(data, path = paste0(data_repo, "/", today, "/plot1.csv"),
                 delim = ","
     )
     p

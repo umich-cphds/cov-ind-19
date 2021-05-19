@@ -62,7 +62,7 @@ plot_fig_7 <- function()
 
     #start.date = as.Date("2020-03-01")
     data_caseplot =
-      vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+      vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
       group_by(State) %>% #filter(Cases >= 50) %>%
       arrange(Date) %>%
       filter(Date >= as.Date('2020-05-01')) %>%
@@ -75,7 +75,7 @@ plot_fig_7 <- function()
       inner_join(data_caseplot, statenames, by = c('State' = 'abbrev'))
 
     data_deathplot =
-      vroom(paste0(data_repo, today, "/covid19india_data.csv"), col_types = cols()) %>%
+      vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
       group_by(State) %>% #filter(Deaths >= 1) %>%
       arrange(Date) %>%
       filter(Date >= as.Date('2020-05-01')) %>%
