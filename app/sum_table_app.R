@@ -280,8 +280,7 @@ India_gt_table = function() {
   tib = tib %>% select(-`Daily new cases`, -`Total tested`) %>% 
     mutate(Location = case_when(Location == "National estimate" ~ "India", TRUE ~ Location)) 
 
-  tabl <- tib %>%
-    gt() %>%
+  tabl <- gt(data = tib) %>%
     # format table body text
     tab_style(
       style     = cell_text(size = px(14), font = "helvetica"),
@@ -289,7 +288,7 @@ India_gt_table = function() {
     ) %>%
     tab_style(
       style     = cell_text(weight = "bold"),
-      locations = cells_body(vars(Location))
+      locations = cells_body((Location))
     ) %>%
     # format column names
     tab_style(
@@ -303,11 +302,11 @@ India_gt_table = function() {
     ) %>%
     # format numbers
     fmt_number(
-      columns  = vars(CFR, `7-day average daily TPR`, TPR),
+      columns  = c(CFR, `7-day average daily TPR`, TPR),
       decimals = 3
     ) %>%
     fmt_number(
-      columns  = vars(R),
+      columns  = c(R),
       decimals = 2
     ) %>%
     # random formatting
@@ -320,8 +319,8 @@ India_gt_table = function() {
     ) %>%
     # column widths
     cols_width(
-      vars(Location) ~ px(150),
-      vars(R, CFR) ~ px(75),
+      Location ~ px(150),
+      c(R, CFR) ~ px(75),
       everything() ~ px(100)
     ) %>%
     cols_align(
@@ -346,20 +345,20 @@ India_gt_table = function() {
     # add and format column spanners
     tab_spanner(
       label   = "Point in time metrics",
-      columns = vars(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+      columns = c(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
                      `7-day average daily CFR`, R, `daily tests`, `daily vaccine doses`)
     ) %>%
     tab_spanner(
       label   = "Cumulative metrics",
-      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, 
+      columns = c(`total cases`, `total deaths`, `TPR`, CFR, 
                      `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`,
                      `Predicted total cases`)
     ) %>% 
     tab_spanner(
       label   = glue("On ({format(today + 21, '%m/%d')})"),
-      columns = vars(`Predicted total cases`)
+      columns = (`Predicted total cases`)
     ) %>% 
-    cols_move_to_start(vars(Location)) %>%
+    cols_move_to_start((Location)) %>%
     tab_style(
       style = cell_text(
         size      = px(14),
@@ -381,11 +380,11 @@ India_gt_table = function() {
     ) %>%
     # color cells based on values
     data_color(
-      columns = vars(R),
+      columns = c(R),
       colors = col_bin(c( "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1.5,1000), pretty = F)
     ) %>%
     data_color(
-      columns = vars(`7-day average daily TPR`),
+      columns = c(`7-day average daily TPR`),
       colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F, na.color = "#e8e8e8")
     ) %>%
     # highlight national estimate
@@ -396,23 +395,23 @@ India_gt_table = function() {
     ) %>% 
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_body(columns = vars(`total cases`))
+      locations = cells_body(columns = (`total cases`))
     ) %>% 
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_column_labels(columns = vars(`total cases`))
+      locations = cells_column_labels(columns = (`total cases`))
     ) %>% 
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_column_spanners(vars("Cumulative metrics"))
+      locations = cells_column_spanners(("Cumulative metrics"))
     ) %>% 
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_body(columns = vars(`Predicted total cases`))
+      locations = cells_body(columns = (`Predicted total cases`))
     ) %>% 
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_column_labels(columns = vars(`Predicted total cases`))
+      locations = cells_column_labels(columns = (`Predicted total cases`))
     ) 
   
   # new table
@@ -428,7 +427,7 @@ India_gt_table = function() {
     ) %>%
     tab_style(
       style     = cell_text(weight = "bold"),
-      locations = cells_body(vars(Location))
+      locations = cells_body(c(Location))
     ) %>%
     # format column names
     tab_style(
@@ -442,11 +441,11 @@ India_gt_table = function() {
     ) %>%
     # format numbers
     fmt_number(
-      columns  = vars(`7-day average daily TPR`),
+      columns  = c(`7-day average daily TPR`),
       decimals = 3
     ) %>%
     fmt_number(
-      columns  = vars(R),
+      columns  = c(R),
       decimals = 2
     ) %>%
     # random formatting
@@ -459,8 +458,8 @@ India_gt_table = function() {
     ) %>%
     # column widths
     cols_width(
-      vars(Location) ~ px(150),
-      vars(R) ~ px(75),
+      Location ~ px(150),
+      R ~ px(75),
       everything() ~ px(100)
     ) %>%
     cols_align(
@@ -484,10 +483,10 @@ India_gt_table = function() {
     ) %>% 
     tab_spanner(
       label   = "Point in time metrics",
-      columns = vars(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+      columns = c(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
                      `7-day average daily CFR`, R, `daily tests`, `daily vaccine doses`)
     ) %>% 
-    cols_move_to_start(vars(Location)) %>%
+    cols_move_to_start((Location)) %>%
     tab_style(
       style = cell_text(
         size      = px(14),
@@ -509,11 +508,11 @@ India_gt_table = function() {
     ) %>%
     # color cells based on values
     data_color(
-      columns = vars(R),
+      columns = c(R),
       colors = col_bin(c( "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1.5,1000), pretty = F)
     ) %>%
     data_color(
-      columns = vars(`7-day average daily TPR`),
+      columns = c(`7-day average daily TPR`),
       colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F, na.color = "#e8e8e8")
     ) %>%
     # highlight national estimate
@@ -534,7 +533,7 @@ India_gt_table = function() {
     ) %>%
     tab_style(
       style     = cell_text(weight = "bold"),
-      locations = cells_body(vars(Location))
+      locations = cells_body(c(Location))
     ) %>%
     # format column names
     tab_style(
@@ -548,7 +547,7 @@ India_gt_table = function() {
     ) %>%
     # format numbers
     fmt_number(
-      columns  = vars(CFR, TPR),
+      columns  = c(CFR, TPR),
       decimals = 3
     ) %>%
     # random formatting
@@ -561,8 +560,8 @@ India_gt_table = function() {
     ) %>%
     # column widths
     cols_width(
-      vars(Location) ~ px(150),
-      vars(CFR) ~ px(75),
+      (Location) ~ px(150),
+      (CFR) ~ px(75),
       everything() ~ px(100)
     ) %>%
     cols_align(
@@ -586,14 +585,14 @@ India_gt_table = function() {
     ) %>% 
     tab_spanner(
       label   = "Cumulative metrics",
-      columns = vars(`total cases`, `total deaths`, `TPR`, CFR, `Predicted total cases`,
+      columns = c(`total cases`, `total deaths`, `TPR`, CFR, `Predicted total cases`,
                      `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`)
     ) %>% 
     tab_spanner(
       label   = glue("On ({format(today + 21, '%m/%d')})"),
-      columns = vars(`Predicted total cases`)
+      columns = c(`Predicted total cases`)
     ) %>% 
-    cols_move_to_start(vars(Location)) %>%
+    cols_move_to_start((Location)) %>%
     tab_style(
       style = cell_text(
         size      = px(14),
@@ -620,11 +619,11 @@ India_gt_table = function() {
     ) %>%
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_body(columns = vars(`Predicted total cases`))
+      locations = cells_body(columns = c(`Predicted total cases`))
     ) %>%
     tab_style(
       style = cell_borders(sides = "left"),
-      locations = cells_column_labels(columns = vars(`Predicted total cases`))
+      locations = cells_column_labels(columns = c(`Predicted total cases`))
     ) %>% 
     cols_move_to_end(columns = "Predicted total cases")
   
