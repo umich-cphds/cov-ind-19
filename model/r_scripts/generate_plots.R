@@ -14,11 +14,6 @@ generate_forecast_plots <- function(state)
     start.date <- as.Date("2020-03-01")
     path       <- paste0(data_repo, "/", today, "/", state)
 
-    if (!dir.exists(path)){
-        dir.create(path, recursive = T)
-        message("creating ", path)
-    }
-
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_1.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_2.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_3.R"))
