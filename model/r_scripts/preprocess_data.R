@@ -5,9 +5,9 @@ library(vroom)
 code_repo <- Sys.getenv("code_repo")
 data_repo <- Sys.getenv("data_repo")
 today     <- Sys.getenv("today")
-if (!dir.exists(paste0(data_repo, today))) {
-    message("Creating" , paste0(data_repo, today))
-    dir.create(paste0(data_repo, today), recursive = T)
+if (!dir.exists(paste0(data_repo, "/", today))) {
+    message("Creating" , paste0(data_repo, "/", today))
+    dir.create(paste0(data_repo, "/", today), recursive = T)
 }
 
 start.date <- as.Date("2020-03-01")
@@ -48,7 +48,7 @@ jhu.data <- reduce(imap(jhu.files,
 ), ~ left_join(.x, .y)) %>%
 ungroup() %>%
 arrange(Country, Date) %>%
-vroom_write(path = paste0(data_repo, today, "/jhu_data.csv"))
+vroom_write(path = paste0(data_repo, "/", today, "/jhu_data.csv"))
 
 
 states.map <- c("Andhra Pradesh" =  "AP", "Arunachal Pradesh" =  "AR",
@@ -114,7 +114,7 @@ data <- data %>%
   ) %>%
   ungroup() %>%
   filter(Date >= "2020-03-15" & Date < today) %>%
-vroom_write(path = paste0(data_repo, today, "/covid19india_data.csv"))
+vroom_write(path = paste0(data_repo, "/", today, "/covid19india_data.csv"))
 
 # grab India related data
 request <- GET("https://api.covid19india.org/data.json")
@@ -140,7 +140,7 @@ data <- data %>%
 
 
 rbind(filter(jhu.data, Country != "India"), data) %>%
-vroom_write(path = paste0(data_repo, today, "/jhu_data_mod.csv"))
+vroom_write(path = paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
 
 # India testing data
 data_testing <- data_testing %>%
@@ -156,12 +156,12 @@ mutate(
     Country = "India"
 )
 
-write_csv(data_testing, paste0(data_repo, today, "/testing.csv"))
+write_csv(data_testing, paste0(data_repo, "/", today, "/testing.csv"))
 
 write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
-          paste0(data_repo, today, "/global_testing.csv"))
+          paste0(data_repo, "/", today, "/global_testing.csv"))
 
 write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv'),
-          paste0(data_repo, today, '/statewise_tested_numbers_data.csv'))
+          paste0(data_repo, "/", today, '/statewise_tested_numbers_data.csv'))
 
 source(paste0(code_repo, "/model/r_scripts/cleanr_covind/run.R"))

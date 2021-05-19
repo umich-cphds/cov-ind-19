@@ -12,19 +12,14 @@ suppressPackageStartupMessages({
   library(vroom)
 })
 
-if (Sys.getenv("production") == "TRUE") {
-  data_repo <- "~/cov-ind-19-data/"
-  today     <- Sys.getenv("today")
-} else {
-  data_repo <- "~/cov-ind-19-test/"
-  today     <- max(as.Date(grep("[0-9]", list.files(data_repo), value = T)))
-}
+data_repo <- Sys.getenv("data_repo")
+today     <- Sys.getenv("today")
 
 India_gt_table = function() {
   
-  tp = read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
-  cfr1 = read_csv(paste0(data_repo, today, "/cfr_t7_avg.csv"), col_types = cols())
-  r_est = read_csv(paste0(data_repo, today, "/r0_t7_avg.csv"), col_types = cols())
+  tp = read_csv(paste0(data_repo, "/", today, "/everything.csv"), col_types = cols())
+  cfr1 = read_csv(paste0(data_repo, "/", today, "/cfr_t7_avg.csv"), col_types = cols())
+  r_est = read_csv(paste0(data_repo, "/", today, "/r0_t7_avg.csv"), col_types = cols())
   
   india_state_pop = '"state" "population"
 "1" "Uttar Pradesh" 199812341
@@ -108,10 +103,10 @@ India_gt_table = function() {
   # pull forecast estimates ----------
   # no_int
   for (i in seq_along(use_abbrevs)) {
-    eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
+    eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% filter(date == '{today + 21}') %>% add_column(abbrev = use_abbrevs[i])")))
   }
   
-  no_int_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
+  no_int_india <- read_tsv(paste0(data_repo, "/", glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% filter(date == today + 21) %>% add_column(abbrev = "India")
   
   eval(parse(text = glue("no_int_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, no_int_india)")))
   no_int_est <- no_int_est %>%
@@ -145,15 +140,15 @@ India_gt_table = function() {
   }
   tp %>% extract_latest()
   
-  tp <- read_csv(paste0(data_repo, today, "/everything.csv"), col_types = cols())
+  tp <- read_csv(paste0(data_repo, "/", today, "/everything.csv"), col_types = cols())
   
   #use_abbrevs <- tp %>% pull(abbrev) %>% unique() %>% tolower()
   today = as.Date(today)
   for (i in seq_along(use_abbrevs)) {
-    eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% add_column(abbrev = use_abbrevs[i])")))
+    eval(parse(text = glue("{use_abbrevs[i]} <- read_tsv('{data_repo}/{today}/1wk/{use_abbrevs[i]}_no_int_data.txt', col_types = cols()) %>% add_column(abbrev = use_abbrevs[i])")))
   }
   
-  no_int_india <- read_tsv(paste0(data_repo, glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% add_column(abbrev = "India")
+  no_int_india <- read_tsv(paste0(data_repo, "/", glue("{today}/1wk/india_no_int_data.txt")), col_types = cols()) %>% add_column(abbrev = "India")
   eval(parse(text = glue("no_int_est <- bind_rows({paste0(use_abbrevs, collapse = ', ')}, no_int_india)")))
   
   no_int_est <- no_int_est %>%

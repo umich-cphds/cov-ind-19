@@ -89,7 +89,7 @@ data <- list(India = generate_forecast_plots("India"),
 			       codes = c(),
 			       gt = list()
 )
-source(paste0(code_repo, "/model/r_scripts/get_states.R"))
+source(paste0(code_repo, "/model/r_scripts/get_top_20_states.R"))
 
 states.to.forecast <- x$State
 for (state in states.to.forecast) {
