@@ -20,7 +20,7 @@ github.api.path <- paste0("https://api.github.com/repos/umich-cphds/",
 # authenticate as alexander rix and pull the latest data
 latest <- get_latest(github.api.path)
 file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/", branch,
-               "/", latest, "/data.RData")
+               "/", latest, "/data_bottom.RData")
 
 url <- url(file)
 load(url)

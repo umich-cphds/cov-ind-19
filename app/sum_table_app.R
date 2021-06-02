@@ -48,7 +48,7 @@ India_gt_table = function() {
                                stringsAsFactors = FALSE)
   
   # shortfall -----------
-  use_abbrevs <- tp %>% filter(abbrev != "la") %>% pull(abbrev) %>% unique() %>% tolower()
+  use_abbrevs <- tp %>% filter(abbrev != "la", abbrev != "hp", abbrev != "py") %>% pull(abbrev) %>% unique() %>% tolower()
   
   # state data ----------
   
@@ -95,6 +95,7 @@ India_gt_table = function() {
       daily_vaccines = vaccines - dplyr::lag(vaccines)
     ) %>%
     ungroup() %>% 
+    drop_na(daily_vaccines) %>% 
     filter(date == max(date, na.rm = TRUE)) %>%
     mutate(state = ifelse(state == "Total", "National estimate", state))
   

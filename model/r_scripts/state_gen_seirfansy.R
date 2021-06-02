@@ -73,19 +73,10 @@ result    <- SEIRfansy.predict(
 )
 
 # directory ----------
-if ( Sys.getenv("bottom") == "TRUE" ) {
-        wd <- paste0(data_repo, "/", today, "/seirfansy/bottom_states")
-        if (!dir.exists(wd)) {
-          dir.create(wd, recursive = TRUE)
-          message("Creating ", wd)
-        }
-        setwd(wd)
-} else {
-	wd <- paste0(data_repo, "/", today, "/seirfansy")
-	if (!dir.exists(wd)) {
-	  dir.create(wd, recursive = TRUE)
-	  message("Creating ", wd)
-	}
+wd <- paste0(data_repo, "/", today, "/seirfansy")
+if (!dir.exists(wd)) {
+  dir.create(wd, recursive = TRUE)
+  message("Creating ", wd)
 }
 
 pred_clean <- clean_prediction(result$prediction,
