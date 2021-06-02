@@ -248,14 +248,5 @@ if (arrayid == 1) {
 #         
 # }
 
-#Create a separate directory for states which are not in the top 20. The data is needed for some things, but shouldn't go in the main data area.
-if ( Sys.getenv("bottom") == "TRUE" ) {
-	wd <- paste0(data_repo, "/", today, "/1wk/bottom_states/")
-	if (!dir.exists(wd)) {
-	  dir.create(wd, recursive = TRUE)
-	  message("Creating ", wd)
-	}
-	setwd(wd)
-}
 write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
 write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))

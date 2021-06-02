@@ -100,3 +100,27 @@ gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, "/", today, 
 data$gt = data$gt$full
 
 save(data, file = paste0(data_repo, "/", today, "/data.RData"))
+
+data = NULL
+data <- list(India = generate_forecast_plots("India"),
+             plots = list(),
+             states = c(),
+             codes = c(),
+             gt = list()
+)
+source(paste0(code_repo, "/model/r_scripts/get_bottom_states.R"))
+
+states.to.forecast <- x$State
+for (state in states.to.forecast) {
+  data$states <- c(data$states, state.data$Name[match(state, state.data$State)])
+  data$codes  <- c(data$codes, state)
+  data$plots[[state]] <- generate_forecast_plots(state)
+}
+
+source(paste0(code_repo, "/app/sum_table_app.R"))
+data$gt <- India_gt_table()
+gtsave(data$gt$point_in_time, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_point_in_time.png")))
+gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_cumulative.png")))
+data$gt = data$gt$full
+
+save(data, file = paste0(data_repo, "/", today, "/data_bottom.RData"))
