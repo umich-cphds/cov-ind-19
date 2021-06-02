@@ -95,6 +95,7 @@ India_gt_table = function() {
       daily_vaccines = vaccines - dplyr::lag(vaccines)
     ) %>%
     ungroup() %>% 
+    drop_na(daily_vaccines) %>% 
     filter(date == max(date, na.rm = TRUE)) %>%
     mutate(state = ifelse(state == "Total", "National estimate", state))
   
