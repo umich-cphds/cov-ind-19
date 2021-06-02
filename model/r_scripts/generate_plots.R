@@ -8,18 +8,6 @@ today <- Sys.getenv("today")
 code_repo <- Sys.getenv("code_repo")
 data_repo <- Sys.getenv("data_repo")
 
-# # copy files into 1wk
-# bottom.path = paste0(data_repo, "/", today, "/1wk/bottom_states/")
-# paste0(bottom.path, list.files(bottom.path))
-# file.copy(from = paste0(bottom.path, list.files(bottom.path)),
-#           to = paste0(data_repo, "/", today, "/1wk/"))
-# 
-# # copy files into seirfansy
-# bottom.path = paste0(data_repo, "/", today, "/seirfansy/bottom_states/")
-# paste0(bottom.path, list.files(bottom.path))
-# file.copy(from = paste0(bottom.path, list.files(bottom.path)),
-#           to = paste0(data_repo, "/", today, "/seirfansy/"))
-
 state.data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols())
 generate_forecast_plots <- function(state)
 {
