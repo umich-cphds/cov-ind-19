@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=FAIL
-#SBATCH --time=25:00:00
+#SBATCH --time=1:00:00
 #SBATCH --job-name=master_india
 #SBATCH --mem-per-cpu=1G
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
@@ -37,33 +37,12 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	preprocess=$(sbatch --dependency=afterok:$gitpull $code_repo/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
 	spatialmap=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	national=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/national_forecast.slurm | awk '{print $NF}')
-	#submit_states
-	sleep 2m #This is to give preprocess data a chance to run before get_top_20_states.R  which requires the data from preprocess data
-	cd $code_repo/model/slurm_scripts
-	states=$(Rscript $code_repo/model/r_scripts/get_all_states.R )
-	state_jobs=""
-	for i in $states; do
-		export state=$i
-		state1=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_forecast.slurm | awk '{print $NF}')
-		if [[ $state_jobs != "" ]]; then
-			state_jobs=$state_jobs:$state1
-		else
-			state_jobs=$state1
-		fi
-	done
-	states="$states tt"
-	#Run seirfansy states which includes tt for India
-	export bottom=FALSE
-	for i in $states; do
-		export state=$i
-                state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
-		if [[ $state_jobs != "" ]]; then
-			state_jobs=$state_jobs:$state2
-		else
-			state_jobs=$state2
-		fi
-	done
-	#end of submit_states
+	submitstates=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/submit_states.slurm | awk '{print $NF}')
+	while [ ! -f $data_repo/$today/state_jobids.txt ]
+        do
+          sleep 10
+        done
+	state_jobs=$(cat $data_repo/$today/state_jobids.txt)
 	generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
 	sbatch --dependency=afterok:$generateplots:$spatialmap $code_repo/model/slurm_scripts/gitpush.slurm
@@ -71,4 +50,4 @@ else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
 
-sbatch --begin=now+24hour $code_repo/model/slurm_scripts/master_india.slurm
+#sbatch --begin=now+24hour $code_repo/model/slurm_scripts/master_india.slurm
