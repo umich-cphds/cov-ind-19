@@ -127,7 +127,7 @@ shinyServer(function(input, output)
     )
     
     output$India_gt = render_gt({
-        data$gt
+        data$gt20
     })
     
     output$gt_india_snapshot = render_gt({
@@ -137,7 +137,7 @@ shinyServer(function(input, output)
     output$download_gt_point = downloadHandler(
         filename = function() {'COVIND_table_point_in_time.png'},
         content = function(con) {
-            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_point_in_time.png'),
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_point_in_time20.png'),
                           'COVIND_table_point_in_time.png', mode = 'wb')
             file.copy(from = 'COVIND_table_point_in_time.png',
                       to = con)
@@ -147,7 +147,7 @@ shinyServer(function(input, output)
     output$download_gt_cumulative = downloadHandler(
         filename = function() {'COVIND_table_cumulative.png'},
         content = function(con) {
-            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_cumulative.png'),
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_cumulative20.png'),
                           'COVIND_table_cumulative.png', mode = 'wb')
             file.copy(from = 'COVIND_table_cumulative.png',
                       to = con)

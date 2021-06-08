@@ -628,7 +628,367 @@ India_gt_table = function() {
     ) %>% 
     cols_move_to_end(columns = "Predicted total cases")
   
-  list(full = tabl,
+  x <- vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
+    group_by(State) %>%
+    filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State != "hp" & State != "py") %>%
+    ungroup() %>%
+    top_n(20, Cases) %>% 
+    pull(Name)
+  
+  tib = tib %>%
+    filter(Location %in% c(x, "India"))
+  
+  tabl20 <- gt(data = tib) %>%
+    # format table body text
+    tab_style(
+      style     = cell_text(size = px(14), font = "helvetica"),
+      locations = cells_body()
+    ) %>%
+    tab_style(
+      style     = cell_text(weight = "bold"),
+      locations = cells_body((Location))
+    ) %>%
+    # format column names
+    tab_style(
+      style = cell_text(
+        size      = px(12),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_labels(everything())
+    ) %>%
+    # format numbers
+    fmt_number(
+      columns  = c(CFR, `7-day average daily TPR`, TPR),
+      decimals = 3
+    ) %>%
+    fmt_number(
+      columns  = c(R),
+      decimals = 2
+    ) %>%
+    # random formatting
+    tab_options(
+      column_labels.border.top.style    = "none",
+      column_labels.border.bottom.width = 1,
+      column_labels.border.bottom.color = "#334422",
+      table_body.border.bottom.color    = "#0000001A",
+      data_row.padding                  = px(4)
+    ) %>%
+    # column widths
+    cols_width(
+      Location ~ px(150),
+      c(R, CFR) ~ px(75),
+      everything() ~ px(100)
+    ) %>%
+    cols_align(
+      align   = "center",
+      columns = everything()
+    ) %>%
+    # title
+    tab_header(
+      title    = md("**Assessing COVID-19 in India**"),
+      subtitle = glue("as of {format(today, '%B %e')}")
+    ) %>%
+    # caption
+    tab_source_note(
+      source_note = md(glue(
+        "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
+      **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
+      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
+      <br>
+      **Abbrev:** CFR, Case-fatality rate."
+      ))
+    ) %>% 
+    # add and format column spanners
+    tab_spanner(
+      label   = "Point in time metrics",
+      columns = c(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+                  `7-day average daily CFR`, R, `daily tests`, `daily vaccine doses`)
+    ) %>%
+    tab_spanner(
+      label   = "Cumulative metrics",
+      columns = c(`total cases`, `total deaths`, `TPR`, CFR, 
+                  `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`,
+                  `Predicted total cases`)
+    ) %>% 
+    tab_spanner(
+      label   = glue("On ({format(today + 21, '%m/%d')})"),
+      columns = (`Predicted total cases`)
+    ) %>% 
+    cols_move_to_start((Location)) %>%
+    tab_style(
+      style = cell_text(
+        size      = px(14),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_spanners(spanners = c("Point in time metrics", "Cumulative metrics", glue("On ({format(today + 21, '%m/%d')})")))
+    ) %>%
+    # adjust title font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(24))),
+      locations = list(cells_title(groups = "title"))
+    ) %>%
+    # adjust subtitle font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(18))),
+      locations = list(cells_title(groups = "subtitle"))
+    ) %>%
+    # color cells based on values
+    data_color(
+      columns = c(R),
+      colors = col_bin(c( "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1.5,1000), pretty = F)
+    ) %>%
+    data_color(
+      columns = c(`7-day average daily TPR`),
+      colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F, na.color = "#e8e8e8")
+    ) %>%
+    # highlight national estimate
+    tab_style(
+      style = cell_fill(color = "#fcf8d4"),
+      locations = cells_body(
+        rows = Location == "India")
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = (`total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = (`total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_spanners(("Cumulative metrics"))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = (`Predicted total cases`))
+    ) %>% 
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = (`Predicted total cases`))
+    ) 
+  
+  # new table
+  point_in_time20 <- tib %>%
+    select(-`total cases`, -`total deaths`, -`TPR`, -CFR, 
+           -`Total doses`, -`% pop. with two shots`, -`% pop. with at least one shot`,
+           -`Predicted total cases`) %>%
+    gt() %>%
+    # format table body text
+    tab_style(
+      style     = cell_text(size = px(14), font = "helvetica"),
+      locations = cells_body()
+    ) %>%
+    tab_style(
+      style     = cell_text(weight = "bold"),
+      locations = cells_body(c(Location))
+    ) %>%
+    # format column names
+    tab_style(
+      style = cell_text(
+        size      = px(12),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_labels(everything())
+    ) %>%
+    # format numbers
+    fmt_number(
+      columns  = c(`7-day average daily TPR`),
+      decimals = 3
+    ) %>%
+    fmt_number(
+      columns  = c(R),
+      decimals = 2
+    ) %>%
+    # random formatting
+    tab_options(
+      column_labels.border.top.style    = "none",
+      column_labels.border.bottom.width = 1,
+      column_labels.border.bottom.color = "#334422",
+      table_body.border.bottom.color    = "#0000001A",
+      data_row.padding                  = px(4)
+    ) %>%
+    # column widths
+    cols_width(
+      Location ~ px(150),
+      R ~ px(75),
+      everything() ~ px(100)
+    ) %>%
+    cols_align(
+      align   = "center",
+      columns = everything()
+    ) %>%
+    # title
+    tab_header(
+      title    = md("**Assessing COVID-19 in India**"),
+      subtitle = glue("as of {format(today, '%B %e')}")
+    ) %>%
+    # caption
+    tab_source_note(
+      source_note = md(glue(
+        "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
+      **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
+      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
+      <br>
+      **Abbrev:** CFR, Case-fatality rate."
+      ))
+    ) %>% 
+    tab_spanner(
+      label   = "Point in time metrics",
+      columns = c(`# daily new cases`, `# daily new deaths`, `7-day average daily TPR`,
+                  `7-day average daily CFR`, R, `daily tests`, `daily vaccine doses`)
+    ) %>% 
+    cols_move_to_start((Location)) %>%
+    tab_style(
+      style = cell_text(
+        size      = px(14),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_spanners(spanners = c("Point in time metrics")) #, glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")
+    ) %>%
+    # adjust title font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(24))),
+      locations = list(cells_title(groups = "title"))
+    ) %>%
+    # adjust subtitle font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(18))),
+      locations = list(cells_title(groups = "subtitle"))
+    ) %>%
+    # color cells based on values
+    data_color(
+      columns = c(R),
+      colors = col_bin(c( "#FFFFFF", "#fae0de"), domain = NULL, bins = c(0,1.5,1000), pretty = F)
+    ) %>%
+    data_color(
+      columns = c(`7-day average daily TPR`),
+      colors = col_bin(c("#FFFFFF", "#fae0de"), domain = NULL, bins = c(0, 0.05, 1), pretty = F, na.color = "#e8e8e8")
+    ) %>%
+    # highlight national estimate
+    tab_style(
+      style = cell_fill(color = "#fcf8d4"),
+      locations = cells_body(
+        rows = Location == "India")
+    )
+  
+  cumulative20 = tib %>%
+    select(-`# daily new cases`, -`# daily new deaths`, -`7-day average daily TPR`,
+           -`7-day average daily CFR`, -R, -`daily tests`, -`daily vaccine doses`) %>%
+    gt() %>%
+    # format table body text
+    tab_style(
+      style     = cell_text(size = px(14), font = "helvetica"),
+      locations = cells_body()
+    ) %>%
+    tab_style(
+      style     = cell_text(weight = "bold"),
+      locations = cells_body(c(Location))
+    ) %>%
+    # format column names
+    tab_style(
+      style = cell_text(
+        size      = px(12),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_labels(everything())
+    ) %>%
+    # format numbers
+    fmt_number(
+      columns  = c(CFR, TPR),
+      decimals = 3
+    ) %>%
+    # random formatting
+    tab_options(
+      column_labels.border.top.style    = "none",
+      column_labels.border.bottom.width = 1,
+      column_labels.border.bottom.color = "#334422",
+      table_body.border.bottom.color    = "#0000001A",
+      data_row.padding                  = px(4)
+    ) %>%
+    # column widths
+    cols_width(
+      (Location) ~ px(150),
+      (CFR) ~ px(75),
+      everything() ~ px(100)
+    ) %>%
+    cols_align(
+      align   = "center",
+      columns = everything()
+    ) %>%
+    # title
+    tab_header(
+      title    = md("**Assessing COVID-19 in India**"),
+      subtitle = glue("as of {format(today, '%B %e')}")
+    ) %>%
+    # caption
+    tab_source_note(
+      source_note = md(glue(
+        "**\uA9 COV-IND-19 Study Group**<br>**Source data:** covid19india.org<br>
+      **Notes:** Cells highlighted in green indicates good performance for given metric while red indicates need for improvement.
+      Only states/union territories with the highest cumulative case counts as of {format(today, '%B %e')} are shown. 
+      <br>
+      **Abbrev:** CFR, Case-fatality rate."
+      ))
+    ) %>% 
+    tab_spanner(
+      label   = "Cumulative metrics",
+      columns = c(`total cases`, `total deaths`, `TPR`, CFR, `Predicted total cases`,
+                  `Total doses`, `% pop. with two shots`, `% pop. with at least one shot`)
+    ) %>% 
+    tab_spanner(
+      label   = glue("On ({format(today + 21, '%m/%d')})"),
+      columns = c(`Predicted total cases`)
+    ) %>% 
+    cols_move_to_start((Location)) %>%
+    tab_style(
+      style = cell_text(
+        size      = px(14),
+        color     = "#999",
+        font      = "helvetica",
+        transform = "uppercase"
+      ),
+      locations = cells_column_spanners(spanners = c("Cumulative metrics", glue("On ({format(today + 21, '%m/%d')})"))) #, glue("Predictions on ({format(today + 21, '%m/%d')}) (No intervention)")
+    ) %>%
+    # adjust title font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(24))),
+      locations = list(cells_title(groups = "title"))
+    ) %>%
+    # adjust subtitle font
+    tab_style(
+      style     = list(cell_text(font = "helvetica", size = px(18))),
+      locations = list(cells_title(groups = "subtitle"))
+    ) %>% 
+    # highlight national estimate
+    tab_style(
+      style = cell_fill(color = "#fcf8d4"),
+      locations = cells_body(rows = Location == "India")
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_body(columns = c(`Predicted total cases`))
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "left"),
+      locations = cells_column_labels(columns = c(`Predicted total cases`))
+    ) %>% 
+    cols_move_to_end(columns = "Predicted total cases")
+  
+  list(full20 = tabl20,
+       point_in_time20 = point_in_time20,
+       cumulative20 = cumulative20,
+       full = tabl,
        point_in_time = point_in_time,
        cumulative = cumulative)
   
