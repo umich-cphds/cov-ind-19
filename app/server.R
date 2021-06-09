@@ -20,7 +20,7 @@ github.api.path <- paste0("https://api.github.com/repos/umich-cphds/",
 # authenticate as alexander rix and pull the latest data
 latest <- get_latest(github.api.path)
 file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/", branch,
-               "/", latest, "/data_bottom.RData")
+               "/", latest, "/data.RData")
 
 url <- url(file)
 load(url)
@@ -137,7 +137,7 @@ shinyServer(function(input, output)
     output$download_gt_point = downloadHandler(
         filename = function() {'COVIND_table_point_in_time.png'},
         content = function(con) {
-            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_point_in_time.png'),
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_point_in_time20.png'),
                           'COVIND_table_point_in_time.png', mode = 'wb')
             file.copy(from = 'COVIND_table_point_in_time.png',
                       to = con)
@@ -147,7 +147,7 @@ shinyServer(function(input, output)
     output$download_gt_cumulative = downloadHandler(
         filename = function() {'COVIND_table_cumulative.png'},
         content = function(con) {
-            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_cumulative.png'),
+            download.file(paste0('https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/', latest, '/COVIND_table_cumulative20.png'),
                           'COVIND_table_cumulative.png', mode = 'wb')
             file.copy(from = 'COVIND_table_cumulative.png',
                       to = con)
