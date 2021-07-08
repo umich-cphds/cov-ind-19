@@ -34,12 +34,8 @@ plot_fig_forest = function() {
     )
   
   # read data -----------
-  everything <- read_csv("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/2021-07-07/everything.csv",
-                         col_types = cols())
-  # everything <- read_csv(paste0(data_repo, "/", today, '/everything.csv'), col_types = cols())
-  r0 <- read_csv("https://raw.githubusercontent.com/umich-cphds/cov-ind-19-data/master/2021-07-07/r0_t7_avg.csv",
-                 col_types = cols())
-  # r0 <- read_csv(paste0(data_repo, "/", today, '/r0_t7_avg.csv'), col_types = cols())
+  everything <- read_csv(paste0(data_repo, "/", today, '/everything.csv'), col_types = cols())
+  r0         <- read_csv(paste0(data_repo, "/", today, '/r0_t7_avg.csv'), col_types = cols())
   
   fplot_colors <- c(
     "alarm" = "#eb4034",
