@@ -44,10 +44,10 @@ plot_fig_forest = function() {
   cfr_danger <- 0.06
   cfr_safe   <- 0.03
   
-  cfr_title    <- "Case fatality rate for COVID-19 in India by state/union territory"
+  cfr_title    <- "Case-fatality rate for COVID-19 in India by state/union territory"
   cfr_subtitle <- glue("as of {format(as.Date(today), '%B %e')}")
   cfr_x_lab    <- "State/Union territory"
-  cfr_y_lab    <- "Case fatality rate"
+  cfr_y_lab    <- "Case-fatality rate"
   cfr_caption  <- glue("**\uA9 COV-IND-19 Study Group**<br>",
                        "**Source:** covid19india.org<br>",
                        "**Note:**<br>",
