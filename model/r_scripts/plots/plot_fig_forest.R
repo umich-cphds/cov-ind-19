@@ -93,8 +93,8 @@ plot_fig_forest = function() {
       ) +
       covind19_base
 
-  r_safe   <- 1
-  r_danger <- 1.5
+  r_safe   <- 0.85
+  r_danger <- 1
   
   r_est_for <- r0 %>%
       mutate(
