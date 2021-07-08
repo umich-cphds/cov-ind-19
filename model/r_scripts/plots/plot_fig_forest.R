@@ -47,29 +47,27 @@ plot_fig_forest = function() {
   cfr_title    <- "Case fatality rate for COVID-19 in India by state/union territory"
   cfr_subtitle <- glue("as of {format(as.Date(today), '%B %e')}")
   cfr_x_lab    <- "State/Union territory"
-  cfr_y_lab    <- "CFR"
+  cfr_y_lab    <- "Case fatality rate"
   cfr_caption  <- glue("**\uA9 COV-IND-19 Study Group**<br>",
                        "**Source:** covid19india.org<br>",
                        "**Note:**<br>",
-                       " - Estimate and 95% confidence interval are provided in each plot by state.<br>",
-                       " - Colored red if estimate is above 0.03 and green if below 0.01.<br>",
-                       " - Estimation is based on all cases confirmed till May 18.<br>",
-                       " - CFR stands for case-fatality rate.")
+                       " - 7-day average and range is shown.<br>",
+                       " - Colored red if estimate is above {cfr_danger} and green if below {cfr_safe}.")
   
   cfr1_for <- everything %>%
-    mutate(
-      cfr = daily_deaths / daily_cases
-    ) %>%
-    group_by(place) %>%
-    arrange(date) %>%
-    slice((n() - 6):n()) %>%
-    summarize(
-      cfr   = mean(cfr, na.rm = T),
-      lower = min(cfr, na.rm = T),
-      upper = max(cfr, na.rm = T)
-    ) %>%
-    ungroup() %>%
-    mutate(place = case_when(place == "Inidia" ~ "National estimate", T ~ place)) %>%
+  mutate(
+    cfr_est = daily_deaths / daily_cases
+  ) %>%
+  group_by(place) %>%
+  arrange(date) %>%
+  slice((n() - 6):n()) %>%
+  summarize(
+    cfr   = mean(cfr_est, na.rm = T),
+    lower = min(cfr_est, na.rm = T),
+    upper = max(cfr_est, na.rm = T)
+  ) %>%
+  ungroup() %>%
+  mutate(place = case_when(place == "India" ~ "National estimate", T ~ place)) %>%
       mutate(
         fplot = ifelse(place == "National estimate", "india", ifelse(cfr > cfr_danger, "alarm", ifelse(cfr < cfr_safe, "good", "eh"))) # change 
       ) %>%
@@ -91,7 +89,7 @@ plot_fig_forest = function() {
         caption  = cfr_caption
       ) +
       coord_flip(
-        ylim = c(0, 0.1)
+        # ylim = c(0, 0.1)
       ) +
       covind19_base
 
@@ -166,8 +164,8 @@ plot_fig_forest = function() {
         y        = "Test-positive rate",
         caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>",
                         "**Note:**<br>",
-                        " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.<br>",
-                        " - Telangana is based on only 5 days of data.")
+                        " - 7-day range is shown.<br>",
+                        " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
       ) +
       coord_flip() +
       covind19_base
@@ -179,7 +177,7 @@ plot_fig_forest = function() {
         title = "a. Case-fatality rate",
         subtitle = NULL,
         caption = glue("**Notes:**<br>", 
-                       " - 7-day average estimate with 95% confidence interval shown.<br>",
+                       " - 7-day average estimate with range shown.<br>",
                        " - Colored red if estimate is above {cfr_danger} and green if below {cfr_safe}.")),
     r_est_for + 
       theme(axis.title.y = element_blank()) + 
