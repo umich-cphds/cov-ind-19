@@ -76,30 +76,30 @@ India_gt_table = function() {
   
   sf = sf %>% left_join(india_state_pop, by = c("place" = "state"))
   
-  vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
-    pivot_longer(
-      names_to = "date",
-      values_to = "vaccines",
-      -State
-    ) %>%
-    mutate(
-      date = as.Date(date, format = "%d/%m/%Y")
-    ) %>%
-    dplyr::rename(
-      state = State
-    ) %>%
-    group_by(state) %>%
-    drop_na(state) %>%
-    arrange(date) %>%
-    mutate(
-      daily_vaccines = vaccines - dplyr::lag(vaccines)
-    ) %>%
-    ungroup() %>% 
-    drop_na(daily_vaccines) %>% 
-    filter(date == max(date, na.rm = TRUE)) %>%
-    mutate(state = ifelse(state == "Total", "National estimate", state))
-  
-  sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
+  # vax_dat <- suppressMessages(vroom("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")) %>%
+  #   pivot_longer(
+  #     names_to = "date",
+  #     values_to = "vaccines",
+  #     -State
+  #   ) %>%
+  #   mutate(
+  #     date = as.Date(date, format = "%d/%m/%Y")
+  #   ) %>%
+  #   dplyr::rename(
+  #     state = State
+  #   ) %>%
+  #   group_by(state) %>%
+  #   drop_na(state) %>%
+  #   arrange(date) %>%
+  #   mutate(
+  #     daily_vaccines = vaccines - dplyr::lag(vaccines)
+  #   ) %>%
+  #   ungroup() %>% 
+  #   drop_na(daily_vaccines) %>% 
+  #   filter(date == max(date, na.rm = TRUE)) %>%
+  #   mutate(state = ifelse(state == "Total", "National estimate", state))
+  # 
+  # sf = sf %>% left_join(vax_dat, by = c("place" = "state"))
   
   # pull forecast estimates ----------
   # no_int
@@ -174,24 +174,59 @@ India_gt_table = function() {
   no_int_est
   # end new
   
-  india_state_pop[india_state_pop$state == "National estimate",1] = "India"
-  vax_data <- fread("http://api.covid19india.org/csv/latest/cowin_vaccine_data_statewise.csv") %>%
-    clean_names() %>%
-    mutate(updated_on = as.Date(updated_on, format = "%d/%m/%Y")) %>%
-    select(date = updated_on, state,
-           second_dose = second_dose_administered,
-           total_vax = total_individuals_vaccinated,
-           total_vax_doses = total_doses_administered) %>%
-    mutate(daily_vax_dose = total_vax_doses - dplyr::lag(total_vax_doses)) %>%
-    drop_na() %>%
-    filter(date == max(date)) %>%
-    left_join(india_state_pop, c("state")) %>% 
-    mutate(
-      pct_at_least_one = round((total_vax/population)*100, 2),
-      pct_second = round((second_dose/population)*100, 2)
-    ) %>% 
-    select(-population)
-  vax_data[vax_data$state == "India",2] = "National estimate"
+  # india_state_pop[india_state_pop$state == "National estimate",1] = "India"
+  # vax_data <- fread("http://api.covid19india.org/csv/latest/cowin_vaccine_data_statewise.csv") %>%
+  #   clean_names() %>%
+  #   mutate(updated_on = as.Date(updated_on, format = "%d/%m/%Y")) %>%
+  #   select(date = updated_on, state,
+  #          second_dose = second_dose_administered,
+  #          total_vax = total_individuals_vaccinated,
+  #          total_vax_doses = total_doses_administered) %>%
+  #   mutate(daily_vax_dose = total_vax_doses - dplyr::lag(total_vax_doses)) %>%
+  #   drop_na() %>%
+  #   filter(date == max(date)) %>%
+  #   left_join(india_state_pop, c("state")) %>% 
+  #   mutate(
+  #     pct_at_least_one = round((total_vax/population)*100, 2),
+  #     pct_second = round((second_dose/population)*100, 2)
+  #   ) %>% 
+  #   select(-population)
+  # vax_data[vax_data$state == "India",2] = "National estimate"
+  
+  vax_data <- read_csv("https://api.covid19india.org/csv/latest/vaccine_doses_statewise_v2.csv",
+                      col_types = cols()) %>%
+    janitor::clean_names() %>%
+    dplyr::mutate(
+      date = as.Date(vaccinated_as_of, "%d/%m/%Y")
+    ) %>%
+    dplyr::select(state, date,
+                  first_dose = first_dose_administered,
+                  second_dose = second_dose_administered,
+                  total_doses = total_doses_administered) %>%
+    dplyr::mutate(
+      state = dplyr::case_when(state == "Total" ~ "India", T ~ state)
+    ) %>%
+    dplyr::left_join(india_state_pop %>% 
+                       #dplyr::select(-abbrev) %>%
+                       dplyr::add_row(state = "Dadra and Nagar Haveli and Daman and Diu",
+                                      population = 3.44e5 + 2.43e5) %>%
+                       distinct(),
+                     by = c("state")) %>%
+    dplyr::mutate(
+      pct_one_doses = round(first_dose * 100 / population, 4),
+      pct_two_doses = round(second_dose * 100/ population, 4)
+    ) %>%
+    dplyr::select(-population) %>%
+    dplyr::group_by(state) %>%
+    dplyr::arrange(date) %>%
+    dplyr::mutate(
+      daily_doses = total_doses - dplyr::lag(total_doses)
+    ) %>%
+    ungroup() %>%
+    dplyr::rename(total_vacc = total_doses, pct_at_least_one = pct_one_doses, pct_second = pct_two_doses, daily_vax_dose = daily_doses) %>%
+    tidyr::drop_na() %>%
+    dplyr::mutate(state = ifelse(state == "India", "National estimate", state)) %>%
+    dplyr::filter(date == max(date))
   
   # quick_correct <- function(x, a = 0.95) {
   #   
@@ -228,9 +263,9 @@ India_gt_table = function() {
     left_join(sf, by = c("place")) %>%
     left_join(no_int_est, by = c("place" = "name")) %>%
     left_join(vax_data, by = c("place" = "state")) %>% 
-    mutate(perc_vaccine   = 100 * vaccines / population,
-           total_vacc     = format(vaccines, big.mark = ","),
-           daily_vaccines = format(daily_vaccines, big.mark = ","),
+    mutate(perc_vaccine   = 100 * total_vacc / population,
+           total_vacc     = format(total_vacc, big.mark = ","),
+           daily_vaccines = format(daily_vax_dose, big.mark = ","),
            daily_cases = format(daily_cases, big.mark = ","),
            daily_deaths = format(daily_deaths, big.mark = ","),
            daily_tests = format(daily_tests, big.mark = ","),
