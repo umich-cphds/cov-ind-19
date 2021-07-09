@@ -1,8 +1,12 @@
-library(here)
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
+today <- as.Date(Sys.getenv("today"))
+
+setwd(paste0(code_repo, "/model/r_scripts/"))
 source("libraries.R")
 
-f <- list.files(here("functions"))
-for (i in seq_along(f)) { source(here("functions", f[i])) }
+f <- list.files(paste0(code_repo, "/model/r_scripts/functions"))
+sapply(paste0("functions/", f), source)
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -15,8 +19,6 @@ if ( Sys.getenv("production") == "TRUE" ) {
 	opt_num   <- 1   #default 200
 }
 
-data_repo <- Sys.getenv("data_repo")
-today <- as.Date(Sys.getenv("today"))
 # specs -----------
 state    <- Sys.getenv("state")
 max_date <- as.Date(today - 1)
@@ -71,7 +73,7 @@ result    <- SEIRfansy.predict(
 )
 
 # directory ----------
-wd <- paste0(data_repo, today)
+wd <- paste0(data_repo, "/", today, "/seirfansy")
 if (!dir.exists(wd)) {
   dir.create(wd, recursive = TRUE)
   message("Creating ", wd)
@@ -82,8 +84,8 @@ pred_clean <- clean_prediction(result$prediction,
                                obs_days = obs_days,
                                t_pred   = t_pred)
 
-write_tsv(pred_clean, paste0(data_repo, today, "/prediction_", state, ".txt"))
-write_tsv(result$mcmc_pars, paste0(data_repo, today, "/prediction_pars_", state, ".txt"))
+write_tsv(pred_clean, paste0(wd, "/prediction_", state, ".txt"))
+write_tsv(as_tibble(result$mcmc_pars, .name_repair = "unique"), paste0(wd, "/prediction_pars_", state, ".txt"))
 
 p_pred <- pred_clean %>%
   filter(section == "positive_reported") %>%
@@ -118,4 +120,4 @@ impo <- tibble(
   "ifr"                   = ifr[obs_days + 1]
 )
 
-write_tsv(impo, paste0(data_repo, today, "/important_", state, ".txt"))
+write_tsv(impo, paste0(wd, "/important_", state, ".txt"))
