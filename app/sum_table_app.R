@@ -2,6 +2,16 @@
 suppressPackageStartupMessages({
   library(tidyverse)
   library(vroom)
+  library(EpiEstim)
+  library(glue)
+  library(gt)
+  library(lubridate)
+  library(janitor)
+  library(scales)
+  library(ggtext)
+  library(here)
+  library(httr)
+  library(covid19india)
 })
 
 data_repo <- Sys.getenv("data_repo")
@@ -17,12 +27,12 @@ top20 = x$State
 
 India_gt_table = function() { 
   
-  remotes::install_github("maxsal/covid19india")
+  # remotes::install_github("maxsal/covid19india")
   
-  covid19india::biblioteca(
-    c("tidyverse", "EpiEstim", "gt", "glue", "lubridate", "janitor",
-      "scales", "ggtext", "here", "httr", "maxsal/covid19india")
-  )
+  # covid19india::biblioteca(
+  #   c("tidyverse", "EpiEstim", "gt", "glue", "lubridate", "janitor",
+  #     "scales", "ggtext", "here", "httr", "maxsal/covid19india")
+  # )
   
   # source(here("code", "functions", "functions.R"))
   set_seed <- 46342
