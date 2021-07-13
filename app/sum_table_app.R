@@ -27,10 +27,6 @@ top20 = x$State
 
 India_gt_table = function() { 
 
-  set.seed(set_seed <- 46342)
-  dat    <- get_all_data()
-  cfr    <- get_cfr(dat) %>% distinct()
-  r0_est <- get_r_est(dat)
   tabs   <- get_metrics_tables(top20 = top20)
   
   return(
