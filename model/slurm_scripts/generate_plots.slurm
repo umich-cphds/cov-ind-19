@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #SBATCH --mail-type=FAIL,ARRAY_TASKS
 #SBATCH --time=10:00
 #SBATCH --job-name=generate_plots
@@ -8,8 +7,7 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
-module load Rtidyverse/4.0.3
-module load jags
+module load Rtidyverse/4.1.0 jags
 
 export http_proxy=http://proxy.arc-ts.umich.edu:3128/
 export FTP_PROXY=http://proxy.arc-ts.umich.edu:3128/

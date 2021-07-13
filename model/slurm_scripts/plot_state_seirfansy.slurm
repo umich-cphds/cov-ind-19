@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #SBATCH --mail-type=FAIL
 #SBATCH --time=1-0
 #SBATCH --job-name=plot_states
@@ -8,7 +7,7 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
-module load Rtidyverse/4.0.3
+module load Rtidyverse/4.1.0
 
 export http_proxy=http://proxy.arc-ts.umich.edu:3128/
 export FTP_PROXY=http://proxy.arc-ts.umich.edu:3128/

@@ -26,7 +26,7 @@ else
   export data_repo="$HOME/cov-ind-19-test"
 fi
 
-module load Rgeospatial/3.6.1-2019-09-29
+module load Rtidyverse/4.1.0
 
 cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )
@@ -53,16 +53,16 @@ if [[ "$remote_sha" != "$local_sha" ]]; then
 	done
 	states="$states tt"
 	#Run seirfansy states which includes tt for India
-	export bottom=FALSE
-	for i in $states; do
-		export state=$i
-                state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
-		if [[ $state_jobs != "" ]]; then
-			state_jobs=$state_jobs:$state2
-		else
-			state_jobs=$state2
-		fi
-	done
+#	export bottom=FALSE
+#	for i in $states; do
+#		export state=$i
+#                state2=$(sbatch --dependency=afterok:$preprocess --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
+#		if [[ $state_jobs != "" ]]; then
+#			state_jobs=$state_jobs:$state2
+#		else
+#			state_jobs=$state2
+#		fi
+#	done
 	#end of submit_states
 	generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 	generateplots=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
@@ -71,4 +71,4 @@ else
 	echo "JHU data has NOT been updated since last run. Taking a nap for 5.5 hours and checking again when I wake up."
 fi
 
-sbatch --begin=now+24hour $code_repo/model/slurm_scripts/master_india.slurm
+#sbatch --begin=now+24hour $code_repo/model/slurm_scripts/master_india.slurm
