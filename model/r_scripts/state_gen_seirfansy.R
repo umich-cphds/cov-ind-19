@@ -22,7 +22,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 # specs -----------
 state    <- Sys.getenv("state")
 max_date <- as.Date(today - 1)
-min_date <- as.Date("2020-04-01")
+min_date <- as.Date(max_date - 99)
 obs_days <- length(as.Date(min_date):as.Date(max_date))
 t_pred   <- 150 # number of predicted days
 N        <- get_pop(state)
@@ -49,7 +49,7 @@ data <- data %>% dplyr::filter(date >= min_date)
 
 mCFR <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recovered), 1)
 
-phases <- get_phase(start_date = "2020-04-01")
+phases <- get_phase(start_date = min_date, end_date = max_date)
 
 # predict -----------
 result    <- SEIRfansy.predict(
