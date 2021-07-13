@@ -28,6 +28,7 @@ close(url)
 
 # order here matters
 source("top_matter.R", local = T)
+source("references.R", local = TRUE)
 
 img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
                    branch, "/", latest, "/day_sp_animation.gif")
@@ -77,7 +78,7 @@ shinyServer(function(input, output)
 
         eval(expr(navbarPage("COVID-19 Outbreak in India",
           observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
-          metrics)))
+          metrics, references)))
 
     })
 
