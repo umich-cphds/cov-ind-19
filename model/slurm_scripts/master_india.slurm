@@ -26,7 +26,7 @@ else
   export data_repo="$HOME/cov-ind-19-test"
 fi
 
-module load Rgeospatial/3.6.1-2019-09-29
+module load Rtidyverse/4.1.0
 
 cd ~/COVID-19/
 remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep HEAD | cut -f 1 )

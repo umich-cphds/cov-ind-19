@@ -31,14 +31,14 @@ for i in $states; do
 done
 states="$states tt"
 #Run seirfansy states which includes tt for India
-export bottom=FALSE
-for i in $states; do
-	export state=$i
-	state2=$(sbatch --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
-	if [[ $state_jobs != "" ]]; then
-		state_jobs=$state_jobs:$state2
-	else
-		state_jobs=$state2
-	fi
-done
+#export bottom=FALSE
+#for i in $states; do
+#	export state=$i
+#	state2=$(sbatch --job-name=$i state_gen_seirfansy.slurm | awk '{print $NF}')
+#	if [[ $state_jobs != "" ]]; then
+#		state_jobs=$state_jobs:$state2
+#	else
+#		state_jobs=$state2
+#	fi
+#done
 echo $state_jobs > $data_repo/$today/state_jobids.txt
