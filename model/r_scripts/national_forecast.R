@@ -1,4 +1,5 @@
 # libraries ----------
+suppressPackageStartupMessages({
 library(tidyverse)
 library(chron)
 library(rjags)
@@ -6,6 +7,7 @@ library(gtools) #rdirichlet(n, alpha)
 library(here)
 library(devtools)
 library(eSIR)
+})
 
 today     <- as.Date(Sys.getenv("today"))
 data_repo     <- Sys.getenv("data_repo")

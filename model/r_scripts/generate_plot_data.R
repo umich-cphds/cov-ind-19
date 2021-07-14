@@ -1,5 +1,7 @@
+suppressPackageStartupMessages({
 library(tidyverse)
 library(janitor)
+})
 
 today <- Sys.getenv("today")
 data_repo <- Sys.getenv("data_repo")

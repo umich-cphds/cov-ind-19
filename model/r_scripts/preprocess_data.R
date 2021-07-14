@@ -1,6 +1,8 @@
+suppressPackageStartupMessages({
 library(httr)
 library(tidyverse)
 library(vroom)
+})
 
 code_repo <- Sys.getenv("code_repo")
 data_repo <- Sys.getenv("data_repo")
