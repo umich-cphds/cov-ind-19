@@ -122,7 +122,7 @@ shinyServer(function(input, output)
         filename = function() {'dashboard.pdf'},
         content = function(con) {
             cairo_pdf(file = con, width = 12, height = 12)
-            grid.arrange(data$India$pforest_ga)
+            print(data$India$pforest_ga)
             dev.off()
         }
     )

@@ -1,4 +1,5 @@
 # libraries ----------
+suppressPackageStartupMessages({
 library(tidyverse)
 library(chron)
 library(rjags)
@@ -6,6 +7,7 @@ library(gtools) #rdirichlet(n, alpha)
 library(here)
 library(eSIR)
 library(devtools)
+})
 
 data_repo <- Sys.getenv("data_repo")
 code_repo <- Sys.getenv("code_repo")
@@ -248,5 +250,5 @@ if (arrayid == 1) {
 #         
 # }
 
-write_tsv(clean_out$data, path = paste0("./", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, path = paste0("./", casename, "_out_table.txt"))
+write_tsv(clean_out$data, file = paste0("./", casename, "_data.txt"))
+write_tsv(clean_out$out_tib, file = paste0("./", casename, "_out_table.txt"))

@@ -92,8 +92,9 @@ plot_fig_forest = function() {
       y        = cfr_y_lab,
       caption  = cfr_caption
     ) +
+    scale_y_continuous(labels = scales::percent) + 
     coord_flip(
-      # ylim = c(0, 0.1)
+      ylim = c(0, 0.05)
     ) +
     covind19_base
   
@@ -174,7 +175,8 @@ plot_fig_forest = function() {
                       " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
     ) +
     coord_flip() +
-    covind19_base
+    covind19_base + 
+    scale_y_continuous(labels = scales::percent)
   
   # panel plot -------------
   patched <- ((cfr1_for + 

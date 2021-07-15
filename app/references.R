@@ -55,23 +55,24 @@ references <-
              fluidRow(
                column(10,
                       h4("References"),
+                      p("Estimating the wave 1 and wave 2 infection fatality rates from SARS-CoV-2 in India", a("Purkayastha et al. 2021", .noWS = "outside", href = "https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-021-05652-2")),
                       p("On the resurgence of COVID-19 in India: ", a("Salvatore et al. 2021", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2021.06.23.21259405v1")),
+                      p("COVID-19 Pandemic in India: Through the Lens of Modeling: ", a("Babu et al. 2021", .noWS = "outside", href = "https://www.ghspjournal.org/content/9/2/220")),
                       p("Estimating COVID-19 related mortality in India: ", a("Zimmermann et al. 2021", .noWS = "outside", href = "https://www.preprints.org/manuscript/202105.0617/v1")),
+                      p("India's COVID-19 crisis: a call for international action: ", a("Kuppalli et al. 2021", .noWS = "outside", href = "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)01121-1/fulltext?rss=yes")),
                       p("Incorporating false-negative tests into COVID-19 models: ", a("Bhattacharyya et al. 2021", .noWS = "outside", href = "https://www.nature.com/articles/s41598-021-89127-1")),
-                      p("Read our forecasting and lockdown effects study: ", a("Ray et al. 2020", .noWS = "outside", href = "https://hdsr.mitpress.mit.edu/pub/r1qq01kw/release/2")),
-                      p("Read our nation vs state-level trends paper: ", a("Salvatore et al. 2020", .noWS = "outside", href = "https://bmjopen.bmj.com/content/10/12/e041778")),
+                      p("Forecasting COVID-19 in India and the effect of lockdowns: ", a("Ray et al. 2020", .noWS = "outside", href = "https://hdsr.mitpress.mit.edu/pub/r1qq01kw/release/2")),
+                      p("National vs state-level COVID-19 trends: ", a("Salvatore et al. 2020", .noWS = "outside", href = "https://bmjopen.bmj.com/content/10/12/e041778")),
                       p("Comparing 5 COVID-19 models in India: ", a("Purkayastha et al. 2020", .noWS = "outside", href = "https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-021-06077-9")),
                       p("Extending SEIR model for imperfect testing: ", a("Bhaduri et al. 2020", .noWS = "outside", href = "https://doi.org/10.1101/2020.09.24.20200238"),
                         p("Read the report: ", a("COV-IND-19 Report", .noWS = "outside", href = "https://bit.ly/COV-IND-19_Report"),
                           " (direct download link, check downloads folder)"),
-                        p(a("View webinar slides", .noWS = "outside", href = "https://sph.umich.edu/precision-health-data-science/research/pdf/COVIND19_UConn_May22.pdf"), " (direct download link, check downloads folder)"),
                         p("Read our Medium trilogy: ", a("pre-lockdown (March 21)", .noWS = "outside",
                                                          href = "https://medium.com/@covind_19/predictions-and-role-of-interventions-for-covid-19-outbreak-in-india-52903e2544e6"),", ", a("studying lockdown (April 3)", .noWS = "outside",
                                                                                                                                                                                            href = "https://medium.com/@covind_19/historic-lockdown-prediction-models-to-study-lockdown-effects-and-the-role-of-data-in-the-crisis-a0afeeec5a6"), ", and ", a("unlocking the lockdown (April 24)", .noWS = "outside",
                                                                                                                                                                                                                                                                                                                                                              href = "https://medium.com/@covind_19/unlocking-the-40-day-national-lockdown-in-india-there-is-no-magic-key-de4e43177cb4")),
                         p("Directory of ", a("all Medium articles", .noWS = "outside", href = "https://bhramarm.medium.com")),
                         p("COV-IND-19 app ", a("source code repository", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19"), " and ", a("data repository", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19-data")),
-                        p("Source code: ", a("COV-IND-19 GitHub", .noWS = "outside", href = "https://github.com/umich-cphds/cov-ind-19")),
                         p("R package: ", a("SEIRfansy", .noWS = "outside", href = "https://github.com/umich-biostatistics/SEIRfansy"))
                       ))
              )

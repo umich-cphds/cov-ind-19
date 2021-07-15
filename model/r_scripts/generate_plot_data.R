@@ -1,5 +1,7 @@
+suppressPackageStartupMessages({
 library(tidyverse)
 library(janitor)
+})
 
 today <- Sys.getenv("today")
 data_repo <- Sys.getenv("data_repo")
@@ -55,6 +57,6 @@ for (forecast in forecasts) {
     no_int_forecast,
   )
 
-  write_tsv(combined_dat, path = paste0(path, "/", forecast, "_plot_data.txt"))
+  write_tsv(combined_dat, file = paste0(path, "/", forecast, "_plot_data.txt"))
 
 }

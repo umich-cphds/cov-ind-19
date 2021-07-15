@@ -1,6 +1,8 @@
+suppressPackageStartupMessages({
 library(tidyverse)
 library(vroom)
 library(ggplot2)
+})
 
 data_repo <- Sys.getenv("data_repo")
 

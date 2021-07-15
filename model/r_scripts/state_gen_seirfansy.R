@@ -16,7 +16,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 } else {
 	n_iter    <- 1e3 #default 1e5
 	burn_in   <- 1e2 #default 1e5
-	opt_num   <- 1   #default 200
+	opt_num   <- 20  #default 200
 }
 
 # specs -----------

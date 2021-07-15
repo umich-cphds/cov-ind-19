@@ -1,4 +1,5 @@
 # libraries ----------
+suppressPackageStartupMessages({
 library(tidyverse)
 library(chron)
 library(reshape2)
@@ -8,6 +9,7 @@ library(scales) #alpha　function
 library(data.table)
 library(devtools)
 library(eSIR)
+})
 
 data_repo <- Sys.getenv("data_repo")
 # Set variables based on testing or production
