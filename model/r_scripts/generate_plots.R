@@ -32,7 +32,7 @@ generate_forecast_plots <- function(state)
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_dbl.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_vax.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_vax_state.R"))
-#    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_SEIR.R"))
+    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_SEIR.R"))
 
 	plots <- list()
 	if (state == "India") {
@@ -73,9 +73,10 @@ generate_forecast_plots <- function(state)
 	plots[["p15"]] = plot_fig_15(state)
 	plots[['ptvr']] = plot_fig_tvr(state)
 	plots[['pdbl']] = plot_fig_dbl(state)
-#	plots[["pSEIR"]] = plot_fig_SEIR(state)
+	plots[["pSEIR"]] = tryCatch(expr = { plot_fig_SEIR(state) },
+	  error = function(e) { message('Caught an error!'); print(e) })
 	
-    plots
+  plots
 }
 
 data <- list(India = generate_forecast_plots("India"),
