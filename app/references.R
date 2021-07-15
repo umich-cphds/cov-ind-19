@@ -59,6 +59,7 @@ references <-
                       p("On the resurgence of COVID-19 in India: ", a("Salvatore et al. 2021", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2021.06.23.21259405v1")),
                       p("COVID-19 Pandemic in India: Through the Lens of Modeling: ", a("Babu et al. 2021", .noWS = "outside", href = "https://www.ghspjournal.org/content/9/2/220")),
                       p("Estimating COVID-19 related mortality in India: ", a("Zimmermann et al. 2021", .noWS = "outside", href = "https://www.preprints.org/manuscript/202105.0617/v1")),
+                      p("India's COVID-19 crisis: a call for international action: ", a("Kuppalli et al. 2021", .noWS = "outside", href = "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)01121-1/fulltext?rss=yes")),
                       p("Incorporating false-negative tests into COVID-19 models: ", a("Bhattacharyya et al. 2021", .noWS = "outside", href = "https://www.nature.com/articles/s41598-021-89127-1")),
                       p("Forecasting COVID-19 in India and the effect of lockdowns: ", a("Ray et al. 2020", .noWS = "outside", href = "https://hdsr.mitpress.mit.edu/pub/r1qq01kw/release/2")),
                       p("National vs state-level COVID-19 trends: ", a("Salvatore et al. 2020", .noWS = "outside", href = "https://bmjopen.bmj.com/content/10/12/e041778")),
