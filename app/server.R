@@ -50,14 +50,26 @@ shinyServer(function(input, output)
 
     extract_and_render_plot <- function(plot, plot.name, state.code)
     {
-        if ("plotly" %in% class(plot))
-            out <- renderPlotly(plot)
+        print(class(plot))
+        if(is.null(plot) | inherits(plot, "simpleError")) {
+            out <- NULL
+        } else if ("plotly" %in% class(plot))
+            out <- tryCatch(expr = { renderPlotly(plot) },
+                error = function(e) { 
+                    showNotification('there was an error','', 
+                                        type = "error"); return() }, silent = TRUE)
         else if ("ggplot" %in% class(plot))
-            out <- renderPlot(plot)
+            out <- tryCatch(expr = { renderPlot(plot) },
+                 error = function(e) { 
+                     showNotification('there was an error','', 
+                                        type = "error"); return() }, silent = TRUE)
         else if ("grob" %in% class(plot))
             out <- renderPlot(grid.arrange(plot))
-        else
+        else {
+            print(class(plot))
             stop("Unrecognized plot type!")
+        }
+            
 
         output[[paste(state.code, plot.name, sep = "_")]] <<- out
     }
