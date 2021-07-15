@@ -94,7 +94,7 @@ plot_fig_forest = function() {
     ) +
     scale_y_continuous(labels = scales::percent) + 
     coord_flip(
-      ylim = c(0, 0.1)
+      ylim = c(0, 0.05)
     ) +
     covind19_base
   
