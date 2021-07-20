@@ -50,7 +50,7 @@ jhu.data <- reduce(imap(jhu.files,
 ), ~ left_join(.x, .y)) %>%
 ungroup() %>%
 arrange(Country, Date) %>%
-vroom_write(path = paste0(data_repo, "/", today, "/jhu_data.csv"))
+vroom_write(paste0(data_repo, "/", today, "/jhu_data.csv"))
 
 
 states.map <- c("Andhra Pradesh" =  "AP", "Arunachal Pradesh" =  "AR",
@@ -116,7 +116,7 @@ data <- data %>%
   ) %>%
   ungroup() %>%
   filter(Date >= "2020-03-15" & Date < today) %>%
-vroom_write(path = paste0(data_repo, "/", today, "/covid19india_data.csv"))
+vroom_write(paste0(data_repo, "/", today, "/covid19india_data.csv"))
 
 # grab India related data
 request <- GET("https://api.covid19india.org/data.json")
@@ -142,7 +142,7 @@ data <- data %>%
 
 
 rbind(filter(jhu.data, Country != "India"), data) %>%
-vroom_write(path = paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
+vroom_write(paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
 
 # India testing data
 data_testing <- data_testing %>%
