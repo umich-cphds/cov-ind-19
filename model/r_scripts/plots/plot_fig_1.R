@@ -52,7 +52,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    vroom_write(data, path = paste0(data_repo, "/", today, "/plot1.csv"),
+    vroom_write(data, paste0(data_repo, "/", today, "/plot1.csv"),
                 delim = ","
     )
     p

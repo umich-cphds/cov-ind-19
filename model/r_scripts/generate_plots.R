@@ -18,7 +18,7 @@ generate_forecast_plots <- function(state)
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_2.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_3.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_4.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_5a.R"))
+    #source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_5a.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_7.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_8.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_9.R"))
@@ -44,7 +44,7 @@ generate_forecast_plots <- function(state)
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
 
-                plots[["p5a"]] = plot_fig_5a("India")
+    #plots[["p5a"]] = plot_fig_5a("India")
 
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
