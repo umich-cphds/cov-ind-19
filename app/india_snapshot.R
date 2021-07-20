@@ -6,6 +6,7 @@ library("janitor")
 library("lubridate")
 library("gt")
 library("vroom")
+library("covid19india")
 
 snapshot = function() {
   # functions -----------
@@ -27,20 +28,20 @@ snapshot = function() {
       ) %>%
       select(date, total_samples_tested, sample_reported_today)
     
-    vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
-      filter(State == "Total") %>%
-      select(-State) %>%
-      pivot_longer(cols = everything(), names_to = "date", values_to = "count") %>%
-      mutate(date = as.Date(date, "%e/%m/%Y")) %>%
-      arrange(date) %>%
-      mutate(lag = count - dplyr::lag(count))
+    # vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
+    #   filter(State == "Total") %>%
+    #   select(-State) %>%
+    #   pivot_longer(cols = everything(), names_to = "date", values_to = "count") %>%
+    #   mutate(date = as.Date(date, "%e/%m/%Y")) %>%
+    #   arrange(date) %>%
+    #   mutate(lag = count - dplyr::lag(count))
     
-    # vax_dat = covid19india::get_all_data() %>%
-    #   filter(place == "India") %>%
-    #   select(date, daily_doses) %>%
-    #   mutate(date = as.Date(date, "%e/%m/%Y"),
-    #          lag = daily_doses) %>% 
-    #   arrange(date)
+    vax_dat = get_all_data() %>%
+      filter(place == "India") %>%
+      select(date, daily_doses) %>%
+      mutate(date = as.Date(date, "%e/%m/%Y"),
+             lag = daily_doses) %>%
+      arrange(date)
     
     if (!is.null(t)) {
       try(if (!is.Date(t)) stop("t needs to be a date (YYYY-MM-DD)"))
