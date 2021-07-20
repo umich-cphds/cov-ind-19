@@ -28,15 +28,7 @@ snapshot = function() {
       ) %>%
       select(date, total_samples_tested, sample_reported_today)
     
-    # vax_dat <- read_csv("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv") %>%
-    #   filter(State == "Total") %>%
-    #   select(-State) %>%
-    #   pivot_longer(cols = everything(), names_to = "date", values_to = "count") %>%
-    #   mutate(date = as.Date(date, "%e/%m/%Y")) %>%
-    #   arrange(date) %>%
-    #   mutate(lag = count - dplyr::lag(count))
-    
-    vax_dat = get_all_data() %>%
+    vax_dat = get_state_vax() %>%
       filter(place == "India") %>%
       select(date, daily_doses) %>%
       mutate(date = as.Date(date, "%e/%m/%Y"),
