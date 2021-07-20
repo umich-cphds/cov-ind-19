@@ -44,7 +44,7 @@ generate_forecast_plots <- function(state)
 		plots[["p3a"]] = p$p3a
 		plots[["p3b"]] = p$p3b
 
-                plots[["p5a"]] = plot_fig_5a("India")
+    #plots[["p5a"]] = plot_fig_5a("India")
 
 		p <- plot_fig_7()
 		plots[["p7a"]] = p$p7a
