@@ -35,6 +35,13 @@ snapshot = function() {
       arrange(date) %>%
       mutate(lag = count - dplyr::lag(count))
     
+    vax_dat = covid19india::get_all_data() %>%
+      filter(place == "India") %>%
+      select(date, daily_doses) %>%
+      mutate(date = as.Date(date, "%e/%m/%Y"),
+             lag = daily_doses) %>% 
+      arrange(date)
+    
     if (!is.null(t)) {
       try(if (!is.Date(t)) stop("t needs to be a date (YYYY-MM-DD)"))
       today <- as.Date(t)
