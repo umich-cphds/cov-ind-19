@@ -5,7 +5,7 @@ today <- as.Date(Sys.getenv("today"))
 setwd(paste0(code_repo, "/model/r_scripts/"))
 source("libraries.R")
 
-f <- list.files(paste0(code_repo, "/model/r_scripts/functions"))
+f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
 sapply(paste0("functions/", f), source)
 
 # Set variables based on testing or production
@@ -20,17 +20,17 @@ if ( Sys.getenv("production") == "TRUE" ) {
 }
 
 # specs -----------
-state    <- Sys.getenv("state")
-max_date <- as.Date(today - 1)
-min_date <- as.Date(max_date - 99)
-obs_days <- length(as.Date(min_date):as.Date(max_date))
-t_pred   <- 150 # number of predicted days
-N        <- get_pop(state)
-plt      <- FALSE
-save_plt <- FALSE
+state      <- Sys.getenv("state")
+state_name <- covid19india::pop %>% dplyr::filter(abbrev == state) %>% pull(place)
+max_date   <- as.Date(today - 1)
+min_date   <- as.Date(max_date - 99)
+obs_days   <- length(as.Date(min_date):as.Date(max_date))
+t_pred     <- 150 # number of predicted days
+N          <- covid19india::pop %>% filter(abbrev == state) %>% pull(population)
+plt        <- FALSE
+save_plt   <- FALSE
 
 # load and prepare ----------
-#danbarke should change this to use a prepull data job and store the data locally. This will ensure all of the jobs are using the same data each time the workload is run.
 data <- readr::read_csv("https://api.covid19india.org/csv/latest/state_wise_daily.csv",
                         col_types = cols()) %>%
   janitor::clean_names() %>%
@@ -82,7 +82,7 @@ tryCatch(
     }
     
     pred_clean <- clean_prediction(result$prediction,
-                                   state    = pop %>% filter(abbrev == tolower(state)) %>% pull(full) %>% unique(),
+                                   state    = state_name,
                                    obs_days = obs_days,
                                    t_pred   = t_pred)
     

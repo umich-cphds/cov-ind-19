@@ -8,7 +8,7 @@ today <- Sys.getenv("today")
 
 x <- vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
   group_by(State) %>%
-  filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State != "hp" & State != "py") %>%
+  filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State != "hp" & State != "py" & State != "dn" ) %>%
   ungroup() %>%
   top_n(-13, Cases)
 
