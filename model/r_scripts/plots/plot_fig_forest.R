@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(grid)
   library(vroom)
   library(patchwork)
+  library(covid19india)
 })
 
 plot_fig_forest = function() {
@@ -34,8 +35,8 @@ plot_fig_forest = function() {
     )
   
   # read data -----------
-  everything <- read_csv(paste0(data_repo, "/", today, '/everything.csv'), col_types = cols())
-  r0         <- read_csv(paste0(data_repo, "/", today, '/r0_t7_avg.csv'), col_types = cols())
+  everything <- get_all_data()
+  r0         <- get_r_est(everything)
   
   fplot_colors <- c(
     "alarm" = "#eb4034",
