@@ -36,7 +36,7 @@ plot_fig_forest = function() {
   
   # read data -----------
   everything <- get_all_data()
-  r0         <- get_r_est(everything)
+  r0         <- get_r_est(everything) %>% filter(!is.nan(r))
   
   fplot_colors <- c(
     "alarm" = "#eb4034",
