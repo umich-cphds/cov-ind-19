@@ -1,28 +1,35 @@
+
+suppressPackageStartupMessages({
+  library(vroom)
+  library(tidyverse)
+  library(ggtext)
+  library(scales)
+  library(tidyr)
+  library(covid19india)
+})
+
 plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
 {
-    data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
-    filter(Country == "India") %>%
-    mutate_at(vars(Cases, Recovered, Deaths), list(function(x) {
-        y <- x - lag(x)
-        ifelse(y < 0, 0, y)
-    })) %>%
-    filter(Date >= start.date) %>%
-    gather(Cases, Recovered, Deaths, key = Type, value = Count) %>%
+  
+  data = get_all_data() %>% 
+    filter(place == "India") %>%
+    mutate(date = as.Date(date)) %>%
+    filter(date >= start.date) %>%
+    gather(daily_cases, daily_recovered, daily_deaths, key = Type, value = Count) %>%
     mutate(
-        date.fmt = as.factor(format(Date, format = "%b %e")),
-        Type = factor(
-            recode(Type,
-                Cases     = "New Cases",
-                Recovered = "Recovered",
-                Deaths    = "Fatalities"
-            ), levels = c("New Cases", "Fatalities", "Recovered"))
+      date.fmt = as.factor(format(date, format = "%b %e")),
+      Type = factor(
+        recode(Type,
+               daily_cases     = "New Cases",
+               daily_recovered = "Recovered",
+               daily_deaths    = "Fatalities"
+        ), levels = c("New Cases", "Fatalities", "Recovered"))
     ) %>%
     mutate(count.fmt = format(Count, big.mark = ",",
-           scientific = F, trim = T)
+                              scientific = F, trim = T)
     ) %>%
     mutate(text = paste0(date.fmt, ": ", count.fmt, " ", Type))
-
-
+  
     cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
                   format(today, format = "%b %e"), sep = ' ')
 
@@ -43,7 +50,7 @@ plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
         "Recovered"  = "#138808"
     )
 
-    p <- plot_ly(data, x = ~Date, y = ~Count, color = ~Type, text = ~text,
+    p <- plot_ly(data, x = ~date, y = ~Count, color = ~Type, text = ~text,
                  type = "bar", colors = colors, hoverinfo = "text"
     ) %>%
     layout(barmode = "stack", xaxis = xaxis, yaxis = yaxis, title =
