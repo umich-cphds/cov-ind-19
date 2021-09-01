@@ -2,7 +2,7 @@
 #SBATCH --mail-type=FAIL,ARRAY_TASKS
 #SBATCH --time=10:00
 #SBATCH --job-name=generate_plots
-#SBATCH --mem-per-cpu=1g
+#SBATCH --mem-per-cpu=4g
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard

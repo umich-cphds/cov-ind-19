@@ -1,3 +1,4 @@
+
 plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 {
     Day.max <- 100
@@ -19,7 +20,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     filter(Day > 30) %>%
     #filter(Day <= Day.max) %>%
     group_by(Country) %>%
-    mutate(Date = format(Date, format = "%b %e"),
+    mutate(Date = as.Date(Date),
            Incident_Cases = Cases - dplyr::lag(Cases)) %>%
     mutate(Cases_fmt = fmt(Incident_Cases)) %>%
     mutate(text = paste0(Country, "<br>", Date, ": ", Cases_fmt,
@@ -39,7 +40,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     filter(Day > 30) %>%
     #filter(Day <= Day.max) %>%
     group_by(Country) %>%
-    mutate(Date = format(Date, format = "%b %e"),
+    mutate(Date = as.Date(Date),
            Incident_Deaths = Deaths - dplyr::lag(Deaths)) %>%
     mutate(Deaths_fmt = fmt(Incident_Deaths)) %>%
     mutate(text = paste0(Country, "<br>", Date, ": ", Deaths_fmt,
