@@ -1,4 +1,13 @@
 
+suppressPackageStartupMessages({
+  library(vroom)
+  library(tidyverse)
+  library(ggtext)
+  library(scales)
+  library(tidyr)
+  library(covid19india)
+})
+
 plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
 {
     Day.max <- 100
@@ -52,7 +61,63 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
     group_by(Country) %>%
     mutate(loess_deaths = c(0, predict(loess(formula = Incident_Deaths ~ Day, span = 0.15))))
     
-
+    cases.data = 
+      cases.data %>%
+      filter(Country != "India") %>% 
+      select(Country, Date, Incident_Cases, Cases_fmt, text, loess_cases, Day)
+    
+    deaths.data = 
+      deaths.data %>%
+      filter(Country != "India") %>% 
+      select(Country, Date, Incident_Deaths, Deaths_fmt, text, loess_deaths, Day)
+    
+    all_data = get_all_data()
+    
+    cases.data.india = all_data %>% 
+      filter(place == "India") %>%
+      mutate(date = as.Date(date)) %>%
+      #filter(date >= start.date) %>% 
+      filter(total_cases >= cases.threshold) %>%
+      arrange(date) %>%
+      mutate(Day = seq(n()) - 1) %>%
+      ungroup() %>%
+      filter(Day > 30) %>% 
+      rename(Country = place,
+             Date = date,
+             Incident_Cases = daily_cases) %>% 
+      mutate(
+        Cases_fmt = fmt(Incident_Cases), 
+        text = paste0(Country, "<br>", Date, ": ", Cases_fmt,
+                             " incident deaths<br>"),
+        loess_cases = c(predict(loess(formula = Incident_Cases ~ Day, span = 0.15)))) %>% 
+      select(Country, Date, Incident_Cases, Cases_fmt, text, loess_cases, Day)
+    
+    deaths.data.india = all_data %>% 
+      filter(place == "India") %>%
+      mutate(date = as.Date(date)) %>%
+      #filter(date >= start.date) %>% 
+      filter(total_deaths >= deaths.threshold) %>%
+      arrange(date) %>%
+      mutate(Day = seq(n()) - 1) %>%
+      ungroup() %>%
+      filter(Day > 30) %>% 
+      rename(Country = place,
+             Date = date,
+             Incident_Deaths = daily_deaths) %>% 
+      mutate(
+        Deaths_fmt = fmt(Incident_Deaths), 
+        text = paste0(Country, "<br>", Date, ": ", Deaths_fmt,
+                      " incident deaths<br>"),
+        loess_deaths = c(predict(loess(formula = Incident_Deaths ~ Day, span = 0.15)))) %>% 
+      select(Country, Date, Incident_Deaths, Deaths_fmt, text, loess_deaths, Day)
+    
+    
+    deaths.data = 
+      bind_rows(deaths.data, deaths.data.india)
+    
+    cases.data = 
+      bind_rows(cases.data, cases.data.india)
+    
     cases.title <- paste("COVID-19 cases in India compared",
                          "to other countries")
 
