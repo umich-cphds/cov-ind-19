@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --mail-type=FAIL,ARRAY_TASKS
-#SBATCH --time=10:00
+#SBATCH --time=1:00:00
 #SBATCH --job-name=generate_plots
 #SBATCH --mem-per-cpu=4g
 #SBATCH --output=/home/%u/slurm_output/slurm-%A_%a.out
