@@ -1,14 +1,19 @@
 
 suppressPackageStartupMessages({
   library(zoo)
+  library(covid19india)
 })
 
 plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
   
-  tsing = read.csv(paste0(data_repo, "/", today, "/statewise_tested_numbers_data.csv"), header = TRUE)
+  #tsing = read.csv(paste0(data_repo, "/", today, "/statewise_tested_numbers_data.csv"), header = TRUE)
   
-  everything = read.csv(paste0(data_repo, "/", today, "/everything.csv"))
+  tsing = get_nat_tests()
   
+  #everything = read.csv(paste0(data_repo, "/", today, "/everything.csv"))
+  
+  everything = get_all_data()
+   
   subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
   
@@ -63,7 +68,7 @@ plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
   colnames(statenames) <- c('full', 'abbrev')
   statenames$abbrev <- tolower(statenames$abbrev)
   
-  tsing = left_join(tsing, statenames, by = c('State' = 'full'))
+  tsing = left_join(tsing, statenames, by = c('place' = 'full'))
   
   p = NULL
   
@@ -71,7 +76,7 @@ plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
     
     everything = 
       everything %>%
-      filter(abbrev == state) %>%
+      filter(place == state) %>%
       mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, daily_cases, daily_tests, place) %>% 
@@ -107,7 +112,7 @@ plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
     
     everything = 
       everything %>%
-      filter(abbrev == state) %>%
+      filter(place == state) %>%
       mutate(Dates = as.Date(date)) %>%
       filter(Dates >= as.Date(start.date) & Dates <= as.Date(today)) %>%
       select(Dates, daily_cases, daily_tests, place) %>% 
