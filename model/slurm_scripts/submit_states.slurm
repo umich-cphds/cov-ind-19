@@ -29,7 +29,8 @@ for i in $states; do
 		state_jobs=$state1
 	fi
 done
-states="$states tt"
+states="tt"
+#states="$states tt"
 Run seirfansy states which includes tt for India
 export bottom=FALSE
 for i in $states; do

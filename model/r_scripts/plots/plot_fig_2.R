@@ -88,7 +88,7 @@ plot_fig_2 <- function(start.date = as.Date("2020-05-01"))
       mutate(
         Cases_fmt = fmt(Incident_Cases), 
         text = paste0(Country, "<br>", Date, ": ", Cases_fmt,
-                             " incident deaths<br>"),
+                             " incident cases<br>"),
         loess_cases = c(predict(loess(formula = Incident_Cases ~ Day, span = 0.15)))) %>% 
       select(Country, Date, Incident_Cases, Cases_fmt, text, loess_cases, Day)
     
