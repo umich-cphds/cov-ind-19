@@ -67,10 +67,16 @@ plot_fig_forest = function() {
     arrange(date) %>%
     slice((n() - 6):n()) %>%
     summarize(
-      cfr   = mean(cfr_est, na.rm = T),
-      lower = min(cfr_est, na.rm = T),
-      upper = max(cfr_est, na.rm = T)
+      mean_daily_cases = mean(daily_cases, na.rm = T),
+      cfr              = mean(cfr_est, na.rm = T),
+      se.cfr           = sqrt(cfr * (1 - cfr) / mean_daily_cases),
+      se.cfr           = ifelse(se.cfr < 0.001, 0.001, se.cfr),
+      half.width       = qnorm(0.95) * se.cfr,
+      lower            = cfr - half.width,
+      lower            = ifelse(lower < 0, lower == 0, lower),
+      upper            = cfr + half.width
     ) %>%
+    drop_na() %>% 
     ungroup() %>%
     mutate(place = case_when(place == "India" ~ "National estimate", T ~ place)) %>%
     mutate(
@@ -139,9 +145,14 @@ plot_fig_forest = function() {
     group_by(place) %>%
     slice((n()-6):n()) %>%
     summarise(
-      lower    = min(tpr, na.rm = T),
-      upper    = max(tpr, na.rm = T),
-      test_pos = mean(tpr, na.rm = T)
+      mean_daily_tests = mean(daily_tests, na.rm = T),
+      test_pos         = mean(tpr, na.rm = T),
+      se.tpr           = sqrt(test_pos * (1 - test_pos) / mean_daily_tests),
+      se.tpr           = ifelse(se.tpr < 0.001, 0.001, se.tpr),
+      half.width       = qnorm(0.95) * se.tpr,
+      lower            = test_pos - half.width,
+      lower            = ifelse(lower < 0, lower == 0, lower),
+      upper            = test_pos + half.width
     ) %>%
     drop_na(test_pos) %>%
     ungroup()
