@@ -55,7 +55,8 @@ references <-
              fluidRow(
                column(10,
                       h4("References"),
-                      p("Estimating the wave 1 and wave 2 infection fatality rates from SARS-CoV-2 in India", a("Purkayastha et al. 2021", .noWS = "outside", href = "https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-021-05652-2")),
+                      p("Review, meta-analysis, and estimation of COVID-19 infection fatality rates in India: ", a("Zimmermann et al. 2021", .noWS = "outside", href = "https://doi.org/10.1101/2021.09.08.21263296")),
+                      p("Estimating the wave 1 and wave 2 infection fatality rates from SARS-CoV-2 in India: ", a("Purkayastha et al. 2021", .noWS = "outside", href = "https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-021-05652-2")),
                       p("On the resurgence of COVID-19 in India: ", a("Salvatore et al. 2021", .noWS = "outside", href = "https://www.medrxiv.org/content/10.1101/2021.06.23.21259405v1")),
                       p("COVID-19 Pandemic in India: Through the Lens of Modeling: ", a("Babu et al. 2021", .noWS = "outside", href = "https://www.ghspjournal.org/content/9/2/220")),
                       p("Estimating COVID-19 related mortality in India: ", a("Zimmermann et al. 2021", .noWS = "outside", href = "https://www.preprints.org/manuscript/202105.0617/v1")),
