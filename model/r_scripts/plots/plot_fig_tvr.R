@@ -20,16 +20,16 @@ plot_fig_tvr <- function(forecast)
       select(place, date, cases, recovered, deaths) %>% 
       mutate(date = as.Date(date, "%m/%d/%y"))
     
-    data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
-      clean_names() %>%
-      filter(country == "India") %>%
-      mutate(date = as.Date(date, "%m/%d/%y")) %>%
-      #filter(date >= start_date) %>%
-      arrange(cases) %>%
-      mutate(
-        cases = cases - dplyr::lag(cases)
-      ) %>% 
-      drop_na(cases)
+    # data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
+    #   clean_names() %>%
+    #   filter(country == "India") %>%
+    #   mutate(date = as.Date(date, "%m/%d/%y")) %>%
+    #   #filter(date >= start_date) %>%
+    #   arrange(cases) %>%
+    #   mutate(
+    #     cases = cases - dplyr::lag(cases)
+    #   ) %>% 
+    #   drop_na(cases)
   } else {
     start_date = as.Date('03/24/2020', format = "%m/%d/%y")
     data = get_state_counts() %>%
@@ -65,7 +65,7 @@ plot_fig_tvr <- function(forecast)
   #   drop_na(cases) %>%
   #   filter(cases > 0) %>%
   #   ungroup()
-  # }
+  }
   
   t_start <- seq(2, nrow(data) - 4)
   t_end   <- t_start + 4
