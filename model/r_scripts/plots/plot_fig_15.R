@@ -2,17 +2,16 @@
 suppressPackageStartupMessages({
   library(zoo)
   library(covid19india)
+  library(tidyverse)
+  library(data.table)
+  library(plotly)
 })
 
 plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
   
-  tsing = read.csv(paste0(data_repo, "/", today, "/statewise_tested_numbers_data.csv"), header = TRUE)
+  tsing <- covid19india::get_nat_tests()
   
-  #tsing = get_nat_tests()
-  
-  everything = read.csv(paste0(data_repo, "/", today, "/everything.csv"))
-  
-  #everything = get_all_data()
+  everything <- covid19india::get_all_data()
    
   subtitle <- paste0('\uA9 COV-IND-19 Study Group. Last updated ',
                      format(as.Date(today), format = '%b %e'), ', 2020', sep = '')
@@ -68,7 +67,7 @@ plot_fig_15 <- function(state = 'India', start.date = "2020-07-01") {
   colnames(statenames) <- c('full', 'abbrev')
   statenames$abbrev <- tolower(statenames$abbrev)
   
-  tsing = left_join(tsing, statenames, by = c('State' = 'full'))
+  tsing = left_join(tsing, statenames, by = c('place' = 'full'))
   
   p = NULL
   
