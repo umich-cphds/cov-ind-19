@@ -13,28 +13,58 @@ plot_fig_tvr <- function(forecast)
   # data ----------
   if (forecast == "India") {
     start_date = as.Date('03/15/2020', format = "%m/%d/%y")
-    data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
-      clean_names() %>%
-      filter(country == "India") %>%
-      mutate(date = as.Date(date, "%m/%d/%y")) %>%
-      #filter(date >= start_date) %>%
-      arrange(cases) %>%
-      mutate(
-        cases = cases - dplyr::lag(cases)
-      ) %>% 
-      drop_na(cases)
+    data = get_nat_counts() %>%
+      mutate(cases = daily_cases,
+                recovered = daily_recovered,
+                deaths = daily_deaths) %>% 
+      select(place, date, cases, recovered, deaths) %>% 
+      mutate(date = as.Date(date, "%m/%d/%y"))
+    
+    # data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
+    #   clean_names() %>%
+    #   filter(country == "India") %>%
+    #   mutate(date = as.Date(date, "%m/%d/%y")) %>%
+    #   #filter(date >= start_date) %>%
+    #   arrange(cases) %>%
+    #   mutate(
+    #     cases = cases - dplyr::lag(cases)
+    #   ) %>% 
+    #   drop_na(cases)
   } else {
     start_date = as.Date('03/24/2020', format = "%m/%d/%y")
-  data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
-    clean_names() %>%
+    data = get_state_counts() %>%
+      mutate(cases = daily_cases,
+             recovered = daily_recovered,
+             deaths = daily_deaths) %>% 
+      select(place, date, cases, recovered, deaths) %>% 
+      mutate(date = as.Date(date, "%m/%d/%y"))
+    
+  statenames = vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
+      group_by(State) %>%
+      filter(Date == max(Date)) %>%
+      ungroup() %>% 
+    select(State, Name)
+  
+  data = 
+    data %>% 
+    left_join(statenames, by = c("place" = "Name"))
+  
+  data = 
+    data %>% 
+    mutate(state = State) %>% 
     filter(state == forecast) %>%
-    filter(cases != 0) %>% #& date >= start_date
-    group_by(name) %>%
-    arrange(date) %>%
-    mutate(cases = cases - dplyr::lag(cases)) %>%
-    drop_na(cases) %>%
-    filter(cases > 0) %>%
-    ungroup()
+    filter(cases > 0)
+    
+  # data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
+  #   clean_names() %>%
+  #   filter(state == forecast) %>%
+  #   filter(cases != 0) %>% #& date >= start_date
+  #   group_by(name) %>%
+  #   arrange(date) %>%
+  #   mutate(cases = cases - dplyr::lag(cases)) %>%
+  #   drop_na(cases) %>%
+  #   filter(cases > 0) %>%
+  #   ungroup()
   }
   
   t_start <- seq(2, nrow(data) - 4)
