@@ -17,6 +17,7 @@ export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export today=$(date +%Y-%m-%d)
 export production=FALSE
 
+echo $http_proxy
 # Set variables based on testing or production
 if [[ $production == "TRUE" ]]; then
   export code_repo="$HOME/cov-ind-19"
@@ -33,7 +34,8 @@ remote_sha=$(git ls-remote https://github.com/CSSEGISandData/COVID-19.git | grep
 local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
 if [[ "$remote_sha" != "$local_sha" ]]; then
 	echo "JHU data has been updated. Running git pull and forecasts"
-	gitpull=$(sbatch $code_repo/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
+	scraper=$(sbatch $code_repo/model/slurm_scripts/scraper.slurm | awk '{print $NF}')
+	gitpull=$(sbatch --dependency=afterok:$scraper $code_repo/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 	preprocess=$(sbatch --dependency=afterok:$gitpull $code_repo/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
 	spatialmap=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	national=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/national_forecast.slurm | awk '{print $NF}')
