@@ -17,7 +17,6 @@ export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export today=$(date +%Y-%m-%d)
 export production=FALSE
 
-echo $http_proxy
 # Set variables based on testing or production
 if [[ $production == "TRUE" ]]; then
   export code_repo="$HOME/cov-ind-19"
