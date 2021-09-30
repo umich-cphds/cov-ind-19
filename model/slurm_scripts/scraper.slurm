@@ -7,7 +7,6 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
-export MODULEPATH=/home/danbarke/Lmod/:$MODULEPATH
 module load geckodriver
 module load python3.8-anaconda
 
