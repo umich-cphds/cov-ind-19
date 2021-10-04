@@ -48,7 +48,7 @@ if __name__=='__main__':
   date=datetime.datetime.now();date_str=date.strftime('%d/%m/%Y')
   
   #check if data for given date already exists in csv. Update only if data doesn't exist
-  a=open(data_file, 'a+');r=csv.reader(a);info=[i for i in r];a.close()
+  a=open(data_file);r=csv.reader(a);info=[i for i in r];a.close()
   dates=list(set([i[1] for i in info[1:]]));dates.sort()
   
   dont_update_data_csv=False
