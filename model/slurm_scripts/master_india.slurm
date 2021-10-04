@@ -34,7 +34,8 @@ local_sha=$(git show-ref --head refs/heads/master | grep HEAD | cut -f 1 -d ' ')
 if [[ "$remote_sha" != "$local_sha" ]]; then
 	echo "JHU data has been updated. Running git pull and forecasts"
 	scraper=$(sbatch $code_repo/model/slurm_scripts/scraper.slurm | awk '{print $NF}')
-	gitpull=$(sbatch --dependency=afterok:$scraper $code_repo/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
+	cowin=$(sbatch $code_repo/model/slurm_scripts/pull_cowin_data.slurm | awk '{print $NF}')
+	gitpull=$(sbatch --dependency=afterok:$scraper:$cowin $code_repo/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 	preprocess=$(sbatch --dependency=afterok:$gitpull $code_repo/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
 	spatialmap=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')
 	national=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/national_forecast.slurm | awk '{print $NF}')
