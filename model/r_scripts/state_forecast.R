@@ -37,7 +37,7 @@ save_plot_data     <- FALSE
 
 # data ----------
 dat        <- covid19india::get_all_data()[abbrev == state & date >= min_date]
-start_date <-  min(dat$Date)
+start_date <-  min(dat$date)
 
 # directory ----------
 wd <- paste0(data_repo, "/", today, "/1wk/")
