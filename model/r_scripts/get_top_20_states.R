@@ -12,4 +12,7 @@ filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State
 ungroup() %>%
 top_n(20, Cases)
 
+x$State[x$State == "ct"] <- "cg"
+x$State[x$State == "ut"] <- "uk"
+
 cat(x$State, "\n")
