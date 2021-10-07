@@ -29,7 +29,11 @@ arrayid  <- Sys.getenv("SLURM_ARRAY_TASK_ID")
 set.seed(20192020) # default: 20192020
 min_date <- today - 45
 
-# specificatioons ----------
+# handle different abbreviation usages -----------
+if (state == "ct") { state <- "cg" }
+if (staet == "ut") { staet <- "uk" }
+
+# specifications ----------
 R_0                <- 2     # basic reproduction number
 save_files         <- FALSE
 save_mcmc          <- FALSE # output MCMC files (default = TRUE; needed for incidence CI calculations)
@@ -37,7 +41,7 @@ save_plot_data     <- FALSE
 
 # data ----------
 dat        <- covid19india::get_all_data()[abbrev == state & date >= min_date]
-start_date <-  min(dat$Date)
+start_date <- min(dat$date)
 
 # directory ----------
 wd <- paste0(data_repo, "/", today, "/1wk/")
