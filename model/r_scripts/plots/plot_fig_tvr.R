@@ -39,19 +39,23 @@ plot_fig_tvr <- function(forecast)
       select(place, date, cases, recovered, deaths) %>% 
       mutate(date = as.Date(date, "%m/%d/%y"))
     
-  statenames = vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
-      group_by(State) %>%
-      filter(Date == max(Date)) %>%
-      ungroup() %>% 
-    select(State, Name)
+    data <- data %>%
+      left_join(covid19india::pop[, !c("population")], by = "place") %>%
+      mutate(state = abbrev)
+    
+  # statenames = vroom(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
+  #     group_by(State) %>%
+  #     filter(Date == max(Date)) %>%
+  #     ungroup() %>% 
+  #   select(State, Name)
+  # 
+  # data = 
+  #   data %>% 
+  #   left_join(statenames, by = c("place" = "Name"))
   
   data = 
     data %>% 
-    left_join(statenames, by = c("place" = "Name"))
-  
-  data = 
-    data %>% 
-    mutate(state = State) %>% 
+    # mutate(state = State) %>% 
     filter(state == forecast) %>%
     filter(cases > 0)
     
