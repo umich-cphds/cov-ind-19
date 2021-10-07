@@ -11,4 +11,7 @@ group_by(State) %>%
 filter(Date == max(Date) & State != "un" & State != "la" & State != "dd" & State != "hp" & State != "py" & State != "dn" & State != "ga" & State != "ld" ) %>%
 ungroup()
 
+x$State[x$State == "ct"] <- "cg"
+x$State[x$State == "ut"] <- "uk"
+
 cat(x$State, "\n")
