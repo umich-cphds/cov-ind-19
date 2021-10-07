@@ -40,7 +40,7 @@ do
   sleep 10
 done
 state_jobs=$(cat $data_repo/$today/state_jobids.txt)
-generateplotdata=$(sbatch --dependency=afterok:$national:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
+generateplotdata=$(sbatch --dependency=afterok:$national,afterany:$state_jobs $code_repo/model/slurm_scripts/generate_plot_data.slurm | awk '{print $NF}')
 generateplots=$(sbatch --dependency=afterok:$generateplotdata $code_repo/model/slurm_scripts/generate_plots.slurm | awk '{print $NF}')
 sbatch --dependency=afterok:$generateplots:$spatialmap $code_repo/model/slurm_scripts/gitpush.slurm
 
