@@ -11,7 +11,16 @@ data_repo <- Sys.getenv("data_repo")
 code_repo <- Sys.getenv("code_repo")
 
 setwd(paste0(code_repo, "/model/r_scripts/"))
-source("libraries.R")
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(magrittr)
+  library(arm)
+  library(janitor)
+  library(DescTools)
+  library(patchwork)
+  library(pbapply)
+  library(SEIRfansy)
+})
 
 f <- list.files(paste0(code_repo, "/model/r_scripts/functions"))
 sapply(paste0("functions/", f), source)
