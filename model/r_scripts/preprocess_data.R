@@ -36,8 +36,7 @@ jhu_files <- list(
 )
 
 jhu_data <- reduce(imap(jhu_files,
-    function(file, var)
-    {
+    function(file, var) {
         data.table::fread(file) %>%
         select(Country = matches("Country"), matches("[0-9]+")) %>%
         filter(Country %in% countries) %>%
@@ -46,16 +45,14 @@ jhu_data <- reduce(imap(jhu_files,
             TRUE ~ Country))
         ) %>%
         group_by(Country) %>%
-
         # Since we don't care about counts in each state we collapse into a
         # single count per country of interest.
         summarise_all(sum, na.rm = T) %>%
         gather(matches("[0-9]+"), key = "Date", value = !!var) %>%
         mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
         group_by(Date, )
-        # filter(Date >= start.date - 1)
     }
-), ~ left_join(.x, .y)) %>%
+), ~ left_join(.x, .y, by = c("Country", "Date"))) %>%
 ungroup() %>%
 arrange(Country, Date) %>%
 data.table::fwrite(paste0(data_repo, "/", today, "/jhu_data.csv"))
@@ -85,7 +82,7 @@ data.table::fwrite(paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
 
 # national testing data ----------
 national_testing <- covid19india::get_nat_tests()[
-  .(Tests = total_tests, Date = date, Country = place)
+  , .(Tests = total_tests, Date = date, Country = place)
 ][]
 
 data.table::fwrite(national_testing, paste0(data_repo, "/", today, "/testing.csv"))
