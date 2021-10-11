@@ -37,7 +37,7 @@ jhu_files <- list(
 
 jhu_data <- reduce(imap(jhu_files,
     function(file, var) {
-        data.table::fread(file) %>%
+        readr::read_csv(file, col_types = cols()) %>%
         select(Country = matches("Country"), matches("[0-9]+")) %>%
         filter(Country %in% countries) %>%
         mutate(Country = as.factor(case_when(
