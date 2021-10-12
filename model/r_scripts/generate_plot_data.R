@@ -15,11 +15,11 @@ if (!dir.exists(path)) {
 start_date <- as.Date(today) - 45
 
 # load observed data ----------
-jhu_data <- read_tsv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
+jhu_data <- read_csv(paste0(data_repo, "/", today, "/jhu_data_mod.csv"), col_types = cols()) %>%
 filter(Country == "India" & Date >= start_date) %>%
 clean_names()
 
-state_data <- read_tsv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
+state_data <- read_csv(paste0(data_repo, "/", today, "/covid19india_data.csv"), col_types = cols()) %>%
 filter(Date >= start_date) %>%
 clean_names()
 

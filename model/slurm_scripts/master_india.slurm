@@ -30,6 +30,7 @@ module load Rtidyverse/4.1.0
 
 scraper=$(sbatch $code_repo/model/slurm_scripts/scraper.slurm | awk '{print $NF}')
 cowin=$(sbatch $code_repo/model/slurm_scripts/pull_cowin_data.slurm | awk '{print $NF}')
+sbatch --dependency=afterok:$scraper:$cowin $code_repo/model/slurm_scripts/commitscraper.slurm
 gitpull=$(sbatch --dependency=afterok:$scraper:$cowin $code_repo/model/slurm_scripts/git_pull_JHU.slurm | awk '{print $NF}')
 preprocess=$(sbatch --dependency=afterok:$gitpull $code_repo/model/slurm_scripts/preprocess_data.slurm | awk '{print $NF}')
 spatialmap=$(sbatch --dependency=afterok:$preprocess $code_repo/model/slurm_scripts/spatialmap.slurm | awk '{print $NF}')

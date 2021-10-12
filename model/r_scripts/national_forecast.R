@@ -1,6 +1,6 @@
 # libraries ----------
 suppressPackageStartupMessages({
-  library(tidyverse)
+  library(data.table)
   library(chron)
   library(rjags)
   library(gtools) #rdirichlet(n, alpha)
@@ -72,9 +72,9 @@ model_3 <- tvt.eSIR(
   nburnin        = nburnins
 )
         
-clean_out <- model_3 %>% cleanr_esir(N = N, adj = T, adj_len = 2, name = "No intervention")       
+clean_out <- cleanr_esir(f_out = model_3, N = N, adj = T, adj_len = 2, name = "No intervention")       
 
 }
 
-write_tsv(clean_out$data, file = paste0("./", casename, "_data.txt"))
-write_tsv(clean_out$out_tib, file = paste0("./", casename, "_out_table.txt"))
+data.table::fwrite(clean_out$data, file = paste0("./", casename, "_data.txt"), sep = "\t")
+data.table::fwrite(clean_out$out_tib, file = paste0("./", casename, "_out_table.txt"), sep = "\t")

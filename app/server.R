@@ -37,7 +37,7 @@ img.file <- paste0("https://github.com/umich-cphds/cov-ind-19-data/raw/",
 source("observed.R", local = T)
 source("forecast.R", local = T)
 source("state.R", local = T)
-source("testing.R", local = T)
+# source("testing.R", local = T)
 source("metrics.R", local = T)
 source("india_snapshot.R", local = TRUE)
 

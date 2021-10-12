@@ -1,40 +1,37 @@
-
 suppressPackageStartupMessages({
-  library(vroom)
-  library(tidyverse)
-  library(ggtext)
+  library(data.table)
   library(scales)
-  library(tidyr)
   library(covid19india)
+  library(plotly)
 })
 
-plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
-{
+plot_fig_1 <- function(start.date = as.Date(Sys.getenv("today")) - 365) {
   
-  data = get_all_data() %>% 
-    filter(place == "India") %>%
-    mutate(date = as.Date(date)) %>%
-    filter(date >= start.date) %>%
-    gather(daily_cases, daily_recovered, daily_deaths, key = Type, value = Count) %>%
-    mutate(
-      date.fmt = as.factor(format(date, format = "%b %e")),
-      Type = factor(
-        recode(Type,
-               daily_cases     = "New Cases",
-               daily_recovered = "Recovered",
-               daily_deaths    = "Fatalities"
-        ), levels = c("New Cases", "Fatalities", "Recovered"))
-    ) %>%
-    mutate(count.fmt = format(Count, big.mark = ",",
-                              scientific = F, trim = T)
-    ) %>%
-    mutate(text = paste0(date.fmt, ": ", count.fmt, " ", Type))
+  data <- get_nat_counts()[date >= start.date]
   
-    cap <- paste0("\uA9 COV-IND-19 Study Group. Last updated: ",
-                  format(today, format = "%b %e"), sep = ' ')
+  data <- melt(data,
+       id.vars       = c("place", "date"),
+       measure.vars  = c("daily_cases", "daily_deaths", "daily_recovered"),
+       variable.name = "Type",
+       value.name    = "Count")[
+         , date.fmt := as.factor(format(date, format = "%b %e"))
+       ][]
+  
+  data <- data[Type == "daily_cases", Type := "New Cases"][
+    Type == "daily_recovered", Type := "Recovered"][
+      Type == "daily_deaths", Type := "Fatalities"][
+        , Type := factor(Type, levels = c("New Cases", "Fatalities", "Recovered"))][
+    , count.fmt := format(Count, big.mark = ",", scientific = F, trim = T)
+  ][
+    , text := paste0(date.fmt, ": ", count.fmt, " ", Type)
+  ][]
+  
+  cap <- paste0("\uA9 COV-IND-19 Study Group. Data through ",
+                trimws(format(max(data[, date]), format = "%B")), " ",
+                trimws(format(max(data[, date]), format = "%e")))
 
     title <- paste("Daily number of COVID-19 new cases, fatalities and",
-                   "recovered cases in India since March 1")
+                   "recovered cases in India since", format(start.date, "%b %e"))
 
     axis.title.font <- list(size = 16)
     tickfont        <- list(size = 16)
@@ -59,8 +56,5 @@ plot_fig_1 <- function(start.date = as.Date("2020-07-01"))
     ) %>%
     plotly::config(toImageButtonOptions = list(width = NULL, height = NULL))
 
-    vroom_write(data, paste0(data_repo, "/", today, "/plot1.csv"),
-                delim = ","
-    )
     p
 }

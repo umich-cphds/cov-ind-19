@@ -1,36 +1,43 @@
+# libraries ----------
 suppressPackageStartupMessages({
-library(httr)
-library(tidyverse)
-library(vroom)
+  library(httr)
+  library(tidyverse)
+  library(data.table)
+  library(covid19india)
 })
 
+# environment variables ----------
 code_repo <- Sys.getenv("code_repo")
 data_repo <- Sys.getenv("data_repo")
 today     <- Sys.getenv("today")
+
+# directory ----------
 if (!dir.exists(paste0(data_repo, "/", today))) {
     message("Creating" , paste0(data_repo, "/", today))
     dir.create(paste0(data_repo, "/", today), recursive = T)
 }
 
+# script variables ---------
 start.date <- as.Date("2020-03-01")
 
-countries <- c("France", "Germany", "India", "Iran", "Italy", "Russia", "Brazil",
-			   "Pakistan", "Bangladesh", "Korea, South", "US", "China", "Canada",
-			   "Belgium", "Turkey", "Netherlands", "Switzerland", "United Kingdom"
+countries <- c("France", "Germany", "India", "Iran", "Italy", "Russia",
+               "Brazil","Pakistan", "Bangladesh", "Korea, South", "US", "China",
+               "Canada","Belgium", "Turkey", "Netherlands", "Switzerland",
+               "United Kingdom"
 )
 
-jhu.path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
+# JHU data ---------
+jhu_path <- paste0("~/COVID-19/csse_covid_19_data/csse_covid_19_time_series")
 
-jhu.files <- list(
-    Cases      = paste0(jhu.path, "/time_series_covid19_confirmed_global.csv"),
-    Recovered  = paste0(jhu.path, "/time_series_covid19_recovered_global.csv"),
-    Deaths     = paste0(jhu.path, "/time_series_covid19_deaths_global.csv")
+jhu_files <- list(
+    Cases      = paste0(jhu_path, "/time_series_covid19_confirmed_global.csv"),
+    Recovered  = paste0(jhu_path, "/time_series_covid19_recovered_global.csv"),
+    Deaths     = paste0(jhu_path, "/time_series_covid19_deaths_global.csv")
 )
 
-jhu.data <- reduce(imap(jhu.files,
-    function(file, var)
-    {
-        vroom(file) %>%
+jhu_data <- reduce(imap(jhu_files,
+    function(file, var) {
+        data.table::fread(file, showProgress = FALSE) %>%
         select(Country = matches("Country"), matches("[0-9]+")) %>%
         filter(Country %in% countries) %>%
         mutate(Country = as.factor(case_when(
@@ -38,132 +45,60 @@ jhu.data <- reduce(imap(jhu.files,
             TRUE ~ Country))
         ) %>%
         group_by(Country) %>%
-
         # Since we don't care about counts in each state we collapse into a
         # single count per country of interest.
         summarise_all(sum, na.rm = T) %>%
         gather(matches("[0-9]+"), key = "Date", value = !!var) %>%
         mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
         group_by(Date, )
-        # filter(Date >= start.date - 1)
     }
-), ~ left_join(.x, .y)) %>%
+), ~ left_join(.x, .y, by = c("Country", "Date"))) %>%
 ungroup() %>%
-arrange(Country, Date) %>%
-vroom_write(paste0(data_repo, "/", today, "/jhu_data.csv"))
+arrange(Country, Date)
 
+data.table::fwrite(x = jhu_data, file = paste0(data_repo, "/", today, "/jhu_data.csv"))
 
-states.map <- c("Andhra Pradesh" =  "AP", "Arunachal Pradesh" =  "AR",
-	"Assam" =  "AS", "Bihar" =  "BR", "Chhattisgarh" =  "CG", "Goa" =  "GA",
-	"Gujarat" =  "GJ", "Haryana" =  "HR", "Himachal Pradesh" =  "HP",
-	"Jammu and Kashmir" =  "JK", "Jharkhand" =  "JH", "Karnataka" =  "KA",
-	"Kerala" =  "KL", "Madhya Pradesh" =  "MP",  "Maharashtra" =  "MH",
-	"Manipur" =  "MN", "Meghalaya" =  "ML", "Mizoram" =  "MZ", "Nagaland" =  "NL",
-	"Odisha" =  "OR", "Punjab" =  "PB", "Rajasthan" =  "RJ", "Sikkim" =  "SK",
-	"Tamil Nadu" =  "TN", "Tripura" =  "TR", "Uttarakhand" =  "UK",
-	"Uttar Pradesh" =  "UP", "West Bengal" =  "WB", "Tamil Nadu" =  "TN",
-	"Tripura" =  "TR", "Andaman and Nicobar Islands" =  "AN",
-	"Chandigarh" =  "CH", "Dadra and Nagar Haveli" =  "DH",
-	"Daman and Diu" = "DD", "Delhi" =  "DL", "Lakshadweep" =  "LD",
-	"Pondicherry" =  "PY", "Telangana" =  "TG", "Dadra and Nagar Haveli" =  "DN",
-	"Chhattisgarh" =  "CT", "Ladakh" =  "LA", "Uttarakhand" =  "UT",
-	"India" = "TT"
-)
+# state count data ----------
+state_count <- covid19india::get_state_counts()[
+  , .(Date = date, Name = place, Cases = total_cases,
+      Deaths = total_deaths, Recovered = total_recovered)
+]
 
-x <- names(states.map)
-names(x) <- states.map
+state_count <- data.table::merge.data.table(
+  state_count,
+  covid19india::pop[, .(Name = place, State = abbrev)][rowid(Name) == 1],
+  by = "Name", all.x = TRUE)
 
-# get state level data from covid19india.org and preprocess it
-request <- GET("https://api.covid19india.org/states_daily.json")
-json    <- content(request)
-data    <- map_dfr(json[[1]], ~ .x)
+data.table::fwrite(state_count,
+                   paste0(data_repo, "/", today, "/covid19india_data.csv"))
 
-data$tt <- NULL
-state.codes <- setdiff(names(data), c("date", "status", "dateymd"))
-data <- data %>%
-  pivot_longer(
-    names_to = "state",
-    values_to = "count",
-    cols = !!state.codes
-    ) %>%
-  select(-date) %>%
-  select(
-    date = dateymd, status, state, count
-  ) %>%
-  mutate(
-    count = as.numeric(count),
-    date = as.Date(date, format = "%Y-%m-%d")
-  ) %>%
-  pivot_wider(
-    names_from = "status",
-    values_from = "count"
-  ) %>%
-  rename(
-    Cases = Confirmed,
-    Deaths = Deceased,
-    Date = date,
-    State = state
-  ) %>%
-  mutate(
-    Name = recode(str_to_upper(State), !!!x)
-  ) %>%
-  arrange(State, Date) %>%
-  group_by(State) %>%
-  mutate(
-    Cases = accumulate(Cases, `+`),
-    Deaths = accumulate(Deaths, `+`),
-    Recovered = accumulate(Recovered, `+`)
-  ) %>%
-  ungroup() %>%
-  filter(Date >= "2020-03-15" & Date < today) %>%
-vroom_write(paste0(data_repo, "/", today, "/covid19india_data.csv"))
+# national count data -----------
+national_count <- covid19india::get_nat_counts()[
+  , .(Country = place, Date = date, Cases = total_cases,
+      Deaths = total_deaths, Recovered = total_recovered)
+][Date < today][]
 
-# grab India related data
-request <- GET("https://api.covid19india.org/data.json")
-json    <- content(request)
-data    <- map_dfr(json[[1]], ~ .x)
-data_testing    <- map_dfr(json[['tested']], ~ .x)
+rbind(filter(jhu_data, Country != "India"), national_count) %>%
+data.table::fwrite(paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
 
-data <- data %>%
-  select(
-    Cases = totalconfirmed,
-    Deaths = totaldeceased,
-    Recovered = totalrecovered,
-    Date = dateymd
-  ) %>%
-  mutate(
-    Date      = as.Date(Date, format = "%Y-%m-%d"),
-    Cases     = as.numeric(Cases),
-    Deaths    = as.numeric(Deaths),
-    Recovered = as.numeric(Recovered),
-    Country = "India"
-  ) %>%
-  filter (Date < today)
+# national testing data ----------
+national_testing <- covid19india::get_nat_tests()[
+  , .(Tests = total_tests, Date = date, Country = place)
+][]
 
+data.table::fwrite(national_testing, paste0(data_repo, "/", today, "/testing.csv"))
 
-rbind(filter(jhu.data, Country != "India"), data) %>%
-vroom_write(paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
-
-# India testing data
-data_testing <- data_testing %>%
-select(
-    Cases = totalpositivecases,
-    Tests = totalsamplestested,
-    Date  = testedasof
-) %>%
-mutate(
-    Date    = as.Date(word(Date, 1), format = "%d/%m/%Y"),
-    Cases   = as.numeric(str_remove(Cases, ",")),
-    Tests   = as.numeric(str_remove(Tests, ",")),
-    Country = "India"
-)
-
-write_csv(data_testing, paste0(data_repo, "/", today, "/testing.csv"))
-
-write_csv(read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
+# global testing data ----------
+data.table::fwrite(data.table::fread('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'),
           paste0(data_repo, "/", today, "/global_testing.csv"))
 
-write_csv(vroom('https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv'),
-          paste0(data_repo, "/", today, '/statewise_tested_numbers_data.csv'))
+# statewise testing data [DEPRECATED] ----------
+# data.table::fwrite(data.table::fread('https://api.covid19india.org/csv/latest/statewise_tested_numbers_data.csv'),
+#           paste0(data_repo, "/", today, '/statewise_tested_numbers_data.csv'))
 
-source(paste0(code_repo, "/model/r_scripts/cleanr_covind/run.R"))
+# replace cleanr_covind Rscript -----------
+all_data <- covid19india::get_all_data()
+data.table::fwrite(all_data, paste0(data_repo, "/", today, "/everything.csv"))
+data.table::fwrite(covid19india::get_cfr(all_data), paste0(data_repo, "/", today, '/cfr_t7_avg.csv'))
+data.table::fwrite(covid19india::get_r_est(all_data), paste0(data_repo, "/", today, '/r0_t7_avg.csv'))
+

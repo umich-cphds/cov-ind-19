@@ -3,7 +3,16 @@ code_repo <- Sys.getenv("code_repo")
 today <- as.Date(Sys.getenv("today"))
 
 setwd(paste0(code_repo, "/model/r_scripts/"))
-source("libraries.R")
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(magrittr)
+  library(arm)
+  library(janitor)
+  library(DescTools)
+  library(patchwork)
+  library(pbapply)
+  library(SEIRfansy)
+})
 
 f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
 sapply(paste0("functions/", f), source)
