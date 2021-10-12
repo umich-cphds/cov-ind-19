@@ -15,7 +15,7 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-module load Rgeospatial/3.6.1-2019-09-29
+module load Rtidyverse/4.1.0
 
 cd $code_repo/model/slurm_scripts
 states=$(Rscript $code_repo/model/r_scripts/get_all_states.R )
