@@ -78,7 +78,7 @@ national_count <- covid19india::get_nat_counts()[
       Deaths = total_deaths, Recovered = total_recovered)
 ][Date < today][]
 
-rbind(filter(jhu_data, Country != "India"), data) %>%
+rbind(filter(jhu_data, Country != "India"), national_count) %>%
 data.table::fwrite(paste0(data_repo, "/", today, "/jhu_data_mod.csv"))
 
 # national testing data ----------
