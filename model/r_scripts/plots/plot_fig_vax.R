@@ -36,7 +36,8 @@ plot_fig_vax = function() {
   
   case_plot <- plot_ly(vax_india, x = ~ Day, y = ~ daily_doses, text = ~ text, color = I("#138808"),
                        hoverinfo = "text", type = "bar", hoverlabel = list(align = "left"),
-                       showlegend = F, line = list(width = 3)
+                       showlegend = F
+                       # line = list(width = 3)
   ) %>%
     layout(xaxis = vax.xaxis, yaxis = vax.yaxis,
            annotations = list(text = vax.title, xref = "paper", yref = "paper",

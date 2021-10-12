@@ -21,7 +21,6 @@ plot_fig_forest = function() {
   # ggplot theme ------------
   covind19_base <- theme_minimal() +
     theme(
-      # text               = element_text(family = "Helvetica Neue"),
       plot.title         = ggtext::element_markdown(size = 18, face = "bold"),
       plot.subtitle      = element_text(size = 14, color = "#36454f"),
       plot.caption       = ggtext::element_markdown(hjust = 0, size = 10, lineheight = 1.1),
@@ -35,8 +34,8 @@ plot_fig_forest = function() {
     )
   
   # read data -----------
-  everything <- get_all_data()
-  r0         <- get_r_est(everything) %>% filter(!is.nan(r))
+  everything <- covid19india::get_all_data()
+  r0         <- covid19india::get_r_est(everything)[!is.nan(r)]
   
   fplot_colors <- c(
     "alarm" = "#eb4034",
@@ -139,56 +138,56 @@ plot_fig_forest = function() {
     coord_flip(ylim = c(0, 3.5)) +
     covind19_base
   
-  # tpr plot -----------
-  state_test_plt_dat <- everything %>%
-    mutate(tpr = daily_cases / daily_tests) %>%
-    group_by(place) %>%
-    slice((n()-6):n()) %>%
-    summarise(
-      mean_daily_tests = mean(daily_tests, na.rm = T),
-      test_pos         = mean(tpr, na.rm = T),
-      se.tpr           = sqrt(test_pos * (1 - test_pos) / mean_daily_tests),
-      se.tpr           = ifelse(se.tpr < 0.001, 0.001, se.tpr),
-      half.width       = qnorm(0.95) * se.tpr,
-      lower            = test_pos - half.width,
-      lower            = ifelse(lower < 0, lower == 0, lower),
-      upper            = test_pos + half.width
-    ) %>%
-    drop_na(test_pos) %>%
-    ungroup()
-  
-  tpr_safe   <- 0.02
-  tpr_danger <- 0.06
-  
-  tp_for <- state_test_plt_dat %>%
-    mutate(
-      fplot = ifelse(test_pos > tpr_danger, "alarm", ifelse(test_pos < tpr_safe, "good", "eh")),
-      place = recode(place, "India" = "National estimate")
-    ) %>%
-    mutate(
-      shape = ifelse(fplot == "india", "india", "not_india"),
-      size  = ifelse(shape == "india", .5, .2),
-      fplot = case_when(place == "National estimate" ~ "india", TRUE ~ fplot)
-    ) %>%
-    ggplot(aes(x = fct_relevel(reorder(place, test_pos), "National estimate"), y = test_pos, shape = shape)) +
-    geom_hline(yintercept = tpr_safe, color = "gray40", linetype = 2) +
-    geom_hline(yintercept = tpr_danger, color = "gray40", linetype = 2) +
-    geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
-    scale_color_manual(values = fplot_colors) +
-    scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
-    labs(
-      title    = "Test-positive rate for COVID-19 in India<br>by state/union territory",
-      subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
-      x        = "State/Union territory",
-      y        = "Test-positive rate",
-      caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>",
-                      "**Note:**<br>",
-                      " - 7-day range is shown.<br>",
-                      " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
-    ) +
-    coord_flip() +
-    covind19_base + 
-    scale_y_continuous(labels = scales::percent)
+  # # tpr plot -----------
+  # state_test_plt_dat <- everything %>%
+  #   mutate(tpr = daily_cases / daily_tests) %>%
+  #   group_by(place) %>%
+  #   slice((n()-6):n()) %>%
+  #   summarise(
+  #     mean_daily_tests = mean(daily_tests, na.rm = T),
+  #     test_pos         = mean(tpr, na.rm = T),
+  #     se.tpr           = sqrt(test_pos * (1 - test_pos) / mean_daily_tests),
+  #     se.tpr           = ifelse(se.tpr < 0.001, 0.001, se.tpr),
+  #     half.width       = qnorm(0.95) * se.tpr,
+  #     lower            = test_pos - half.width,
+  #     lower            = ifelse(lower < 0, lower == 0, lower),
+  #     upper            = test_pos + half.width
+  #   ) %>%
+  #   drop_na(test_pos) %>%
+  #   ungroup()
+  # 
+  # tpr_safe   <- 0.02
+  # tpr_danger <- 0.06
+  # 
+  # tp_for <- state_test_plt_dat %>%
+  #   mutate(
+  #     fplot = ifelse(test_pos > tpr_danger, "alarm", ifelse(test_pos < tpr_safe, "good", "eh")),
+  #     place = recode(place, "India" = "National estimate")
+  #   ) %>%
+  #   mutate(
+  #     shape = ifelse(fplot == "india", "india", "not_india"),
+  #     size  = ifelse(shape == "india", .5, .2),
+  #     fplot = case_when(place == "National estimate" ~ "india", TRUE ~ fplot)
+  #   ) %>%
+  #   ggplot(aes(x = fct_relevel(reorder(place, test_pos), "National estimate"), y = test_pos, shape = shape)) +
+  #   geom_hline(yintercept = tpr_safe, color = "gray40", linetype = 2) +
+  #   geom_hline(yintercept = tpr_danger, color = "gray40", linetype = 2) +
+  #   geom_pointrange(aes(ymin = lower, ymax = upper, color = fplot), size = 0.4) +
+  #   scale_color_manual(values = fplot_colors) +
+  #   scale_shape_manual(values = c("not_india" = 16, "india" = 18)) +
+  #   labs(
+  #     title    = "Test-positive rate for COVID-19 in India<br>by state/union territory",
+  #     subtitle = glue("as of {format(as.Date(today), '%B %e')}"),
+  #     x        = "State/Union territory",
+  #     y        = "Test-positive rate",
+  #     caption  = glue("**\uA9 COV-IND-19 Study Group**<br>**Source:** covid19india.org<br>",
+  #                     "**Note:**<br>",
+  #                     " - 7-day range is shown.<br>",
+  #                     " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
+  #   ) +
+  #   coord_flip() +
+  #   covind19_base + 
+  #   scale_y_continuous(labels = scales::percent)
   
   # panel plot -------------
   patched <- ((cfr1_for + 
@@ -206,17 +205,17 @@ plot_fig_forest = function() {
          subtitle = NULL,
          caption = glue("**Notes:**<br>", 
                         " - 7-day average estimate with 95% confidence interval shown.<br>",
-                        " - Colored red if estimate is above {r_danger} and green if below {r_safe}.")))) / 
-    ((tp_for +
-       labs(
-         title   = "Test-positive rate",
-         subtitle = NULL,
-         caption = glue("**Notes:**<br>", 
-                        " - 7-day average estimate with range shown.<br>",
-                        " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
-       ) +
-       theme(axis.title.y = element_blank())) +
-       plot_spacer()) 
+                        " - Colored red if estimate is above {r_danger} and green if below {r_safe}."))))
+    # ((tp_for +
+    #    labs(
+    #      title   = "Test-positive rate",
+    #      subtitle = NULL,
+    #      caption = glue("**Notes:**<br>", 
+    #                     " - 7-day average estimate with range shown.<br>",
+    #                     " - Colored red if estimate is above {tpr_danger} and green if below {tpr_safe}.")
+    #    ) +
+    #    theme(axis.title.y = element_blank())) +
+    #    plot_spacer()) 
   
   ga_for <- patched +
     plot_annotation(
@@ -237,6 +236,8 @@ plot_fig_forest = function() {
   # output ----------
   return(list(
     cfr1_for = cfr1_for, r_est_for = r_est_for,
-    tp_for = tp_for, ga_for = ga_for 
+    # tp_for = tp_for, 
+    ga_for = ga_for 
   ))
+  
 }

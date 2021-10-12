@@ -16,16 +16,16 @@ generate_forecast_plots <- function(state)
 
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_1.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_2.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_3.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_3.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_4.R"))
     #source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_5a.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_7.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_8.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_9.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_8.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_9.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_x.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_10.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_11.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_14.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_10.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_11.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_14.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_15.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_tvr.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_forest.R"))
@@ -36,45 +36,45 @@ generate_forecast_plots <- function(state)
 
 	plots <- list()
 	if (state == "India") {
-		p <- plot_fig_3()
+		# p <- plot_fig_3()
 		plots[["p1"]] = plot_fig_1()
 		plots[["pvax"]] = plot_fig_vax()
-		plots[["pvax_state"]] = plot_fig_vax_state()
+		# plots[["pvax_state"]] = plot_fig_vax_state()
 		plots[["p2"]] = plot_fig_2()
-		plots[["p3a"]] = p$p3a
-		plots[["p3b"]] = p$p3b
+		# plots[["p3a"]] = p$p3a
+		# plots[["p3b"]] = p$p3b
 
     #plots[["p5a"]] = plot_fig_5a("India")
 
 		p <- plot_fig_7()
-		plots[["p7a"]] = p$p7a
+		# plots[["p7a"]] = p$p7a
 		plots[["p7b"]] = p$p7b
-		plots[["p7c"]] = p$p7c
+		# plots[["p7c"]] = p$p7c
 		plots[["p7d"]] = p$p7d
 
-		plots[["p8"]] = plot_fig_8()
-		plots[["p9"]] = plot_fig_9()
-		plots[["p10"]] = plot_fig_10()
-		plots[["p11"]] = plot_fig_11()
+		# plots[["p8"]] = plot_fig_8() # rm TESTING
+		# plots[["p9"]] = plot_fig_9() # rm TESTING
+		# plots[["p10"]] = plot_fig_10() # rm TESTING
+		# plots[["p11"]] = plot_fig_11() # rm TESTING
 
-		plots[["p14"]] = plot_fig_14()$p14
+		# plots[["p14"]] = plot_fig_14()$p14
 		pforest = plot_fig_forest()
 		plots[["pforest_cfr1"]] = pforest$cfr1_for
-		plots[["pforest_dbl"]] = pforest$dbl_for
+		# plots[["pforest_dbl"]] = pforest$dbl_for
 		plots[["pforest_r_est"]] = pforest$r_est_for
-		plots[["pforest_tp"]] = pforest$tp_for
+		# plots[["pforest_tp"]] = pforest$tp_for
 		plots[["pforest_ga"]] = pforest$ga_for
 
 	} else {
 		plots[["x"]] <- plot_fig_x(state)
 	}
 
-	plots[["p4"]] = plot_fig_4(state)
-	plots[["p15"]] = plot_fig_15(state)
+	# plots[["p4"]] = plot_fig_4(state) # tmp rm FORECAST
+	# plots[["p15"]] = plot_fig_15(state) # rm TESTING
 	plots[['ptvr']] = plot_fig_tvr(state)
-	plots[['pdbl']] = plot_fig_dbl(state)
-	plots[["pSEIR"]] = tryCatch(expr = { plot_fig_SEIR(state) },
-	  error = function(e) { message('Caught an error!'); print(e) })
+	# plots[['pdbl']] = plot_fig_dbl(state)
+	# plots[["pSEIR"]] = tryCatch(expr = { plot_fig_SEIR(state) },
+	#   error = function(e) { message('Caught an error!'); print(e) })
 	
   plots
 }
@@ -94,11 +94,12 @@ for (state in states.to.forecast) {
 	data$plots[[state]] <- generate_forecast_plots(state)
 }
 
-source(paste0(code_repo, "/app/sum_table_app.R"))
-data$gt <- India_gt_table()
-gtsave(data$gt$point_in_time, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_point_in_time20.png")))
-gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_cumulative20.png")))
-data$gt = data$gt$full20
+data$gt <- covid19india::get_metrics_tables(top20 = states.to.forecast)
+# source(paste0(code_repo, "/app/sum_table_app.R")) # rm DEPRECATED
+# data$gt <- India_gt_table()  # rm DEPRECATED
+gtsave(data$gt$point_in_time_t20, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_point_in_time20.png")))
+gtsave(data$gt$cumulative_t20, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_cumulative20.png")))
+data$gt = data$gt$full_t20
 
 save(data, file = paste0(data_repo, "/", today, "/data.RData"))
 
@@ -118,8 +119,9 @@ for (state in states.to.forecast) {
   data$plots[[state]] <- generate_forecast_plots(state)
 }
 
-source(paste0(code_repo, "/app/sum_table_app.R"))
-data$gt <- India_gt_table()
+data$gt <- covid19india::get_metrics_tables(top20 = states.to.forecast)
+# source(paste0(code_repo, "/app/sum_table_app.R"))
+# data$gt <- India_gt_table()
 gtsave(data$gt$point_in_time, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_point_in_time.png")))
 gtsave(data$gt$cumulative, filename = path.expand(paste0(data_repo, "/", today, "/COVIND_table_cumulative.png")))
 data$gt = data$gt$full
