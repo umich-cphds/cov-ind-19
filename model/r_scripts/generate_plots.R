@@ -1,7 +1,8 @@
 suppressPackageStartupMessages({
-library(tidyverse)
-library(plotly)
-library(ggtext)
+	library(tidyverse)
+	library(plotly)
+	library(ggtext)
+	library(gt)
 })
 
 today <- Sys.getenv("today")
