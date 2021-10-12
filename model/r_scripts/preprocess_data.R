@@ -37,7 +37,7 @@ jhu_files <- list(
 
 jhu_data <- reduce(imap(jhu_files,
     function(file, var) {
-        readr::read_csv(file, col_types = cols()) %>%
+        data.table::fread(file, showProgress = FALSE) %>%
         select(Country = matches("Country"), matches("[0-9]+")) %>%
         filter(Country %in% countries) %>%
         mutate(Country = as.factor(case_when(
@@ -54,8 +54,9 @@ jhu_data <- reduce(imap(jhu_files,
     }
 ), ~ left_join(.x, .y, by = c("Country", "Date"))) %>%
 ungroup() %>%
-arrange(Country, Date) %>%
-data.table::fwrite(paste0(data_repo, "/", today, "/jhu_data.csv"))
+arrange(Country, Date)
+
+data.table::fwrite(x = jhu_data, file = paste0(data_repo, "/", today, "/jhu_data.csv"))
 
 # state count data ----------
 state_count <- covid19india::get_state_counts()[
