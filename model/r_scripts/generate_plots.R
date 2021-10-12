@@ -32,7 +32,7 @@ generate_forecast_plots <- function(state)
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_dbl.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_vax.R"))
     source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_vax_state.R"))
-    source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_SEIR.R"))
+    # source(paste0(code_repo, "/model/r_scripts/plots/plot_fig_SEIR.R"))
 
 	plots <- list()
 	if (state == "India") {
