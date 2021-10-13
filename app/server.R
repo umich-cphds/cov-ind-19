@@ -89,7 +89,7 @@ shinyServer(function(input, output)
         tabs <- map2(states, codes, generate_state_tab)
 
         eval(expr(navbarPage("COVID-19 Outbreak in India",
-          observed, forecast, testing, navbarMenu("State Forecasts", !!!tabs),
+          observed, forecast, navbarMenu("State Forecasts", !!!tabs),
           metrics, references)))
 
     })
