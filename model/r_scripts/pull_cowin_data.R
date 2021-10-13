@@ -53,7 +53,7 @@ if (file.exists(paste0(data_repo, "source_data/vax/cowin_vax_latest.csv"))) {
   vax <- rbindlist(list(
     latest[, date := as.Date(date)],
     vax[, raw_timestamp := as.POSIXct(raw_timestamp)]
-  ), use.names = TRUE)
+  ), use.names = TRUE, fill = TRUE)
   }
 }
 setcolorder(vax, neworder = c("place", "date"))
