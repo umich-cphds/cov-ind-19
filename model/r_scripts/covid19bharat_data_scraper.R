@@ -2,6 +2,9 @@
 library(tidyverse)
 library(httr)
 
+data_repo = Sys.getenv("data_repo")
+data_file = paste0(data_repo, "/source_data/", "count_test_vax_latest.csv")
+
 path_historical = "https://data.covid19bharat.org/v4/min/timeseries.min.json"
 path_current = "https://data.covid19bharat.org/v4/min/data.min.json"
 
@@ -34,7 +37,8 @@ raw_current =
   unlist() %>% 
   enframe() %>% 
   separate(name, into = paste0("x", 1:10)) %>% 
-  filter((x2 %in% c("total") & x3 %in% c("tested", "confirmed", "recovered", "deceased", "vaccinated1", "vaccinated2")) | (x2 == "meta" & x3 == "date")) %>% 
+  filter((x2 %in% c("total") & x3 %in% c("tested", "confirmed", "recovered", 
+    "deceased", "vaccinated1", "vaccinated2")) | (x2 == "meta" & x3 == "date")) %>% 
   select(x1, x3, value) %>% 
   mutate(place = tolower(x1)) %>% 
   select(-x1) %>% 
@@ -50,3 +54,4 @@ data =
   raw_historical %>% 
   bind_rows(raw_current)
 
+write.csv(data, file = data_file)
