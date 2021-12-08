@@ -1,6 +1,7 @@
-
-library(tidyverse)
-library(httr)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(httr)
+})
 
 data_repo = Sys.getenv("data_repo")
 data_file = paste0(data_repo, "/source_data/", "count_test_vax_latest.csv")
@@ -11,7 +12,7 @@ path_current = "https://data.covid19bharat.org/v4/min/data.min.json"
 raw_historical = content(GET(path_historical))
 raw_current = content(GET(path_current))
 
-today = Sys.Date()
+today = Sys.getenv("today")
 
 raw_historical = 
   path_historical %>% 

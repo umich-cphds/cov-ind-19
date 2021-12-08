@@ -30,6 +30,7 @@ module load Rtidyverse/4.1.0
 
 scraper=$(sbatch $code_repo/model/slurm_scripts/scraper.slurm | awk '{print $NF}')
 cowin=$(sbatch $code_repo/model/slurm_scripts/pull_cowin_data.slurm | awk '{print $NF}')
-sbatch --dependency=afterok:$scraper:$cowin $code_repo/model/slurm_scripts/commitscraper.slurm
+bharat=$(sbatch $code_repo/model/slurm_scripts/covid19bharat_data_scraper.slurm | awk '{print $NF}')
+sbatch --dependency=afterok:$scraper:$cowin:$bharat $code_repo/model/slurm_scripts/commitscraper.slurm
 
 sbatch --begin=now+24hour $code_repo/model/slurm_scripts/master_india.slurm
