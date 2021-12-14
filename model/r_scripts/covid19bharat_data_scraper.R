@@ -1,6 +1,7 @@
 suppressPackageStartupMessages({
   library(tidyverse)
   library(httr)
+  library(data.table)
 })
 
 data_repo = Sys.getenv("data_repo")
