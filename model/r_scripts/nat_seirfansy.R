@@ -8,12 +8,13 @@ suppressPackageStartupMessages({
   library(janitor)
   library(SEIRfansy)
   library(covid19india)
+  library(glue)
+  library(data.table)
 })
 
 f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
-sapply(paste0("../model/r_scripts/functions/", f), source)
-
-# sapply(paste0("functions/", f), source)
+# sapply(paste0("../model/r_scripts/functions/", f), source)
+sapply(paste0("functions/", f), source)
 
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
@@ -132,6 +133,63 @@ tryCatch(
     
     write_tsv(impo, paste0(wd, "/important_", state, "_", format(max_date, "%Y%m%d"), ".txt"))
     write_tsv(impo, paste0(wd, "/important_", state,"_latest.txt"))
+    
+    # quick plots ----------
+    case_plot <- rbindlist(list(
+      pred_clean[section == "positive_daily_reported"][, .(date, cases = mean, pred)][, scenario := fifelse(pred == 1, "prediction", "training")][],
+      data[, .(date, cases = Confirmed, scenario = "observed")]
+    ), fill = TRUE, use.names = TRUE)[date <= (data[, max(date)] + 30)] |>
+      ggplot(aes(x = date, y = cases, color = scenario)) +
+      geom_line(size = 1) +
+      scale_y_continuous(labels = scales::comma) +
+      scale_color_brewer(palette = "Set2") +
+      labs(
+        title   = "SEIRfansy predicted case counts in India",
+        subtitle = glue("{data[, min(date)]} to {data[, max(date)]}; predicting 30 days through {data[, max(date)] + 30}"),
+        x       = "Date",
+        y       = "Daily reported case count",
+        caption = glue("Initial values: f = {f_val}; alpha_u = {alpha_u_val}")
+      ) +
+      theme_classic() +
+      theme(
+        plot.caption = element_text(hjust = 0),
+        plot.title = element_text(face = "bold"),
+        legend.title = element_blank(),
+        legend.position = "top"
+      )
+    
+    ggsave(
+      filename = paste0(wd, "/seirfansy_national_cases_latest.pdf"),
+      plot = case_plot,
+      width = 7, height = 5, device = cairo_pdf)
+    
+    death_plot <- rbindlist(list(
+      pred_clean[section == "death_daily_reported"][, .(date, deaths = mean, pred)][, scenario := fifelse(pred == 1, "prediction", "training")][],
+      data[, .(date, deaths = Deceased, scenario = "observed")]
+    ), fill = TRUE, use.names = TRUE)[date <= (data[, max(date)] + 30)] |>
+      ggplot(aes(x = date, y = deaths, color = scenario)) +
+      geom_line(size = 1) +
+      scale_y_continuous(labels = scales::comma) +
+      scale_color_brewer(palette = "Set2") +
+      labs(
+        title   = "SEIRfansy predicted death counts in India",
+        subtitle = glue("{data[, min(date)]} to {data[, max(date)]}; predicting 30 days through {data[, max(date)] + 30}"),
+        x       = "Date",
+        y       = "Daily reported death count",
+        caption = glue("Initial values: f = {f_val}; alpha_u = {alpha_u_val}")
+      ) +
+      theme_classic() +
+      theme(
+        plot.caption = element_text(hjust = 0),
+        plot.title = element_text(face = "bold"),
+        legend.title = element_blank(),
+        legend.position = "top"
+      )
+    ggsave(
+      filename = paste0(wd, "~/Downloads/seirfansy_national_deaths_latest.pdf"),
+      plot = death_plot,
+      width = 7, height = 5, device = cairo_pdf)
+    
     message("Successfully executed the call.")
   },
   error = function(e){
