@@ -38,7 +38,7 @@ dd <- latest_vax_data[place %in% c("Dadra and Nagar Haveli", "Daman and Diu")][,
 india <- latest_vax_data[, lapply(.SD, sum, na.rm = TRUE), .SDcols = c("total_doses", "first_dose", "second_dose")][, place := "India"][]
 
 vax <- rbindlist(list(
-  latest_vax_data[!(place %in% c("Dadra and Nagar Haveli", "Daman and Diu"))],
+  latest_vax_data[!(place %in% c("Dadra and Nagar Haveli", "Daman and Diu"))][, precaution_dose := NULL],
   dd,
   india
 ), use.names = TRUE)[, `:=` (
