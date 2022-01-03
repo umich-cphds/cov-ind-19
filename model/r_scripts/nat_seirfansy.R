@@ -11,13 +11,17 @@ suppressPackageStartupMessages({
 })
 
 f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
-sapply(paste0("functions/", f), source)
+sapply(paste0("../model/r_scripts/functions/", f), source)
+
+# sapply(paste0("functions/", f), source)
 
 # specs -----------
-state    <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
-t_pred   <- 50 # number of predicted days
-plt      <- FALSE
-save_plt <- FALSE
+state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
+t_pred      <- 50 # number of predicted days
+alpha_u_val <- 0.5
+f_val       <- 0.15  # false positivity rate
+plt         <- FALSE
+save_plt    <- FALSE
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
@@ -31,7 +35,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 }
 
 # auto-specs -----------
-state_name <- covid19india::pop %>% dplyr::filter(abbrev == state) %>% pull(place)
+state_name <- covid19india::pop[abbrev == state, place]
 
 data <- get_nat_counts()[, .(date, Confirmed = daily_cases, Recovered = daily_recovered, Deceased = daily_deaths)][]
 
@@ -51,7 +55,7 @@ tryCatch(
   expr = {
     # predict -----------
     result    <- SEIRfansy.predict(
-      data            = abs(data %>% dplyr::select(-date)),
+      data            = abs(data[, !c("date")]),
       init_pars       = NULL,
       data_init       = data_initial,
       T_predict       = t_pred,
@@ -64,8 +68,8 @@ tryCatch(
       period_start    = phases,
       opt_num         = opt_num,
       auto.initialize = T,
-      alpha_u         = 0.5,
-      f               = 0.15,
+      alpha_u         = alpha_u_val,
+      f               = f_val,
       plot            = plt,
       save_plots      = save_plt
     )
