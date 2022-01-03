@@ -4,9 +4,9 @@ get_init <- function(data) {
     filter(date < min_date) %>%
     dplyr::select(-date) %>%
     summarize(
-      Confirmed = sum(Confirmed),
-      Recovered = sum(Recovered),
-      Deceased  = sum(Deceased)
+      Confirmed = sum(Confirmed, na.rm = TRUE),
+      Recovered = sum(Recovered, na.rm = TRUE),
+      Deceased  = sum(Deceased, na.rm = TRUE)
     ) %>%
     as.numeric(as.vector(.))
   
