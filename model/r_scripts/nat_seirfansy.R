@@ -19,8 +19,8 @@ sapply(paste0("functions/", f), source)
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
 t_pred      <- 50 # number of predicted days
-alpha_u_val <- 0.5
-f_val       <- 0.15  # false positivity rate
+alpha_u_val <- 1
+f_val       <- 0  # false positivity rate
 plt         <- FALSE
 save_plt    <- FALSE
 
@@ -90,7 +90,8 @@ tryCatch(
                                    state     = state_name,
                                    obs_days  = def_obs_days,
                                    obs_dates = obs_dates,
-                                   t_pred    = t_pred)
+                                   t_pred    = t_pred) |>
+      as.data.table()
     
     write_tsv(pred_clean, paste0(wd, "/prediction_", state, "_", format(max_date, "%Y%m%d"), ".txt"))
     write_tsv(as_tibble(result$mcmc_pars, .name_repair = "unique"), paste0(wd, "/prediction_pars_", state, "_", format(max_date, "%Y%m%d"),".txt"))
@@ -186,7 +187,7 @@ tryCatch(
         legend.position = "top"
       )
     ggsave(
-      filename = paste0(wd, "~/Downloads/seirfansy_national_deaths_latest.pdf"),
+      filename = paste0(wd, "/seirfansy_national_deaths_latest.pdf"),
       plot = death_plot,
       width = 7, height = 5, device = cairo_pdf)
     
