@@ -19,8 +19,8 @@ sapply(paste0("functions/", f), source)
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
 t_pred      <- 50 # number of predicted days
-alpha_u_val <- 1
-f_val       <- 0  # false positivity rate
+alpha_u_val <- 0.5
+f_val       <- 0.15  # false positivity rate
 plt         <- FALSE
 save_plt    <- FALSE
 
@@ -52,8 +52,8 @@ mCFR         <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recover
 phases       <- get_phase(start_date = min_date, end_date = max_date)
 
 # model ----------
-tryCatch(
-  expr = {
+# tryCatch(
+#   expr = {
     # predict -----------
     result    <- SEIRfansy.predict(
       data            = abs(data[, !c("date")]),
@@ -76,7 +76,7 @@ tryCatch(
     )
     
     # directory ----------
-    wd <- paste0(data_repo, "/", max_date, "/seirfansy")
+    wd <- paste0(data_repo, "/source_data/seir")
     if (!dir.exists(wd)) {
       dir.create(wd, recursive = TRUE)
       message("Creating ", wd)
@@ -190,11 +190,10 @@ tryCatch(
       filename = paste0(wd, "/seirfansy_national_deaths_latest.pdf"),
       plot = death_plot,
       width = 7, height = 5, device = cairo_pdf)
-    
-    message("Successfully executed the call.")
-  },
-  error = function(e){
-    message('Caught an error!')
-    print(e)
-  }
-)
+
+#   },
+#   error = function(e){
+#     message('Caught an error!')
+#     print(e)
+#   }
+# )
