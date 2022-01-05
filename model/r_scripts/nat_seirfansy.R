@@ -19,7 +19,7 @@ sapply(paste0("functions/", f), source)
 
 # g <- list.files("../model/r_scripts/seir")
 g <- list.files("seir/")
-sapply(paste0("../model/r_scripts/seir/", g), source)
+sapply(paste0("../r_scripts/seir/", g), source)
 
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
