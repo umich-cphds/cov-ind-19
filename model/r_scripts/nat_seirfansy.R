@@ -32,8 +32,8 @@ save_plt    <- FALSE
 
 # Set variables based on testing or production
 if ( Sys.getenv("production") == "TRUE" ) {
-  n_iter    <- 3e6
-  burn_in   <- 3e6
+  n_iter    <- 3e5
+  burn_in   <- 3e5
   opt_num   <- 200
 } else {
   n_iter    <- 1e3 #default 1e5
