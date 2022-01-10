@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(covid19india)
   library(glue)
   library(data.table)
+  library(cli)
 })
 
 f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
@@ -63,7 +64,7 @@ result <- model_predictR(
   init_pars       = NULL,
   data_init       = data_initial,
   T_predict       = t_pred,
-  D_e             = 3,
+  De              = 3,
   pi              = rep(1, t_pred),
   niter           = n_iter,
   BurnIn          = burn_in,
@@ -196,5 +197,58 @@ ggsave(
   filename = paste0(wd, "/seirfansy_national_deaths_latest.pdf"),
   plot = death_plot,
   width = 7, height = 5, device = cairo_pdf)
+
+case_bar_plot <- pred_clean[section %in% c("unreported_daily", "positive_daily_reported") & pred == 1][
+  section == "unreported_daily", reported := "Unreported"][
+    section == "positive_daily_reported", reported := "Reported"][
+      , reported := factor(reported, c("Unreported", "Reported"))][] |>
+  ggplot(aes(x = date, y = mean, fill = reported)) +
+  geom_bar(stat = "identity") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_x_date(date_labels = "%B %e") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    x = "Date",
+    y = "Daily counts",
+    title = "Predicted daily reported and unreported COVID-19 case counts"
+  ) +
+  theme_classic() +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+ggsave(
+  filename = paste0(wd, "/seirfansy_national_cases_bar_latest.pdf"),
+  plot = case_bar_plot,
+  width = 7, height = 5, device = cairo_pdf)
+
+death_dat <- pred_clean[section %in% c("death_unreported", "death_daily_reported") & pred == 1][section == "death_daily_reported", daily := mean][section == "death_unreported", daily := mean - shift(mean)][]
+
+death_bar_plot <- death_dat[
+  section == "death_unreported", reported := "Unreported"][
+    section == "death_daily_reported", reported := "Reported"][
+      , reported := factor(reported, c("Unreported", "Reported"))][] |>
+  ggplot(aes(x = date, y = daily, fill = reported)) +
+  geom_bar(stat = "identity") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_x_date(date_labels = "%B %e") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    x = "Date",
+    y = "Daily counts",
+    title = "Predicted daily reported and unreported COVID-19 death counts"
+  ) +
+  theme_classic() +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+ggsave(
+  filename = paste0(wd, "/seirfansy_national_deaths_bar_latest.pdf"),
+  plot = case_plot,
+  width = 7, height = 5, device = cairo_pdf)
+
 
 cli::cli_alert_success("*beep boop* Done!!!")

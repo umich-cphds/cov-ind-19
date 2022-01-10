@@ -26,6 +26,7 @@ model_initializeR <- function(data, data_init, init_pars, model = "Multinomial",
   fix_pars = c(alpha_p = alpha_p, alpha_u = alpha_u, beta_1 = beta_1, beta_2 = beta_2, delta_1 = delta_1,
                delta_2 = delta_2, lambda = lambda, mu = mu, mu_c = mu_c, De = De, Dr = Dr, f = f, N = N)
 
+  cli::cli_alert_info("Incubation period: {De} days")
   ## Initializing parameters
 
   ## Initial states
