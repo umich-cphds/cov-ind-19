@@ -15,8 +15,8 @@ suppressPackageStartupMessages({
 data_repo = Sys.getenv("data_repo")
 data_repo = paste0(data_repo, "source_data/")
 
-subfolder_package = "package-data/raw/"
-subfolder_app = "package-data/processed/"
+subfolder_package = "/package-data/raw/"
+subfolder_app = "/package-data/processed/"
 
 # load data -----------
 state_count_data <- get_state_counts()
