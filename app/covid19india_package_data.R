@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 })
 
 data_repo = Sys.getenv("data_repo")
-data_repo = paste0(data_repo, "source_data/")
+data_repo = paste0(data_repo, "/source_data/")
 
 subfolder_package = "/package-data/raw/"
 subfolder_app = "/package-data/processed/"
@@ -484,7 +484,7 @@ write_r_forest()
 
 
 write_state_cumul_perc_vax = function() {
-  
+  forecast = "tt"
   vax_dat <- vax_data[abbrev == forecast]
   setnames(vax_dat, old = "date", new = "Day")
   
