@@ -1,4 +1,4 @@
-clean_prediction <- function(x, state, obs_days, t_pred) {
+clean_prediction <- function(x, state, obs_days, obs_dates, t_pred) {
   
   vals <- c(
     "susceptible",
@@ -21,7 +21,7 @@ clean_prediction <- function(x, state, obs_days, t_pred) {
     mutate(
       state   = state,
       section = rep(vals, each = obs_days + t_pred),
-      date    = rep(as.Date(min_date:(min_date + (obs_days + t_pred - 1)), origin = "1970-01-01"), 14),
+      date    = rep(c(obs_dates, as.Date((max_date + 1):(max_date + t_pred), origin = "1970-01-01")), 14),
       pred    = rep(c(rep(0, obs_days), rep(1, t_pred)), 14)
     ) %>%
     dplyr::select(state, section, date, pred, everything()) %>%
