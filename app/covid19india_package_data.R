@@ -25,6 +25,9 @@ fwrite(state_count_data, file = paste0(data_repo, subfolder_package, "state_coun
 all_the_data     <- get_all_data()[, .(place, abbrev, date, r = r_est, lower = r_lower, upper = r_upper)]
 fwrite(all_the_data, file = paste0(data_repo, subfolder_package, "all_the_data.csv"))
 
+everything     <- get_all_data()
+fwrite(everything, file = paste0(data_repo, subfolder_package, "everything.csv"))
+
 nat_count_data   <- get_nat_counts()
 fwrite(nat_count_data, file = paste0(data_repo, subfolder_package, "nat_count_data.csv"))
 
