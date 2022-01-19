@@ -73,7 +73,7 @@ par_initializeR <- function(data,model="Multinomial", init_pars, period_start, i
     passed <- FALSE
     while (!passed) {
       if(is.null(init_pars)){
-        initial_param<-c(runif(n_period,0.1,1),rep(0.2,times=n_period))
+        initial_param<-c(runif(n_period,0.1,0.5),rep(0.2,times=n_period))
         }
      else{
        initial_param<-init_pars

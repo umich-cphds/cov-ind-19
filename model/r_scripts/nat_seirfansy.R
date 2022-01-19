@@ -35,7 +35,7 @@ save_plt    <- FALSE
 if ( Sys.getenv("production") == "TRUE" ) {
   n_iter    <- 3e5
   burn_in   <- 3e5
-  opt_num   <- 200
+  opt_num   <- 300
 } else {
   n_iter    <- 1e3 #default 1e5
   burn_in   <- 1e2 #default 1e5
@@ -55,7 +55,8 @@ N          <- covid19india::pop %>% filter(abbrev == state) %>% pull(population)
 # prepare ----------
 data_initial <- get_init(data)
 data         <- data[date >= min_date]
-mCFR         <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recovered), 1)
+mCFR         <- data[(.N-13):.N][, lapply(.SD, sum), .SDcols = c("Recovered", "Deceased")][, mCFR := Deceased / (Deceased + Recovered)][, mCFR][]
+# mCFR         <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recovered), 1)
 phases       <- get_phase(start_date = min_date, end_date = max_date)
 
 # model ----------
@@ -64,19 +65,19 @@ result <- model_predictR(
   init_pars       = NULL,
   data_init       = data_initial,
   T_predict       = t_pred,
-  De              = 3,
-  pi              = rep(1, t_pred),
   niter           = n_iter,
   BurnIn          = burn_in,
   model           = "Multinomial",
   N               = N,
   lambda          = 1/(69.416 * 365),
+  De              = 3,
+  Dr              = 7,
   mu              = 1/(69.416 * 365),
   period_start    = phases,
   opt_num         = opt_num,
   auto.initialize = TRUE,
-  alpha_u         = alpha_u_val,
-  f               = f_val,
+  alpha_u         = 0.5,
+  f               = 0.15,
   plot            = plt,
   save_plots      = save_plt
   )

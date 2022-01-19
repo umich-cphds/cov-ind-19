@@ -39,7 +39,7 @@
 #'
 #' @examples
 
-model_predictR <- function(data, data_init, init_pars = NULL, N, plot = TRUE, T_predict,pi, period_start, estimate = TRUE,
+model_predictR <- function(data, data_init, init_pars = NULL, N, plot = TRUE, T_predict, period_start, estimate = TRUE,
                            pars = NULL, data_test = NULL, auto.initialize = TRUE, ... ){
   if(estimate == FALSE && is.null(pars)) stop("Either supply parameters or set estimate = TRUE")
   if(estimate == FALSE){
@@ -64,9 +64,8 @@ model_predictR <- function(data, data_init, init_pars = NULL, N, plot = TRUE, T_
   cat("Predicting ... ", fill = T)
   pboptions(type="txt", char="|")
   prediction <- pbapply(mcmc_pars[ , 1:(2*length(period_start))], 1, function(x)
-  model_stochastic_simulateR(init_obs_current = init_state_num, init_obs_daily = data_init[4:6], period_start = period_start,
-                               timestrain= (1:nrow(data)),timestest=((nrow(data)+1):(nrow(data)+T_predict)),pi_fn=pi, 
-                               pars = x, fix_pars = fix_pars, ...))
+    model_stochastic_simulateR(init_obs_current = init_state_num, init_obs_daily = data_init[4:6], period_start = period_start,
+                               times = 1:(nrow(data)+T_predict), pars = x, fix_pars = fix_pars, ...))
   Result = list(prediction = prediction)
 
   if(estimate == TRUE)
