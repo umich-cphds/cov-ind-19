@@ -1,26 +1,29 @@
-library(dplyr)
-library(arm)
-library(data.table)
-source("par_initializeR.r")
-source("model_estimateR.r")
-source("model_initializeR.r")
-source("mcmc_performR.r")
-source("model_deterministic_simulateR.r")
-source("R0_calculateR.r")
-source("model_predictR.r")
-source("model_stochastic_simulateR.r")
-source("model_plotR.r")
-source("get_init.R")
-source("get_phase.R")
-source("get_impo.R")
-source("clean_prediction.R")
+# looks for `data_repo`, `code_repo`, and `production` in environment
+data_repo <- Sys.getenv("data_repo")
+code_repo <- Sys.getenv("code_repo")
 
-#install.packages("remotes")
-#remotes::install_gitlab("maxsal/ally")
-ally::libri(tidyverse, janitor, arm, covid19india, glue, data.table, cli)
+setwd(paste0(code_repo, "/model/r_scripts/"))
 
-#phases = c(as.Date("2020-12-09"),as.Date("2021-01-01"), as.Date("2021-01-16"),
-#as.Date("2021-02-01"),as.Date("2021-02-16"), as.Date("2021-03-01"),as.Date("2021-03-12"))
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(janitor)
+  library(arm)
+  library(covid19india)
+  library(glue)
+  library(data.table)
+  library(cli)
+  library(patchwork)
+})
+
+f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
+# sapply(paste0("../model/r_scripts/functions/", f), source)
+sapply(paste0("functions/", f), source)
+
+# g <- list.files("../model/r_scripts/seir")
+g <- list.files("seir/")
+# sapply(paste0("../model/r_scripts/seir/", g), source)
+sapply(paste0("../r_scripts/seir/", g), source)
+
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
 t_pred      <- 50 # number of predicted days
@@ -28,17 +31,16 @@ alpha_u_val <- 0.3
 f_val       <- 0.15  # false positivity rate
 plt         <- FALSE
 save_plt    <- FALSE
-production  <- TRUE
 
 # Set variables based on testing or production
-if (production == TRUE) {
+if ( Sys.getenv("production") == "TRUE" ) {
   n_iter    <- 3e5
   burn_in   <- 3e5
-  opt_num   <- 200
+  opt_num   <- 300
 } else {
-  n_iter    <- 5e2 #default 1e5
-  burn_in   <- 5e2 #default 1e5
-  opt_num   <- 20   #default 200
+  n_iter    <- 1e3 #default 1e5
+  burn_in   <- 1e2 #default 1e5
+  opt_num   <- 20  #default 200
 }
 
 # auto-specs -----------
@@ -83,8 +85,14 @@ result <- model_predictR(
   plot            = plt,
   save_plots      = save_plt)
 
-# saveRDS(Result,"Result8.rds")
+# directory ----------
+wd <- paste0(data_repo, "/source_data/seir")
+if (!dir.exists(wd)) {
+  dir.create(wd, recursive = TRUE)
+  message("Creating ", wd)
+}
 
+# output -----------
 def_obs_days <- length(data[, date])
 obs_dates    <- data[, date]
 
@@ -95,7 +103,49 @@ pred_clean <- clean_prediction(result$prediction,
                                t_pred    = t_pred) |>
   as.data.table()
 
-fwrite(pred_clean, "~/Downloads/seir_poisson_d10.135_t8_20220128.csv")
+write_tsv(pred_clean, paste0(wd, "/prediction_", state, "_", format(max_date, "%Y%m%d"), ".txt"))
+write_tsv(as_tibble(result$mcmc_pars, .name_repair = "unique"), paste0(wd, "/prediction_pars_", state, "_", format(max_date, "%Y%m%d"),".txt"))
+
+write_tsv(pred_clean, paste0(wd, "/prediction_", state, "_latest.txt"))
+write_tsv(as_tibble(result$mcmc_pars, .name_repair = "unique"), paste0(wd, "/prediction_pars_", state, "_latest.txt"))
+
+# extract underreporting ----------
+p_pred <- pred_clean %>%
+  filter(section == "positive_reported") %>%
+  dplyr::select(-(1:4)) %>%
+  rowMeans()
+
+r_pred <- pred_clean %>%
+  filter(section == "recovered_reported") %>%
+  dplyr::select(-(1:4)) %>%
+  rowMeans()
+
+d_pred <- pred_clean %>%
+  filter(section == "death_reported") %>%
+  dplyr::select(-(1:4)) %>%
+  rowMeans()
+
+t_d <- r_pred + d_pred + p_pred
+total_pred <- rowSums(matrix(rowMeans(result$prediction), nrow = obs_days + t_pred)[, 3:9])
+UF_p <- total_pred / t_d
+
+d_u <- pred_clean %>%
+  filter(section == "death_unreported") %>%
+  dplyr::select(-(1:4)) %>%
+  rowMeans()
+total_death <- d_u + d_pred
+UF_d <- total_death / d_pred
+ifr <- total_death / total_pred
+
+impo <- tibble(
+  "underreporting_cases"  = UF_p[obs_days + 1],
+  "underreporting_deaths" = UF_d[obs_days + 1],
+  "ifr"                   = ifr[obs_days + 1]
+)
+
+write_tsv(impo, paste0(wd, "/important_", state, "_", format(max_date, "%Y%m%d"), ".txt"))
+write_tsv(impo, paste0(wd, "/important_", state,"_latest.txt"))
+
 
 # quick plots ----------
 case_plot <- rbindlist(list(
@@ -205,10 +255,8 @@ death_bar_plot <- death_dat[
 #   plot = case_plot,
 #   width = 7, height = 5, device = cairo_pdf)
 
-library(patchwork)
-
 patch <- (case_plot + death_plot) /
   (case_bar_plot + death_bar_plot)
-ggsave(filename = "~/Downloads/seir_poisson_d10.135_t8_20220128.pdf",
+ggsave(filename = paste0(wd, "/seir_", state, "_prediction_panel_", format(max_date, "%Y%m%d"), ".pdf"),
        plot = patch,
        height = 8, width = 15, device = cairo_pdf)
