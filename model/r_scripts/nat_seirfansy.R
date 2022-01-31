@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
   library(glue)
   library(data.table)
   library(cli)
+  library(patchwork)
 })
 
 f <- c("clean_prediction.R", "get_impo.R", "get_init.R", "get_phase.R")
@@ -26,7 +27,7 @@ sapply(paste0("../r_scripts/seir/", g), source)
 # specs -----------
 state       <- "tt" # as abbreviation; `tt` is the abbreviation for india in the data
 t_pred      <- 50 # number of predicted days
-alpha_u_val <- 0.5
+alpha_u_val <- 0.3
 f_val       <- 0.15  # false positivity rate
 plt         <- FALSE
 save_plt    <- FALSE
@@ -35,7 +36,7 @@ save_plt    <- FALSE
 if ( Sys.getenv("production") == "TRUE" ) {
   n_iter    <- 3e5
   burn_in   <- 3e5
-  opt_num   <- 200
+  opt_num   <- 300
 } else {
   n_iter    <- 1e3 #default 1e5
   burn_in   <- 1e2 #default 1e5
@@ -45,7 +46,7 @@ if ( Sys.getenv("production") == "TRUE" ) {
 # auto-specs -----------
 state_name <- covid19india::pop[abbrev == state, place]
 
-data <- get_nat_counts()[, .(date, Confirmed = daily_cases, Recovered = daily_recovered, Deceased = daily_deaths)][]
+data <- get_nat_counts()[, .(date, Confirmed = daily_cases, Recovered = daily_recovered, Deceased = daily_deaths)]
 
 max_date   <- data[, max(date)]
 min_date   <- as.Date(max_date - 99)
@@ -55,31 +56,34 @@ N          <- covid19india::pop %>% filter(abbrev == state) %>% pull(population)
 # prepare ----------
 data_initial <- get_init(data)
 data         <- data[date >= min_date]
-mCFR         <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recovered), 1)
+mCFR         <- data[(.N-55):.N][, lapply(.SD, sum), .SDcols = c("Recovered", "Deceased")][, mCFR := Deceased / (Deceased + Recovered)][, mCFR][]
+# mCFR         <- data[(.N-20):.N][, lapply(.SD, sum), .SDcols = c("Recovered", "Deceased")][, mCFR := Deceased / (Deceased + Recovered)][, mCFR][]
+# mCFR         <- tail(cumsum(data$Deceased) / cumsum(data$Deceased + data$Recovered), 1)
 phases       <- get_phase(start_date = min_date, end_date = max_date)
 
-# model ----------
+
 result <- model_predictR(
   data            = abs(data[, !c("date")]),
   init_pars       = NULL,
   data_init       = data_initial,
-  T_predict       = t_pred,
-  De              = 3,
-  pi              = rep(1, t_pred),
+  T_predict       = t_pred, 
   niter           = n_iter,
   BurnIn          = burn_in,
-  model           = "Multinomial",
-  N               = N,
-  lambda          = 1/(69.416 * 365),
+  model           = "Poisson",
+  mCFR            = mCFR,
+  N               = N, 
+  lambda          = 1/(69.416 * 365), 
+  De              = 3,
+  Dr              = 7,
   mu              = 1/(69.416 * 365),
+  delta_1         = 0.135,
   period_start    = phases,
   opt_num         = opt_num,
   auto.initialize = TRUE,
   alpha_u         = alpha_u_val,
   f               = f_val,
   plot            = plt,
-  save_plots      = save_plt
-  )
+  save_plots      = save_plt)
 
 # directory ----------
 wd <- paste0(data_repo, "/source_data/seir")
@@ -88,7 +92,7 @@ if (!dir.exists(wd)) {
   message("Creating ", wd)
 }
 
-# output ----------
+# output -----------
 def_obs_days <- length(data[, date])
 obs_dates    <- data[, date]
 
@@ -142,6 +146,7 @@ impo <- tibble(
 write_tsv(impo, paste0(wd, "/important_", state, "_", format(max_date, "%Y%m%d"), ".txt"))
 write_tsv(impo, paste0(wd, "/important_", state,"_latest.txt"))
 
+
 # quick plots ----------
 case_plot <- rbindlist(list(
   pred_clean[section == "positive_daily_reported"][, .(date, cases = mean, pred)][, scenario := fifelse(pred == 1, "prediction", "training")][],
@@ -166,10 +171,10 @@ case_plot <- rbindlist(list(
     legend.position = "top"
   )
 
-ggsave(
-  filename = paste0(wd, "/seirfansy_national_cases_latest.pdf"),
-  plot = case_plot,
-  width = 7, height = 5, device = cairo_pdf)
+# ggsave(
+#   filename = paste0(wd, "/seirfansy_national_cases_latest.pdf"),
+#   plot = case_plot,
+#   width = 7, height = 5, device = cairo_pdf)
 
 death_plot <- rbindlist(list(
   pred_clean[section == "death_daily_reported"][, .(date, deaths = mean, pred)][, scenario := fifelse(pred == 1, "prediction", "training")][],
@@ -193,10 +198,10 @@ death_plot <- rbindlist(list(
     legend.title = element_blank(),
     legend.position = "top"
   )
-ggsave(
-  filename = paste0(wd, "/seirfansy_national_deaths_latest.pdf"),
-  plot = death_plot,
-  width = 7, height = 5, device = cairo_pdf)
+# ggsave(
+#   filename = paste0(wd, "/seirfansy_national_deaths_latest.pdf"),
+#   plot = death_plot,
+#   width = 7, height = 5, device = cairo_pdf)
 
 case_bar_plot <- pred_clean[section %in% c("unreported_daily", "positive_daily_reported") & pred == 1][
   section == "unreported_daily", reported := "Unreported"][
@@ -218,10 +223,10 @@ case_bar_plot <- pred_clean[section %in% c("unreported_daily", "positive_daily_r
     legend.title = element_blank(),
     plot.title = element_text(face = "bold")
   )
-ggsave(
-  filename = paste0(wd, "/seirfansy_national_cases_bar_latest.pdf"),
-  plot = case_bar_plot,
-  width = 7, height = 5, device = cairo_pdf)
+# ggsave(
+#   filename = paste0(wd, "/seirfansy_national_cases_bar_latest.pdf"),
+#   plot = case_bar_plot,
+#   width = 7, height = 5, device = cairo_pdf)
 
 death_dat <- pred_clean[section %in% c("death_unreported", "death_daily_reported") & pred == 1][section == "death_daily_reported", daily := mean][section == "death_unreported", daily := mean - shift(mean)][]
 
@@ -245,10 +250,13 @@ death_bar_plot <- death_dat[
     legend.title = element_blank(),
     plot.title = element_text(face = "bold")
   )
-ggsave(
-  filename = paste0(wd, "/seirfansy_national_deaths_bar_latest.pdf"),
-  plot = case_plot,
-  width = 7, height = 5, device = cairo_pdf)
+# ggsave(
+#   filename = paste0(wd, "/seirfansy_national_deaths_bar_latest.pdf"),
+#   plot = case_plot,
+#   width = 7, height = 5, device = cairo_pdf)
 
-
-cli::cli_alert_success("*beep boop* Done!!!")
+patch <- (case_plot + death_plot) /
+  (case_bar_plot + death_bar_plot)
+ggsave(filename = paste0(wd, "/seir_", state, "_prediction_panel_", format(max_date, "%Y%m%d"), ".pdf"),
+       plot = patch,
+       height = 8, width = 15, device = cairo_pdf)

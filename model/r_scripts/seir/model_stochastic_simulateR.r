@@ -1,4 +1,4 @@
-model_stochastic_simulateR <- function(init_obs_current, init_obs_daily, period_start, pi_fn,timestrain,timestest, pars, fix_pars, T_predict, ...){
+model_stochastic_simulateR <- function(init_obs_current, init_obs_daily, period_start, times, pars, fix_pars, T_predict, ...){
   stochastic_sampleR <- function(stage_pars, fix_pars, old_values) {
     ## stage pars
     b = stage_pars[1]
@@ -28,6 +28,7 @@ model_stochastic_simulateR <- function(init_obs_current, init_obs_daily, period_
     DU = old_values[8]
     DR = old_values[9]
     ##
+    
     pS_vec <- c( b * (alpha_p * P + alpha_u * U + F) / N , mu, 1 -  b * (alpha_p * P + alpha_u * U + F) / N - mu)
     sample_S <- rmultinom(1, size = S, prob = pS_vec)
     ##
@@ -73,7 +74,7 @@ model_stochastic_simulateR <- function(init_obs_current, init_obs_daily, period_
     sum(i >= phase)
   }
 
-  for(i in 1:length(timestrain)){
+  for(i in 1:length(times)){
     stage_pars <- c(b = pars[which.period(i)], r = pars[n_period + which.period(i)])
     if(i == 1) {
       old_values <- init_obs_current
@@ -85,12 +86,5 @@ model_stochastic_simulateR <- function(init_obs_current, init_obs_daily, period_
     }
   }
   
-  for(j in 1:length(timestest)){
-    stage_pars <- c(b=pars[n_period]*pi_fn[j], r = pars[2*n_period])
-    now_values <- stochastic_sampleR(stage_pars = stage_pars, fix_pars = fix_pars, old_values = old_values)
-    results = rbind(results, now_values)
-    old_values <- now_values[1:9]
-    }
-
   return(results)
 }
