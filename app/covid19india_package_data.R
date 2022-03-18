@@ -589,7 +589,6 @@ write_r_forest()
 
 write_state_cumul_perc_vax = function() {
   vax_dat <- vax_data
-  setnames(vax_dat, old = "date", new = "Day")
   vax_india <- melt(vax_dat[,.(place, Day, pct_one_dose, pct_two_doses)], id.vars = c("place", "Day"),
                     measure.vars = c("pct_one_dose", "pct_two_doses"))
   vax_india <- vax_india[, text := paste0("India", "<br>", Day, ": ", round(value, digits = 2), ifelse(variable == "pct_one_dose", "% with one dose<br>", "% with two doses<br>"))][Day >= as.Date("2021-03-15")][]
