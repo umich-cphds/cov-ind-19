@@ -714,4 +714,54 @@ left_join(
   filter(!grepl("\\*", place)) -> 
   merged_all
 
+left_join(
+  read_csv(paste0(merge_out, "india_daily_barplot.csv")) %>% 
+    select(place, date, Type, Count, text) %>% 
+    filter(Type == "New Cases") %>% 
+    rename(daily_cases = Count, daily_cases_text = text) %>% 
+    select(place, date, daily_cases, daily_cases_text),
+  read_csv(paste0(merge_out, "india_daily_barplot.csv")) %>% 
+    select(place, date, Type, Count, text) %>% 
+    filter(Type == "Fatalities") %>% 
+    rename(daily_deaths = Count, daily_deaths_text = text) %>% 
+    select(place, date, daily_deaths, daily_deaths_text),
+  by = c("place", "date")
+) %>% 
+  left_join(
+    read_csv(paste0(merge_out, "india_daily_barplot.csv")) %>% 
+      select(place, date, Type, Count, text) %>% 
+      filter(Type == "Recovered") %>% 
+      rename(daily_recovered = Count, daily_recovered_text = text) %>% 
+      select(place, date, daily_recovered, daily_recovered_text),
+    by = c("place", "date")
+  ) %>% 
+  left_join(
+    read_csv(paste0(merge_out, "tvr_national.csv")) %>% 
+      select(place, date, r, lower, upper, text) %>% 
+      rename(r_lower = lower, r_upper = upper, r_text = text) %>% 
+      select(place, date, r, r_lower, r_upper, r_text),
+    by = c("place", "date")
+  ) %>%
+  left_join(
+    read_csv(paste0(merge_out, "tpr_national.csv")) %>% 
+      select(state, date, tpr, text) %>% 
+      rename(place = state, tpr_text = text) %>% 
+      select(place, date, tpr, tpr_text),
+    by = c("place", "date")
+  ) %>%
+  left_join(
+    read_csv(paste0(merge_out, "india_daily_vax.csv")) %>% 
+      select(place, Day, daily_doses, pct_one_dose, pct_two_doses) %>% 
+      rename(date = Day) %>% 
+      select(place, date, daily_doses, pct_one_dose, pct_two_doses) %>% 
+      mutate(pct_one_dose_text = paste0(place, "<br>", date, ": ", pct_one_dose, " % one dose<br>"), 
+             pct_two_doses_text = paste0(place, "<br>", date, ": ", pct_two_doses, " % two doses<br>")),
+    by = c("place", "date")
+  ) %>%
+  filter(!grepl("\\*", place)) -> 
+  merged_all_nat
+
+merged_all = 
+  bind_rows(merged_all, merged_all_nat)
+
 write_csv(merged_all, file = paste0(merge_out, "new_everything.csv"))
