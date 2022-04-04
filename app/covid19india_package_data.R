@@ -582,7 +582,8 @@ write_r_forest = function() {
   }
   
   r_forest_plot(all_the_data)
-  ggsave(paste0(data_repo, subfolder_app, "r_forest_plot.pdf"))
+  ggsave(paste0(data_repo, subfolder_app, "r_forest_plot.png"),
+         width = 10, height = 8, dpi = 300, units = "in", device='png')
 }
 write_r_forest()
 
