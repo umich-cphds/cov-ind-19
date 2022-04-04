@@ -391,127 +391,127 @@ write_state_seir = function() {
   
 }
 write_state_seir()
-# 
-# write_snapshot = function() {
-#   
-#   snapshot <- function() {
-#     # functions -----------
-#     get_snap <- function(t = Sys.Date() - 1) {
-#       
-#       nat <- nat_count_data
-#       
-#       vax_dat <- vax_data[Day <= nat[, max(date)]][place == "India", .(date, daily_doses)][, lag := daily_doses][]
-#       
-#       test_data <- testing_data %>%
-#         filter(place == "tt") %>%
-#         mutate(confirmed = confirmed - lag(confirmed),
-#                tested    = tested - lag(tested)) %>%
-#         group_by(date) %>%
-#         mutate(ntpr = confirmed / tested) %>%
-#         filter(tested > 100) %>%
-#         as.data.table()
-#       
-#       if (!is.null(t)) {
-#         today <- as.Date(t)
-#       } else {
-#         today     <- min(max(nat$date, na.rm = TRUE),
-#                          max(vax_dat$date, na.rm = TRUE))
-#       }
-#       
-#       yesterday <- today - 1
-#       week_ago  <- today - 7
-#       month_ago <- today - 30
-#       
-#       get_stats <- function(d) {
-#         
-#         tmp_nat <- nat[date == d]
-#         tmp_deaths <- tmp_nat[, daily_deaths]
-#         tmp_cases  <- tmp_nat[, daily_cases]
-#         tmp_vax <- vax_dat[date == d, lag]
-#         tmp_tpr <- test_data[date == d, ntpr]
-#         tmp_test <- test_data[date == d, tested]
-#         
-#         data.table(
-#           Day        = fifelse(d == today, "Today",
-#                                fifelse(d == yesterday, "Yesterday",
-#                                        fifelse(d == week_ago, "One week ago",
-#                                                fifelse(d == month_ago, "One month ago", "")))),
-#           Date       = format(d, "%m/%d"),
-#           Deaths     = format(tmp_deaths, big.mark = ","),
-#           Cases      = format(tmp_cases, big.mark = ","),
-#           Tests      = format(tmp_test, big.mark = ","),
-#           TPR        = sprintf("%1.2f%%", tmp_tpr*100),
-#           Vaccines   = format(tmp_vax, big.mark = ",")
-#         )
-#         
-#       }
-#       
-#       today_stats     <- get_stats(today)
-#       yesterday_stats <- get_stats(yesterday)
-#       week_ago_stats  <- get_stats(week_ago)
-#       month_ago_stats <- get_stats(month_ago)
-#       
-#       rbindlist(list(
-#         today_stats,
-#         yesterday_stats,
-#         week_ago_stats,
-#         month_ago_stats
-#       ))
-#       
-#     }
-#     
-#     make_pretty <- function(x) {
-#       
-#       source_note_text <- glue::glue(
-#         "**\uA9 COV-IND-19 Study Group**<br>**Source data:** count data (mohfw.gov.in), vaccine data (cowin.gov.in), testing data (covid19bharat.org)<br>"
-#       )
-#       
-#       x %>%
-#         gt() %>%
-#         # bold column headers
-#         tab_style(
-#           style = cell_text(
-#             font = "arial",
-#             weight = "bold"
-#           ),
-#           locations = cells_column_labels(everything())
-#         ) %>%
-#         # center column headers
-#         tab_style(
-#           style = cell_text(
-#             align = "center"
-#           ),
-#           locations = cells_column_labels(c(Date, Deaths, Cases, TPR, Vaccines))
-#         ) %>%
-#         # format columns
-#         tab_style(
-#           style = list(
-#             cell_text(
-#               font = "arial",
-#               align = "center"
-#             )
-#           ),
-#           locations = list(
-#             cells_body(columns = c(Date, Deaths, Cases, TPR, Vaccines))
-#           )
-#         ) %>%  # caption
-#         tab_source_note(
-#           source_note = md(source_note_text)
-#         )
-#     }
-#     
-#     # run ----------
-#     snap <- get_snap()
-#     
-#     # today <- as.Date(snap[Day == "Today", Date], "%m/%d")
-#     
-#     return(make_pretty(snap))
-#   }
-#   
-#   gtsave(snapshot(), paste0(data_repo, subfolder_app, "snapshot.html"))
-#   
-# }
-# write_snapshot()
+
+write_snapshot = function() {
+
+  snapshot <- function() {
+    # functions -----------
+    get_snap <- function(t = Sys.Date() - 1) {
+
+      nat <- nat_count_data
+
+      vax_dat <- vax_data[Day <= nat[, max(date)]][place == "India", .(date = Day, daily_doses)][, lag := daily_doses][]
+
+      test_data <- testing_data %>%
+        filter(place == "tt") %>%
+        mutate(confirmed = confirmed - lag(confirmed),
+               tested    = tested - lag(tested)) %>%
+        group_by(date) %>%
+        mutate(ntpr = confirmed / tested) %>%
+        filter(tested > 100) %>%
+        as.data.table()
+
+      if (!is.null(t)) {
+        today <- as.Date(t)
+      } else {
+        today     <- min(max(nat$date, na.rm = TRUE),
+                         max(vax_dat$date, na.rm = TRUE))
+      }
+
+      yesterday <- today - 1
+      week_ago  <- today - 7
+      month_ago <- today - 30
+
+      get_stats <- function(d) {
+
+        tmp_nat <- nat[date == d]
+        tmp_deaths <- tmp_nat[, daily_deaths]
+        tmp_cases  <- tmp_nat[, daily_cases]
+        tmp_vax <- vax_dat[date == d, lag]
+        tmp_tpr <- test_data[date == d, ntpr]
+        tmp_test <- test_data[date == d, tested]
+
+        data.table(
+          Day        = fifelse(d == today, "Today",
+                               fifelse(d == yesterday, "Yesterday",
+                                       fifelse(d == week_ago, "One week ago",
+                                               fifelse(d == month_ago, "One month ago", "")))),
+          Date       = format(d, "%m/%d"),
+          Deaths     = format(tmp_deaths, big.mark = ","),
+          Cases      = format(tmp_cases, big.mark = ","),
+          Tests      = format(tmp_test, big.mark = ","),
+          TPR        = sprintf("%1.2f%%", tmp_tpr*100),
+          Vaccines   = format(tmp_vax, big.mark = ",")
+        )
+
+      }
+
+      today_stats     <- get_stats(today)
+      yesterday_stats <- get_stats(yesterday)
+      week_ago_stats  <- get_stats(week_ago)
+      month_ago_stats <- get_stats(month_ago)
+
+      rbindlist(list(
+        today_stats,
+        yesterday_stats,
+        week_ago_stats,
+        month_ago_stats
+      ))
+
+    }
+
+    make_pretty <- function(x) {
+
+      source_note_text <- glue::glue(
+        "**\uA9 COV-IND-19 Study Group**<br>**Source data:** count data (mohfw.gov.in), vaccine data (cowin.gov.in), testing data (covid19bharat.org)<br>"
+      )
+
+      x %>%
+        gt() %>%
+        # bold column headers
+        tab_style(
+          style = cell_text(
+            font = "arial",
+            weight = "bold"
+          ),
+          locations = cells_column_labels(everything())
+        ) %>%
+        # center column headers
+        tab_style(
+          style = cell_text(
+            align = "center"
+          ),
+          locations = cells_column_labels(c(Date, Deaths, Cases, TPR, Vaccines))
+        ) %>%
+        # format columns
+        tab_style(
+          style = list(
+            cell_text(
+              font = "arial",
+              align = "center"
+            )
+          ),
+          locations = list(
+            cells_body(columns = c(Date, Deaths, Cases, TPR, Vaccines))
+          )
+        ) %>%  # caption
+        tab_source_note(
+          source_note = md(source_note_text)
+        )
+    }
+
+    # run ----------
+    snap <- get_snap()
+
+    # today <- as.Date(snap[Day == "Today", Date], "%m/%d")
+
+    return(make_pretty(snap))
+  }
+
+  gtsave(snapshot(), paste0(data_repo, subfolder_app, "snapshot.html"))
+
+}
+write_snapshot()
 
 write_r_forest = function() {
   
@@ -765,3 +765,38 @@ merged_all =
   bind_rows(merged_all, merged_all_nat)
 
 write_csv(merged_all, file = paste0(merge_out, "new_everything.csv"))
+
+# insert html for new site into snapshot.html
+to_insert = "<script>
+    function sendMessage() { window.parent.postMessage(document.getElementById('fzrccngwny').offsetHeight, '*'); }
+    window.addEventListener('message', sendMessage)
+    window.addEventListener('load', sendMessage)
+</script>"
+
+snap_lines = readLines("../../cov-ind-19-data/source_data/package-data/processed/snapshot.html")
+new_snap_lines = vector(mode = "character", length = length(snap_lines) + 1)
+
+inside_header = FALSE
+below_style = FALSE
+line_count = 1
+for(i in 1:length(snap_lines)) {
+  #print(paste("iteration ", i))
+  if(snap_lines[i] == "<head>") {
+    inside_header = TRUE
+  }
+  if(i > 1 && snap_lines[i - 1] == "</style>") {
+    below_style = TRUE
+  }
+  if(inside_header == TRUE & below_style == TRUE) {
+    new_snap_lines[i] = to_insert
+    #print(paste("INSERTED ", i))
+    inside_header = FALSE
+    below_style = FALSE
+  } else {
+    new_snap_lines[i] = snap_lines[line_count]
+    line_count = line_count + 1
+  }
+}
+new_snap_lines[length(new_snap_lines)] = snap_lines[length(snap_lines)]
+
+writeLines(new_snap_lines, con = paste0(merge_out, "snapshot.html"))
