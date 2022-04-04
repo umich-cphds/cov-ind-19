@@ -773,7 +773,7 @@ to_insert = "<script>
     window.addEventListener('load', sendMessage)
 </script>"
 
-snap_lines = readLines("../../cov-ind-19-data/source_data/package-data/processed/snapshot.html")
+snap_lines = readLines(paste0(data_repo, subfolder_app, "snapshot.html"))
 new_snap_lines = vector(mode = "character", length = length(snap_lines) + 1)
 
 inside_header = FALSE
