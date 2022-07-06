@@ -719,6 +719,7 @@ write_prediction_nation = function() {
   fwrite(data, file = paste0(data_repo, subfolder_app, "SEIR_predictions.csv"))
   return()
 }
+write_prediction_nation()
 
 # merge and write processed package data
 merge_out = paste0(data_repo, subfolder_app)
