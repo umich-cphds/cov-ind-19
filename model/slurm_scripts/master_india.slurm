@@ -26,7 +26,7 @@ else
   export data_repo="$HOME/cov-ind-19-test"
 fi
 
-module load Rtidyverse/4.1.0
+module load Rtidyverse/4.2.0
 
 scraper=$(sbatch $code_repo/model/slurm_scripts/scraper.slurm | awk '{print $NF}')
 cowin=$(sbatch $code_repo/model/slurm_scripts/pull_cowin_data.slurm | awk '{print $NF}')
