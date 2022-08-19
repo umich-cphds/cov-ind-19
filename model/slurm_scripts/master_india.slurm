@@ -34,7 +34,8 @@ bharat=$(sbatch $code_repo/model/slurm_scripts/covid19bharat_data_scraper.slurm 
 commit=$(sbatch --dependency=afterok:$scraper:$cowin:$bharat $code_repo/model/slurm_scripts/commitscraper.slurm | awk '{print $NF}')
 nat_seirfansy=$(sbatch --dependency=afterok:$scraper:$cowin:$bharat $code_repo/model/slurm_scripts/nat_seirfansy.slurm | awk '{print $NF}')
 covid19india_package_data=$(sbatch --dependency=afterok:$nat_seirfansy $code_repo/model/slurm_scripts/covid19india_package_data.slurm | awk '{print $NF}')
-commit=$(sbatch --dependency=afterok:$covid19india_package_data $code_repo/model/slurm_scripts/commitscraper.slurm | awk '{print $NF}')
+bharat_package_data=$(sbatch --dependency=afterok:covid19india_package_data $code_repo/model/slurm_scripts/bharat_package_data.slurm | awk '{print $NF}')
+commit=$(sbatch --dependency=afterok:$covid19india_package_data:$bharat_package_data $code_repo/model/slurm_scripts/commitscraper.slurm | awk '{print $NF}')
 
 covid19india_package_data6=$(sbatch --being=now+6hour $code_repo/model/slurm_scripts/covid19india_package_data.slurm | awk '{print $NF}')
 commit=$(sbatch --dependency=afterok:$covid19india_package_data6 $code_repo/model/slurm_scripts/commitscraper.slurm | awk '{print $NF}')
