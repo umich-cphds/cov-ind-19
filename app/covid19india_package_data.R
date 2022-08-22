@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 })
 
 #remotes::install_github("maxsal/covid19india", ref = "bharat-pivot")
-Sys.getenv("data_repo") #data_repo = "../../cov-ind-19-data/" 
+data_repo = Sys.getenv("data_repo") #data_repo = "../../cov-ind-19-data/" 
 data_repo = paste0(data_repo, "/source_data/")
 
 subfolder_package = "/package-data/raw/"
