@@ -14,5 +14,5 @@ export HTTPS_PROXY=http://proxy.arc-ts.umich.edu:3128/
 export https_proxy=http://proxy.arc-ts.umich.edu:3128/
 export HTTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
 
-module load Rtidyverse/4.1.0
+module load Rtidyverse/4.2.0
 Rscript --vanilla $code_repo/model/r_scripts/covid19bharat_data_scraper.R
