@@ -7,8 +7,9 @@
 #SBATCH --account=covid19_project1
 #SBATCH --partition=standard
 
+module load use.own
 module load geckodriver
-module load python3.8-anaconda
+module load python3.9-anaconda
 
 export http_proxy=http://proxy.arc-ts.umich.edu:3128/
 export FTP_PROXY=http://proxy.arc-ts.umich.edu:3128/
