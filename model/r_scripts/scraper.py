@@ -36,7 +36,7 @@ if __name__=='__main__':
   fireFoxOptions.headless = True
   driver = webdriver.Firefox(options=fireFoxOptions, service_log_path=os.path.devnull)
   driver.get('https://www.mohfw.gov.in/')
-  driver.find_element_by_xpath('//a[@href="#state-data"]').click()
+  driver.find_element("xpath", '//a[@href="#state-data"]').click()
   time.sleep(3)
   htm=driver.page_source
   a=open(os.path.join(data_repo, 'source_data/test.html'),'w');a.write(htm);a.close()
