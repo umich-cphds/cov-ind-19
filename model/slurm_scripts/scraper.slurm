@@ -12,5 +12,7 @@ module load geckodriver
 module load python3.9-anaconda
 
 source /etc/profile.d/http_proxy.sh
+source ~/.bashrc
+conda activate cov-ind-19
 
 python $code_repo/model/r_scripts/scraper.py
