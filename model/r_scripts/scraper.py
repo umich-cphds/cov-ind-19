@@ -65,7 +65,7 @@ if __name__=='__main__':
     
     a=open(data_file,'a+')
     for idx in range(36):
-      chunk=t('td')[10*idx:10*(idx+1)]
+      chunk=t('td')[8*idx:8*(idx+1)]
       state_name=chunk[1].text.strip()
       state_active=int(chunk[2].text.strip())
       state_recovered=int(chunk[4].text.strip())

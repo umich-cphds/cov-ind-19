@@ -9,7 +9,6 @@
 
 module load use.own
 module load geckodriver
-module load python3.9-anaconda
 
 source /etc/profile.d/http_proxy.sh
 source ~/.bashrc
